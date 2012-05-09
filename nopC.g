@@ -8,42 +8,36 @@ options {
 
 @header {
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 }
 
-@members
-{
-	TreeMap<String, String> functionTable = new TreeMap<String, String>();
-	HashSet<String> varTable = new HashSet<String>();
+@members {
+    TreeMap<String, String> functionTable = new TreeMap<String, String>();
+    HashSet<String> varTable = new HashSet<String>;
 }
 
-//scope Symbols {
-//	Set types;
-//}
-
-// TODO: 
-//	logicalExpression
-
-
-
-cFile
-//	scope Symbols; // entire file is a scope
-//	@init {
-// 	$Symbols::types = new HashSet();
-//	}
+cFile returns [GenericStatement ret]
+@init{
+HashMap<String, String> scope = new HashMap<String, String>;
+GenericStatement cFile = new GenericStatement(scope, functionTable, varTable);
+}
 	: 
-	globalFunctionOrStatement +
+	globalFunctionOrStatement[cFile]+{$ret = $globalFunctionOrStatement.ret;}
 	;
 
-globalFunctionOrStatement
+globalFunctionOrStatement [GenericStatement parent] returns [GenericStatement ret]
+@init{
+  GenericStatement globalFunctionOrStatement = new GenericStatement(parent.getScope), functionTable, varTable);
+}
 	:
-	(typeSpecifier NAME ('=' | ';' | ',')) => globalVariableDeclaration 
+	(typeSpecifier NAME ('=' | ';' | ',')) => globalVariableDeclaration {$ret = globalVariableDeclaration.ret;}
 	| (typeSpecifier NAME  '(') => functionDefinition
 	;
 
 globalVariableDeclaration 
+
 	:
 	typeSpecifier globalVariableDeclarationList ';' {System.out.println($globalVariableDeclaration.text);}
 	;

@@ -18,6 +18,8 @@ import src.*;
 @members {
     TreeMap<String, FunctionDefinition> functionTable = new TreeMap<String, FunctionDefinition>();
     HashMap<String, String> varTable = new HashMap<String, String>();
+
+		GenericStatement hackStore1;
 }
 
 cFile returns [GenericStatement ret]
@@ -87,9 +89,12 @@ codeBlock [GenericStatement parent]
 	;
 	
 statement[GenericStatement parent]
+@init {
+	hackStore1 = parent; // We cannot pass parent to functionCall or assignment directly, as there is a synpred rule involved during backtracking which does not take parameters. Therefore we store it in a global variable to access the variable through this later
+}
 	:
-//		  ( functionCall[parent] ';')
-		 ( assignment[parent] ';'	)
+		  ( functionCall[null] ';')
+		 	( assignment[null] ';'	)
 		| variableDeclaration[parent]
 		| selection_statement[parent]
 	  | iteration_statement[parent]
@@ -129,10 +134,16 @@ jump_statement [GenericStatement parent]
 
 functionCall [GenericStatement parent]
 @init {
+	GenericStatement p = parent; 
+	
+	if (p == null) {
+		 p = hackStore1;
+	}
+	
 	FunctionDefinition fun = null;
 }
 	: 
-	NAME '(' {fun = functionTable.get($NAME.text); System.out.println(functionTable.get($NAME.text).getLabel());} variableList[parent, fun] ')' 
+	NAME '(' {fun = functionTable.get($NAME.text); System.out.println(functionTable.get($NAME.text).getLabel());} variableList[p, fun] ')' 
 	;
 	
 variableList[GenericStatement parent, FunctionDefinition fun]
@@ -141,8 +152,15 @@ variableList[GenericStatement parent, FunctionDefinition fun]
 	;
 
 assignment[GenericStatement parent]
+@init {
+	GenericStatement p = parent; 
+	
+	if (p == null) {
+		 p = hackStore1;
+	}
+}
 	:
-		NAME assignmentOperator expression[parent]
+		NAME assignmentOperator expression[p]
 	;
 
 
@@ -162,65 +180,65 @@ assignmentOperator
 	;
 
 	expression[GenericStatement parent]
-		: logical_or_expression ('?' expression[parent] ':' expression[parent])?
+		: logical_or_expression[parent] ('?' expression[parent] ':' expression[parent])?
 		;
 
-	logical_or_expression
-		: logical_and_expression ('||' logical_and_expression)*
+	logical_or_expression[GenericStatement parent]
+		: logical_and_expression[parent] ('||' logical_and_expression[parent])*
 		;
 
-	logical_and_expression
-		: inclusive_or_expression ('&&' inclusive_or_expression)*
+	logical_and_expression[GenericStatement parent]
+		: inclusive_or_expression[parent] ('&&' inclusive_or_expression[parent])*
 		;
 
-	inclusive_or_expression
-		: exclusive_or_expression ('|' exclusive_or_expression)*
+	inclusive_or_expression[GenericStatement parent]
+		: exclusive_or_expression[parent] ('|' exclusive_or_expression[parent])*
 		;
 
-	exclusive_or_expression
-		: and_expression ('^' and_expression)*
+	exclusive_or_expression[GenericStatement parent]
+		: and_expression[parent] ('^' and_expression[parent])*
 		;
 
-	and_expression
-		: equality_expression ('&' equality_expression)*
+	and_expression[GenericStatement parent]
+		: equality_expression[parent] ('&' equality_expression[parent])*
 		;
-	equality_expression
-		: relational_expression (('=='|'!=') relational_expression)*
-		;
-
-	relational_expression
-		: shift_expression (('<'|'>'|'<='|'>=') shift_expression)*
+	equality_expression[GenericStatement parent]
+		: relational_expression[parent] (('=='|'!=') relational_expression[parent])*
 		;
 
-	shift_expression
-		: additive_expression (('<<'|'>>') additive_expression)*
+	relational_expression[GenericStatement parent]
+		: shift_expression[parent] (('<'|'>'|'<='|'>=') shift_expression[parent])*
+		;
+
+	shift_expression[GenericStatement parent]
+		: additive_expression[parent] (('<<'|'>>') additive_expression[parent])*
 		;
 		
-	additive_expression
-		: (multiplicative_expression) ('+' multiplicative_expression | '-' multiplicative_expression)*
+	additive_expression[GenericStatement parent]
+		: (multiplicative_expression[parent]) ('+' multiplicative_expression[parent] | '-' multiplicative_expression[parent])*
 		;
 
-	multiplicative_expression
-		: (unary_expression) ('*' unary_expression | '/' unary_expression | '%' unary_expression)*
+	multiplicative_expression[GenericStatement parent]
+		: (unary_expression[parent]) ('*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent])*
 		;
 
-unary_expression
-	: postfix_expression
-	| '++' unary_expression
-	| '--' unary_expression
+unary_expression[GenericStatement parent]
+	: postfix_expression[parent]
+	| '++' unary_expression[parent]
+	| '--' unary_expression[parent]
 	;
 
-postfix_expression
-	:   primary_expression
+postfix_expression[GenericStatement parent]
+	:   primary_expression[parent]
         ( '++'
         | '--'
         )*
 	;
 
-primary_expression
+primary_expression[GenericStatement parent]
 	: NAME
-	| '(' expression[null] ')' // TODO: backpatch parent
-	| functionCall[null]
+	| '(' expression[parent] ')' // TODO: backpatch parent
+	| functionCall[parent]
 	| WERT
 	;
 			

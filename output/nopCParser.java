@@ -1,8 +1,11 @@
-// $ANTLR 3.4 /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g 2012-05-09 12:56:15
+// $ANTLR 3.4 /Users/alexander/Code/nop/nopC.g 2012-05-11 12:17:30
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.TreeMap;
+import src.*;
 
 
 import org.antlr.runtime.*;
@@ -89,32 +92,33 @@ public class nopCParser extends DebugParser {
 
 
 public static final String[] ruleNames = new String[] {
-    "invalidRule", "assignmentOperator", "synpred23_nopC", "synpred48_nopC", 
-    "synpred53_nopC", "variableDeclaration", "synpred36_nopC", "synpred19_nopC", 
-    "synpred21_nopC", "synpred34_nopC", "synpred57_nopC", "synpred45_nopC", 
-    "synpred4_nopC", "synpred42_nopC", "synpred27_nopC", "multiplicative_expression", 
-    "postfix_expression", "synpred11_nopC", "synpred22_nopC", "synpred9_nopC", 
-    "synpred12_nopC", "synpred1_nopC", "synpred37_nopC", "variableList", 
-    "synpred20_nopC", "typeSpecifier", "shift_expression", "synpred24_nopC", 
-    "and_expression", "logical_and_expression", "synpred17_nopC", "synpred15_nopC", 
-    "unary_expression", "selection_statement", "synpred28_nopC", "statement", 
-    "jump_statement", "synpred51_nopC", "primary_expression", "synpred14_nopC", 
-    "synpred16_nopC", "synpred39_nopC", "synpred30_nopC", "synpred52_nopC", 
-    "relational_expression", "synpred32_nopC", "synpred38_nopC", "synpred69_nopC", 
-    "synpred40_nopC", "iteration_statement", "synpred46_nopC", "exclusive_or_expression", 
-    "synpred33_nopC", "parameterList", "variableDeclarationList", "synpred54_nopC", 
-    "synpred62_nopC", "inclusive_or_expression", "synpred66_nopC", "additive_expression", 
-    "synpred70_nopC", "synpred5_nopC", "globalVariableDeclaration", "expression", 
-    "synpred56_nopC", "synpred55_nopC", "synpred31_nopC", "synpred43_nopC", 
-    "synpred3_nopC", "synpred7_nopC", "functionDefinition", "synpred25_nopC", 
-    "synpred50_nopC", "synpred63_nopC", "synpred44_nopC", "synpred6_nopC", 
-    "synpred13_nopC", "synpred47_nopC", "synpred8_nopC", "cFile", "synpred58_nopC", 
-    "globalFunctionOrStatement", "synpred64_nopC", "synpred26_nopC", "synpred41_nopC", 
-    "synpred61_nopC", "synpred29_nopC", "synpred60_nopC", "logical_or_expression", 
-    "expression_statement", "synpred67_nopC", "synpred49_nopC", "assignment", 
-    "equality_expression", "synpred35_nopC", "synpred68_nopC", "synpred18_nopC", 
-    "synpred10_nopC", "synpred2_nopC", "synpred59_nopC", "globalVariableDeclarationList", 
-    "functionCall", "codeBlock", "synpred65_nopC"
+    "invalidRule", "codeBlock", "synpred47_nopC", "functionDefinition", 
+    "synpred33_nopC", "synpred62_nopC", "synpred61_nopC", "synpred68_nopC", 
+    "synpred12_nopC", "synpred19_nopC", "synpred63_nopC", "synpred9_nopC", 
+    "synpred67_nopC", "multiplicative_expression", "synpred24_nopC", "synpred45_nopC", 
+    "selection_statement", "synpred15_nopC", "additive_expression", "inclusive_or_expression", 
+    "logical_and_expression", "synpred43_nopC", "synpred52_nopC", "synpred3_nopC", 
+    "logical_or_expression", "synpred1_nopC", "exclusive_or_expression", 
+    "globalFunctionOrStatement", "primary_expression", "synpred11_nopC", 
+    "equality_expression", "synpred56_nopC", "synpred65_nopC", "variableDeclaration", 
+    "synpred7_nopC", "synpred31_nopC", "synpred37_nopC", "synpred6_nopC", 
+    "synpred53_nopC", "globalVariableDeclaration", "synpred21_nopC", "synpred60_nopC", 
+    "relational_expression", "synpred38_nopC", "shift_expression", "globalVariableDeclarationList", 
+    "assignment", "synpred59_nopC", "iteration_statement", "synpred13_nopC", 
+    "synpred49_nopC", "synpred69_nopC", "synpred32_nopC", "synpred16_nopC", 
+    "synpred25_nopC", "synpred34_nopC", "and_expression", "jump_statement", 
+    "assignmentOperator", "synpred58_nopC", "synpred42_nopC", "synpred40_nopC", 
+    "synpred10_nopC", "synpred50_nopC", "synpred35_nopC", "synpred29_nopC", 
+    "statement", "synpred8_nopC", "synpred5_nopC", "postfix_expression", 
+    "synpred54_nopC", "cFile", "synpred27_nopC", "synpred20_nopC", "synpred55_nopC", 
+    "synpred4_nopC", "variableList", "synpred14_nopC", "synpred17_nopC", 
+    "expression", "synpred18_nopC", "synpred28_nopC", "variableDeclarationList", 
+    "synpred57_nopC", "synpred64_nopC", "typeSpecifier", "synpred36_nopC", 
+    "unary_expression", "synpred23_nopC", "synpred22_nopC", "synpred41_nopC", 
+    "synpred2_nopC", "synpred30_nopC", "synpred51_nopC", "synpred44_nopC", 
+    "synpred46_nopC", "expression_statement", "synpred48_nopC", "synpred66_nopC", 
+    "parameterList", "synpred26_nopC", "functionCall", "synpred70_nopC", 
+    "synpred39_nopC"
 };
 
 public static final boolean[] decisionCanBacktrack = new boolean[] {
@@ -163,34 +167,43 @@ protected boolean evalPredicate(boolean result, String predicate) {
 }
 
     public String[] getTokenNames() { return nopCParser.tokenNames; }
-    public String getGrammarFileName() { return "/Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g"; }
+    public String getGrammarFileName() { return "/Users/alexander/Code/nop/nopC.g"; }
 
 
-    	TreeMap<String, String> functionTable = new TreeMap<String, String>();
-    	TreeMap<String, Float> varTable = new TreeMap<String, Float>();
+        TreeMap<String, String> functionTable = new TreeMap<String, String>();
+        HashMap<String, String> varTable = new HashMap<String, String>();
 
 
 
     // $ANTLR start "cFile"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:30:1: cFile : ( globalFunctionOrStatement )+ ;
-    public final void cFile() throws RecognitionException {
+    // /Users/alexander/Code/nop/nopC.g:23:1: cFile returns [GenericStatement ret] : ( globalFunctionOrStatement[cFile] )+ ;
+    public final GenericStatement cFile() throws RecognitionException {
+        GenericStatement ret = null;
+
         int cFile_StartIndex = input.index();
+
+        GenericStatement globalFunctionOrStatement1 =null;
+
+
+
+        HashMap<String, String> scope = new HashMap<String, String>();
+        GenericStatement cFile = new GenericStatement(scope, functionTable, varTable);
 
         try { dbg.enterRule(getGrammarFileName(), "cFile");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(30, 0);
+        dbg.location(23, 0);
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 1) ) { return ; }
+            if ( state.backtracking>0 && alreadyParsedRule(input, 1) ) { return ret; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:35:2: ( ( globalFunctionOrStatement )+ )
+            // /Users/alexander/Code/nop/nopC.g:28:2: ( ( globalFunctionOrStatement[cFile] )+ )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:36:2: ( globalFunctionOrStatement )+
+            // /Users/alexander/Code/nop/nopC.g:29:2: ( globalFunctionOrStatement[cFile] )+
             {
-            dbg.location(36,2);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:36:2: ( globalFunctionOrStatement )+
+            dbg.location(29,2);
+            // /Users/alexander/Code/nop/nopC.g:29:2: ( globalFunctionOrStatement[cFile] )+
             int cnt1=0;
             try { dbg.enterSubRule(1);
 
@@ -212,21 +225,21 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:36:2: globalFunctionOrStatement
+            	    // /Users/alexander/Code/nop/nopC.g:29:2: globalFunctionOrStatement[cFile]
             	    {
-            	    dbg.location(36,2);
-            	    pushFollow(FOLLOW_globalFunctionOrStatement_in_cFile70);
-            	    globalFunctionOrStatement();
+            	    dbg.location(29,2);
+            	    pushFollow(FOLLOW_globalFunctionOrStatement_in_cFile65);
+            	    globalFunctionOrStatement1=globalFunctionOrStatement(cFile);
 
             	    state._fsp--;
-            	    if (state.failed) return ;
+            	    if (state.failed) return ret;
 
             	    }
             	    break;
 
             	default :
             	    if ( cnt1 >= 1 ) break loop1;
-            	    if (state.backtracking>0) {state.failed=true; return ;}
+            	    if (state.backtracking>0) {state.failed=true; return ret;}
                         EarlyExitException eee =
                             new EarlyExitException(1, input);
                         dbg.recognitionException(eee);
@@ -237,6 +250,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
             } while (true);
             } finally {dbg.exitSubRule(1);}
 
+            dbg.location(29,35);
+            if ( state.backtracking==0 ) {ret = globalFunctionOrStatement1;}
 
             }
 
@@ -251,7 +266,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 1, cFile_StartIndex); }
 
         }
-        dbg.location(37, 1);
+        dbg.location(30, 1);
 
         }
         finally {
@@ -260,26 +275,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( getRuleLevel()==0 ) {dbg.terminate();}
         }
 
-        return ;
+        return ret;
     }
     // $ANTLR end "cFile"
 
 
 
     // $ANTLR start "globalFunctionOrStatement"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:39:1: globalFunctionOrStatement : ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration | ( typeSpecifier NAME '(' )=> functionDefinition );
-    public final void globalFunctionOrStatement() throws RecognitionException {
+    // /Users/alexander/Code/nop/nopC.g:34:1: globalFunctionOrStatement[GenericStatement parent] returns [GenericStatement ret] : ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent] | ( typeSpecifier NAME '(' )=> functionDefinition[parent] );
+    public final GenericStatement globalFunctionOrStatement(GenericStatement parent) throws RecognitionException {
+        GenericStatement ret = null;
+
         int globalFunctionOrStatement_StartIndex = input.index();
+
+        nopCParser.globalVariableDeclaration_return globalVariableDeclaration2 =null;
+
 
         try { dbg.enterRule(getGrammarFileName(), "globalFunctionOrStatement");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(39, 0);
+        dbg.location(34, 0);
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 2) ) { return ; }
+            if ( state.backtracking>0 && alreadyParsedRule(input, 2) ) { return ret; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:40:2: ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration | ( typeSpecifier NAME '(' )=> functionDefinition )
+            // /Users/alexander/Code/nop/nopC.g:35:2: ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent] | ( typeSpecifier NAME '(' )=> functionDefinition[parent] )
             int alt2=2;
             try { dbg.enterDecision(2, decisionCanBacktrack[2]);
 
@@ -298,7 +318,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
                         alt2=2;
                     }
                     else {
-                        if (state.backtracking>0) {state.failed=true; return ;}
+                        if (state.backtracking>0) {state.failed=true; return ret;}
                         NoViableAltException nvae =
                             new NoViableAltException("", 2, 2, input);
 
@@ -308,7 +328,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
                     }
                 }
                 else {
-                    if (state.backtracking>0) {state.failed=true; return ;}
+                    if (state.backtracking>0) {state.failed=true; return ret;}
                     NoViableAltException nvae =
                         new NoViableAltException("", 2, 1, input);
 
@@ -318,7 +338,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 }
             }
             else {
-                if (state.backtracking>0) {state.failed=true; return ;}
+                if (state.backtracking>0) {state.failed=true; return ret;}
                 NoViableAltException nvae =
                     new NoViableAltException("", 2, 0, input);
 
@@ -332,28 +352,30 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:41:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration
+                    // /Users/alexander/Code/nop/nopC.g:36:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent]
                     {
-                    dbg.location(41,44);
-                    pushFollow(FOLLOW_globalVariableDeclaration_in_globalFunctionOrStatement104);
-                    globalVariableDeclaration();
+                    dbg.location(36,44);
+                    pushFollow(FOLLOW_globalVariableDeclaration_in_globalFunctionOrStatement108);
+                    globalVariableDeclaration2=globalVariableDeclaration(parent);
 
                     state._fsp--;
-                    if (state.failed) return ;
+                    if (state.failed) return ret;
+                    dbg.location(36,78);
+                    if ( state.backtracking==0 ) {ret = (globalVariableDeclaration2!=null?globalVariableDeclaration2.ret:null);}
 
                     }
                     break;
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:42:4: ( typeSpecifier NAME '(' )=> functionDefinition
+                    // /Users/alexander/Code/nop/nopC.g:37:4: ( typeSpecifier NAME '(' )=> functionDefinition[parent]
                     {
-                    dbg.location(42,33);
-                    pushFollow(FOLLOW_functionDefinition_in_globalFunctionOrStatement121);
-                    functionDefinition();
+                    dbg.location(37,33);
+                    pushFollow(FOLLOW_functionDefinition_in_globalFunctionOrStatement127);
+                    functionDefinition(parent);
 
                     state._fsp--;
-                    if (state.failed) return ;
+                    if (state.failed) return ret;
 
                     }
                     break;
@@ -370,7 +392,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 2, globalFunctionOrStatement_StartIndex); }
 
         }
-        dbg.location(43, 1);
+        dbg.location(38, 1);
 
         }
         finally {
@@ -379,18 +401,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( getRuleLevel()==0 ) {dbg.terminate();}
         }
 
-        return ;
+        return ret;
     }
     // $ANTLR end "globalFunctionOrStatement"
 
 
     public static class globalVariableDeclaration_return extends ParserRuleReturnScope {
+        public GenericStatement ret;
     };
 
 
     // $ANTLR start "globalVariableDeclaration"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:45:1: globalVariableDeclaration : typeSpecifier globalVariableDeclarationList ';' ;
-    public final nopCParser.globalVariableDeclaration_return globalVariableDeclaration() throws RecognitionException {
+    // /Users/alexander/Code/nop/nopC.g:40:1: globalVariableDeclaration[GenericStatement parent] returns [GenericStatement ret] : typeSpecifier globalVariableDeclarationList[parent] ';' ;
+    public final nopCParser.globalVariableDeclaration_return globalVariableDeclaration(GenericStatement parent) throws RecognitionException {
         nopCParser.globalVariableDeclaration_return retval = new nopCParser.globalVariableDeclaration_return();
         retval.start = input.LT(1);
 
@@ -399,31 +422,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
         try { dbg.enterRule(getGrammarFileName(), "globalVariableDeclaration");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(45, 0);
+        dbg.location(40, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 3) ) { return retval; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:46:2: ( typeSpecifier globalVariableDeclarationList ';' )
+            // /Users/alexander/Code/nop/nopC.g:41:2: ( typeSpecifier globalVariableDeclarationList[parent] ';' )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:47:2: typeSpecifier globalVariableDeclarationList ';'
+            // /Users/alexander/Code/nop/nopC.g:43:2: typeSpecifier globalVariableDeclarationList[parent] ';'
             {
-            dbg.location(47,2);
-            pushFollow(FOLLOW_typeSpecifier_in_globalVariableDeclaration134);
+            dbg.location(43,2);
+            pushFollow(FOLLOW_typeSpecifier_in_globalVariableDeclaration148);
             typeSpecifier();
 
             state._fsp--;
             if (state.failed) return retval;
-            dbg.location(47,16);
-            pushFollow(FOLLOW_globalVariableDeclarationList_in_globalVariableDeclaration136);
-            globalVariableDeclarationList();
+            dbg.location(43,16);
+            pushFollow(FOLLOW_globalVariableDeclarationList_in_globalVariableDeclaration150);
+            globalVariableDeclarationList(parent);
 
             state._fsp--;
             if (state.failed) return retval;
-            dbg.location(47,46);
-            match(input,30,FOLLOW_30_in_globalVariableDeclaration138); if (state.failed) return retval;
-            dbg.location(47,50);
+            dbg.location(43,54);
+            match(input,30,FOLLOW_30_in_globalVariableDeclaration153); if (state.failed) return retval;
+            dbg.location(43,58);
             if ( state.backtracking==0 ) {System.out.println(input.toString(retval.start,input.LT(-1)));}
 
             }
@@ -442,7 +465,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 3, globalVariableDeclaration_StartIndex); }
 
         }
-        dbg.location(48, 1);
+        dbg.location(44, 1);
 
         }
         finally {
@@ -458,27 +481,40 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "globalVariableDeclarationList"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:55:1: globalVariableDeclarationList : NAME ( '=' WERT )? ( ',' NAME ( '=' WERT )? )* ;
-    public final void globalVariableDeclarationList() throws RecognitionException {
+    // /Users/alexander/Code/nop/nopC.g:51:1: globalVariableDeclarationList[GenericStatement parent] returns [GenericStatement ret] : (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )* ;
+    public final GenericStatement globalVariableDeclarationList(GenericStatement parent) throws RecognitionException {
+        GenericStatement ret = null;
+
         int globalVariableDeclarationList_StartIndex = input.index();
+
+        Token n1=null;
+        Token w1=null;
+        Token n2=null;
+        Token w2=null;
 
         try { dbg.enterRule(getGrammarFileName(), "globalVariableDeclarationList");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(55, 0);
+        dbg.location(51, 0);
 
         try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 4) ) { return ; }
+            if ( state.backtracking>0 && alreadyParsedRule(input, 4) ) { return ret; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:56:2: ( NAME ( '=' WERT )? ( ',' NAME ( '=' WERT )? )* )
+            // /Users/alexander/Code/nop/nopC.g:52:2: ( (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:57:2: NAME ( '=' WERT )? ( ',' NAME ( '=' WERT )? )*
+            // /Users/alexander/Code/nop/nopC.g:53:2: (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )*
             {
-            dbg.location(57,2);
-            match(input,NAME,FOLLOW_NAME_in_globalVariableDeclarationList158); if (state.failed) return ;
-            dbg.location(57,7);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:57:7: ( '=' WERT )?
+            dbg.location(53,2);
+            // /Users/alexander/Code/nop/nopC.g:53:2: (n1= NAME ( '=' w1= WERT )? )
+            dbg.enterAlt(1);
+
+            // /Users/alexander/Code/nop/nopC.g:53:3: n1= NAME ( '=' w1= WERT )?
+            {
+            dbg.location(53,6);
+            n1=(Token)match(input,NAME,FOLLOW_NAME_in_globalVariableDeclarationList183); if (state.failed) return ret;
+            dbg.location(53,12);
+            // /Users/alexander/Code/nop/nopC.g:53:12: ( '=' w1= WERT )?
             int alt3=2;
             try { dbg.enterSubRule(3);
             try { dbg.enterDecision(3, decisionCanBacktrack[3]);
@@ -494,12 +530,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:57:8: '=' WERT
+                    // /Users/alexander/Code/nop/nopC.g:53:13: '=' w1= WERT
                     {
-                    dbg.location(57,8);
-                    match(input,35,FOLLOW_35_in_globalVariableDeclarationList161); if (state.failed) return ;
-                    dbg.location(57,12);
-                    match(input,WERT,FOLLOW_WERT_in_globalVariableDeclarationList163); if (state.failed) return ;
+                    dbg.location(53,13);
+                    match(input,35,FOLLOW_35_in_globalVariableDeclarationList185); if (state.failed) return ret;
+                    dbg.location(53,20);
+                    w1=(Token)match(input,WERT,FOLLOW_WERT_in_globalVariableDeclarationList191); if (state.failed) return ret;
 
                     }
                     break;
@@ -507,8 +543,13 @@ protected boolean evalPredicate(boolean result, String predicate) {
             }
             } finally {dbg.exitSubRule(3);}
 
-            dbg.location(57,19);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:57:19: ( ',' NAME ( '=' WERT )? )*
+
+            }
+
+            dbg.location(53,29);
+            if ( state.backtracking==0 ) {parent.addVarToScope((n1!=null?n1.getText():null), (w1!=null?w1.getText():null));}
+            dbg.location(53,73);
+            // /Users/alexander/Code/nop/nopC.g:53:73: ( ',' (n2= NAME ( '=' w2= WERT )? ) )*
             try { dbg.enterSubRule(5);
 
             loop5:
@@ -529,14 +570,20 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:57:20: ',' NAME ( '=' WERT )?
+            	    // /Users/alexander/Code/nop/nopC.g:53:74: ',' (n2= NAME ( '=' w2= WERT )? )
             	    {
-            	    dbg.location(57,20);
-            	    match(input,23,FOLLOW_23_in_globalVariableDeclarationList168); if (state.failed) return ;
-            	    dbg.location(57,24);
-            	    match(input,NAME,FOLLOW_NAME_in_globalVariableDeclarationList170); if (state.failed) return ;
-            	    dbg.location(57,29);
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:57:29: ( '=' WERT )?
+            	    dbg.location(53,74);
+            	    match(input,23,FOLLOW_23_in_globalVariableDeclarationList198); if (state.failed) return ret;
+            	    dbg.location(53,78);
+            	    // /Users/alexander/Code/nop/nopC.g:53:78: (n2= NAME ( '=' w2= WERT )? )
+            	    dbg.enterAlt(1);
+
+            	    // /Users/alexander/Code/nop/nopC.g:53:79: n2= NAME ( '=' w2= WERT )?
+            	    {
+            	    dbg.location(53,82);
+            	    n2=(Token)match(input,NAME,FOLLOW_NAME_in_globalVariableDeclarationList205); if (state.failed) return ret;
+            	    dbg.location(53,88);
+            	    // /Users/alexander/Code/nop/nopC.g:53:88: ( '=' w2= WERT )?
             	    int alt4=2;
             	    try { dbg.enterSubRule(4);
             	    try { dbg.enterDecision(4, decisionCanBacktrack[4]);
@@ -552,12 +599,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	        case 1 :
             	            dbg.enterAlt(1);
 
-            	            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:57:30: '=' WERT
+            	            // /Users/alexander/Code/nop/nopC.g:53:89: '=' w2= WERT
             	            {
-            	            dbg.location(57,30);
-            	            match(input,35,FOLLOW_35_in_globalVariableDeclarationList173); if (state.failed) return ;
-            	            dbg.location(57,34);
-            	            match(input,WERT,FOLLOW_WERT_in_globalVariableDeclarationList175); if (state.failed) return ;
+            	            dbg.location(53,89);
+            	            match(input,35,FOLLOW_35_in_globalVariableDeclarationList207); if (state.failed) return ret;
+            	            dbg.location(53,96);
+            	            w2=(Token)match(input,WERT,FOLLOW_WERT_in_globalVariableDeclarationList213); if (state.failed) return ret;
 
             	            }
             	            break;
@@ -565,6 +612,11 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	    }
             	    } finally {dbg.exitSubRule(4);}
 
+
+            	    }
+
+            	    dbg.location(53,105);
+            	    if ( state.backtracking==0 ) {parent.addVarToScope((n2!=null?n2.getText():null), (w2!=null?w2.getText():null));}
 
             	    }
             	    break;
@@ -589,7 +641,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 4, globalVariableDeclarationList_StartIndex); }
 
         }
-        dbg.location(58, 1);
+        dbg.location(54, 1);
 
         }
         finally {
@@ -598,7 +650,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( getRuleLevel()==0 ) {dbg.terminate();}
         }
 
-        return ;
+        return ret;
     }
     // $ANTLR end "globalVariableDeclarationList"
 
@@ -608,7 +660,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "variableDeclaration"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:61:1: variableDeclaration : typeSpecifier variableDeclarationList ';' ;
+    // /Users/alexander/Code/nop/nopC.g:56:1: variableDeclaration : typeSpecifier variableDeclarationList ';' ;
     public final nopCParser.variableDeclaration_return variableDeclaration() throws RecognitionException {
         nopCParser.variableDeclaration_return retval = new nopCParser.variableDeclaration_return();
         retval.start = input.LT(1);
@@ -618,31 +670,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
         try { dbg.enterRule(getGrammarFileName(), "variableDeclaration");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(61, 0);
+        dbg.location(56, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 5) ) { return retval; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:62:2: ( typeSpecifier variableDeclarationList ';' )
+            // /Users/alexander/Code/nop/nopC.g:57:2: ( typeSpecifier variableDeclarationList ';' )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:63:2: typeSpecifier variableDeclarationList ';'
+            // /Users/alexander/Code/nop/nopC.g:58:2: typeSpecifier variableDeclarationList ';'
             {
-            dbg.location(63,2);
-            pushFollow(FOLLOW_typeSpecifier_in_variableDeclaration196);
+            dbg.location(58,2);
+            pushFollow(FOLLOW_typeSpecifier_in_variableDeclaration235);
             typeSpecifier();
 
             state._fsp--;
             if (state.failed) return retval;
-            dbg.location(63,16);
-            pushFollow(FOLLOW_variableDeclarationList_in_variableDeclaration198);
+            dbg.location(58,16);
+            pushFollow(FOLLOW_variableDeclarationList_in_variableDeclaration237);
             variableDeclarationList();
 
             state._fsp--;
             if (state.failed) return retval;
-            dbg.location(63,40);
-            match(input,30,FOLLOW_30_in_variableDeclaration200); if (state.failed) return retval;
-            dbg.location(63,44);
+            dbg.location(58,40);
+            match(input,30,FOLLOW_30_in_variableDeclaration239); if (state.failed) return retval;
+            dbg.location(58,44);
             if ( state.backtracking==0 ) {System.out.println(input.toString(retval.start,input.LT(-1)));}
 
             }
@@ -661,7 +713,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 5, variableDeclaration_StartIndex); }
 
         }
-        dbg.location(64, 1);
+        dbg.location(59, 1);
 
         }
         finally {
@@ -677,27 +729,27 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "variableDeclarationList"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:66:1: variableDeclarationList : NAME ( '=' expression )? ( ',' NAME ( '=' expression )? )* ;
+    // /Users/alexander/Code/nop/nopC.g:61:1: variableDeclarationList : NAME ( '=' expression )? ( ',' NAME ( '=' expression )? )* ;
     public final void variableDeclarationList() throws RecognitionException {
         int variableDeclarationList_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "variableDeclarationList");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(66, 0);
+        dbg.location(61, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 6) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:67:2: ( NAME ( '=' expression )? ( ',' NAME ( '=' expression )? )* )
+            // /Users/alexander/Code/nop/nopC.g:62:2: ( NAME ( '=' expression )? ( ',' NAME ( '=' expression )? )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:68:2: NAME ( '=' expression )? ( ',' NAME ( '=' expression )? )*
+            // /Users/alexander/Code/nop/nopC.g:63:2: NAME ( '=' expression )? ( ',' NAME ( '=' expression )? )*
             {
-            dbg.location(68,2);
-            match(input,NAME,FOLLOW_NAME_in_variableDeclarationList215); if (state.failed) return ;
-            dbg.location(68,7);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:68:7: ( '=' expression )?
+            dbg.location(63,2);
+            match(input,NAME,FOLLOW_NAME_in_variableDeclarationList254); if (state.failed) return ;
+            dbg.location(63,7);
+            // /Users/alexander/Code/nop/nopC.g:63:7: ( '=' expression )?
             int alt6=2;
             try { dbg.enterSubRule(6);
             try { dbg.enterDecision(6, decisionCanBacktrack[6]);
@@ -713,12 +765,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:68:8: '=' expression
+                    // /Users/alexander/Code/nop/nopC.g:63:8: '=' expression
                     {
-                    dbg.location(68,8);
-                    match(input,35,FOLLOW_35_in_variableDeclarationList218); if (state.failed) return ;
-                    dbg.location(68,12);
-                    pushFollow(FOLLOW_expression_in_variableDeclarationList220);
+                    dbg.location(63,8);
+                    match(input,35,FOLLOW_35_in_variableDeclarationList257); if (state.failed) return ;
+                    dbg.location(63,12);
+                    pushFollow(FOLLOW_expression_in_variableDeclarationList259);
                     expression();
 
                     state._fsp--;
@@ -730,8 +782,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
             }
             } finally {dbg.exitSubRule(6);}
 
-            dbg.location(68,25);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:68:25: ( ',' NAME ( '=' expression )? )*
+            dbg.location(63,25);
+            // /Users/alexander/Code/nop/nopC.g:63:25: ( ',' NAME ( '=' expression )? )*
             try { dbg.enterSubRule(8);
 
             loop8:
@@ -752,14 +804,14 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:68:26: ',' NAME ( '=' expression )?
+            	    // /Users/alexander/Code/nop/nopC.g:63:26: ',' NAME ( '=' expression )?
             	    {
-            	    dbg.location(68,26);
-            	    match(input,23,FOLLOW_23_in_variableDeclarationList225); if (state.failed) return ;
-            	    dbg.location(68,30);
-            	    match(input,NAME,FOLLOW_NAME_in_variableDeclarationList227); if (state.failed) return ;
-            	    dbg.location(68,35);
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:68:35: ( '=' expression )?
+            	    dbg.location(63,26);
+            	    match(input,23,FOLLOW_23_in_variableDeclarationList264); if (state.failed) return ;
+            	    dbg.location(63,30);
+            	    match(input,NAME,FOLLOW_NAME_in_variableDeclarationList266); if (state.failed) return ;
+            	    dbg.location(63,35);
+            	    // /Users/alexander/Code/nop/nopC.g:63:35: ( '=' expression )?
             	    int alt7=2;
             	    try { dbg.enterSubRule(7);
             	    try { dbg.enterDecision(7, decisionCanBacktrack[7]);
@@ -775,12 +827,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	        case 1 :
             	            dbg.enterAlt(1);
 
-            	            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:68:36: '=' expression
+            	            // /Users/alexander/Code/nop/nopC.g:63:36: '=' expression
             	            {
-            	            dbg.location(68,36);
-            	            match(input,35,FOLLOW_35_in_variableDeclarationList230); if (state.failed) return ;
-            	            dbg.location(68,40);
-            	            pushFollow(FOLLOW_expression_in_variableDeclarationList232);
+            	            dbg.location(63,36);
+            	            match(input,35,FOLLOW_35_in_variableDeclarationList269); if (state.failed) return ;
+            	            dbg.location(63,40);
+            	            pushFollow(FOLLOW_expression_in_variableDeclarationList271);
             	            expression();
 
             	            state._fsp--;
@@ -816,7 +868,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 6, variableDeclarationList_StartIndex); }
 
         }
-        dbg.location(69, 1);
+        dbg.location(64, 1);
 
         }
         finally {
@@ -835,50 +887,50 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "functionDefinition"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:72:1: functionDefinition : typeSpecifier NAME '(' parameterList ')' '{' ( statement )* '}' ;
-    public final nopCParser.functionDefinition_return functionDefinition() throws RecognitionException {
+    // /Users/alexander/Code/nop/nopC.g:67:1: functionDefinition[GenericStatement parent] : typeSpecifier NAME '(' parameterList ')' '{' ( statement )* '}' ;
+    public final nopCParser.functionDefinition_return functionDefinition(GenericStatement parent) throws RecognitionException {
         nopCParser.functionDefinition_return retval = new nopCParser.functionDefinition_return();
         retval.start = input.LT(1);
 
         int functionDefinition_StartIndex = input.index();
 
-        Token NAME1=null;
+        Token NAME3=null;
 
         try { dbg.enterRule(getGrammarFileName(), "functionDefinition");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(72, 0);
+        dbg.location(67, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 7) ) { return retval; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:73:2: ( typeSpecifier NAME '(' parameterList ')' '{' ( statement )* '}' )
+            // /Users/alexander/Code/nop/nopC.g:68:2: ( typeSpecifier NAME '(' parameterList ')' '{' ( statement )* '}' )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:74:3: typeSpecifier NAME '(' parameterList ')' '{' ( statement )* '}'
+            // /Users/alexander/Code/nop/nopC.g:69:3: typeSpecifier NAME '(' parameterList ')' '{' ( statement )* '}'
             {
-            dbg.location(74,3);
-            pushFollow(FOLLOW_typeSpecifier_in_functionDefinition253);
+            dbg.location(69,3);
+            pushFollow(FOLLOW_typeSpecifier_in_functionDefinition293);
             typeSpecifier();
 
             state._fsp--;
             if (state.failed) return retval;
-            dbg.location(74,17);
-            NAME1=(Token)match(input,NAME,FOLLOW_NAME_in_functionDefinition255); if (state.failed) return retval;
-            dbg.location(74,22);
-            match(input,16,FOLLOW_16_in_functionDefinition257); if (state.failed) return retval;
-            dbg.location(74,26);
-            pushFollow(FOLLOW_parameterList_in_functionDefinition259);
+            dbg.location(69,17);
+            NAME3=(Token)match(input,NAME,FOLLOW_NAME_in_functionDefinition295); if (state.failed) return retval;
+            dbg.location(69,22);
+            match(input,16,FOLLOW_16_in_functionDefinition297); if (state.failed) return retval;
+            dbg.location(69,26);
+            pushFollow(FOLLOW_parameterList_in_functionDefinition299);
             parameterList();
 
             state._fsp--;
             if (state.failed) return retval;
-            dbg.location(74,40);
-            match(input,17,FOLLOW_17_in_functionDefinition261); if (state.failed) return retval;
-            dbg.location(74,44);
-            match(input,57,FOLLOW_57_in_functionDefinition263); if (state.failed) return retval;
-            dbg.location(74,48);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:74:48: ( statement )*
+            dbg.location(69,40);
+            match(input,17,FOLLOW_17_in_functionDefinition301); if (state.failed) return retval;
+            dbg.location(69,44);
+            match(input,57,FOLLOW_57_in_functionDefinition303); if (state.failed) return retval;
+            dbg.location(69,48);
+            // /Users/alexander/Code/nop/nopC.g:69:48: ( statement )*
             try { dbg.enterSubRule(9);
 
             loop9:
@@ -899,10 +951,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:74:48: statement
+            	    // /Users/alexander/Code/nop/nopC.g:69:48: statement
             	    {
-            	    dbg.location(74,48);
-            	    pushFollow(FOLLOW_statement_in_functionDefinition265);
+            	    dbg.location(69,48);
+            	    pushFollow(FOLLOW_statement_in_functionDefinition305);
             	    statement();
 
             	    state._fsp--;
@@ -917,10 +969,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
             } while (true);
             } finally {dbg.exitSubRule(9);}
 
-            dbg.location(74,59);
-            match(input,61,FOLLOW_61_in_functionDefinition268); if (state.failed) return retval;
-            dbg.location(74,63);
-            if ( state.backtracking==0 ) {System.out.println(input.toString(retval.start,input.LT(-1))); functionTable.put((NAME1!=null?NAME1.getText():null), "istDa");}
+            dbg.location(69,59);
+            match(input,61,FOLLOW_61_in_functionDefinition308); if (state.failed) return retval;
+            dbg.location(69,63);
+            if ( state.backtracking==0 ) {System.out.println(input.toString(retval.start,input.LT(-1))); functionTable.put((NAME3!=null?NAME3.getText():null), "istDa");}
 
             }
 
@@ -938,7 +990,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 7, functionDefinition_StartIndex); }
 
         }
-        dbg.location(75, 1);
+        dbg.location(70, 1);
 
         }
         finally {
@@ -954,25 +1006,25 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "parameterList"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:78:1: parameterList : ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )? ;
+    // /Users/alexander/Code/nop/nopC.g:73:1: parameterList : ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )? ;
     public final void parameterList() throws RecognitionException {
         int parameterList_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "parameterList");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(78, 0);
+        dbg.location(73, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 8) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:79:2: ( ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )? )
+            // /Users/alexander/Code/nop/nopC.g:74:2: ( ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )? )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:80:3: ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )?
+            // /Users/alexander/Code/nop/nopC.g:75:3: ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )?
             {
-            dbg.location(80,3);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:80:3: ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )?
+            dbg.location(75,3);
+            // /Users/alexander/Code/nop/nopC.g:75:3: ( typeSpecifier NAME ( ',' typeSpecifier NAME )* )?
             int alt11=2;
             try { dbg.enterSubRule(11);
             try { dbg.enterDecision(11, decisionCanBacktrack[11]);
@@ -988,18 +1040,18 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:80:4: typeSpecifier NAME ( ',' typeSpecifier NAME )*
+                    // /Users/alexander/Code/nop/nopC.g:75:4: typeSpecifier NAME ( ',' typeSpecifier NAME )*
                     {
-                    dbg.location(80,4);
-                    pushFollow(FOLLOW_typeSpecifier_in_parameterList288);
+                    dbg.location(75,4);
+                    pushFollow(FOLLOW_typeSpecifier_in_parameterList328);
                     typeSpecifier();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(80,18);
-                    match(input,NAME,FOLLOW_NAME_in_parameterList290); if (state.failed) return ;
-                    dbg.location(80,23);
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:80:23: ( ',' typeSpecifier NAME )*
+                    dbg.location(75,18);
+                    match(input,NAME,FOLLOW_NAME_in_parameterList330); if (state.failed) return ;
+                    dbg.location(75,23);
+                    // /Users/alexander/Code/nop/nopC.g:75:23: ( ',' typeSpecifier NAME )*
                     try { dbg.enterSubRule(10);
 
                     loop10:
@@ -1020,18 +1072,18 @@ protected boolean evalPredicate(boolean result, String predicate) {
                     	case 1 :
                     	    dbg.enterAlt(1);
 
-                    	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:80:24: ',' typeSpecifier NAME
+                    	    // /Users/alexander/Code/nop/nopC.g:75:24: ',' typeSpecifier NAME
                     	    {
-                    	    dbg.location(80,24);
-                    	    match(input,23,FOLLOW_23_in_parameterList293); if (state.failed) return ;
-                    	    dbg.location(80,28);
-                    	    pushFollow(FOLLOW_typeSpecifier_in_parameterList295);
+                    	    dbg.location(75,24);
+                    	    match(input,23,FOLLOW_23_in_parameterList333); if (state.failed) return ;
+                    	    dbg.location(75,28);
+                    	    pushFollow(FOLLOW_typeSpecifier_in_parameterList335);
                     	    typeSpecifier();
 
                     	    state._fsp--;
                     	    if (state.failed) return ;
-                    	    dbg.location(80,42);
-                    	    match(input,NAME,FOLLOW_NAME_in_parameterList297); if (state.failed) return ;
+                    	    dbg.location(75,42);
+                    	    match(input,NAME,FOLLOW_NAME_in_parameterList337); if (state.failed) return ;
 
                     	    }
                     	    break;
@@ -1063,7 +1115,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 8, parameterList_StartIndex); }
 
         }
-        dbg.location(81, 1);
+        dbg.location(76, 1);
 
         }
         finally {
@@ -1079,19 +1131,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "codeBlock"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:83:1: codeBlock : ( '{' ( statement )* '}' | statement );
+    // /Users/alexander/Code/nop/nopC.g:78:1: codeBlock : ( '{' ( statement )* '}' | statement );
     public final void codeBlock() throws RecognitionException {
         int codeBlock_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "codeBlock");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(83, 0);
+        dbg.location(78, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 9) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:84:2: ( '{' ( statement )* '}' | statement )
+            // /Users/alexander/Code/nop/nopC.g:79:2: ( '{' ( statement )* '}' | statement )
             int alt13=2;
             try { dbg.enterDecision(13, decisionCanBacktrack[13]);
 
@@ -1118,12 +1170,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:85:2: '{' ( statement )* '}'
+                    // /Users/alexander/Code/nop/nopC.g:80:2: '{' ( statement )* '}'
                     {
-                    dbg.location(85,2);
-                    match(input,57,FOLLOW_57_in_codeBlock313); if (state.failed) return ;
-                    dbg.location(85,5);
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:85:5: ( statement )*
+                    dbg.location(80,2);
+                    match(input,57,FOLLOW_57_in_codeBlock353); if (state.failed) return ;
+                    dbg.location(80,5);
+                    // /Users/alexander/Code/nop/nopC.g:80:5: ( statement )*
                     try { dbg.enterSubRule(12);
 
                     loop12:
@@ -1144,10 +1196,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                     	case 1 :
                     	    dbg.enterAlt(1);
 
-                    	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:85:5: statement
+                    	    // /Users/alexander/Code/nop/nopC.g:80:5: statement
                     	    {
-                    	    dbg.location(85,5);
-                    	    pushFollow(FOLLOW_statement_in_codeBlock314);
+                    	    dbg.location(80,5);
+                    	    pushFollow(FOLLOW_statement_in_codeBlock354);
                     	    statement();
 
                     	    state._fsp--;
@@ -1162,18 +1214,18 @@ protected boolean evalPredicate(boolean result, String predicate) {
                     } while (true);
                     } finally {dbg.exitSubRule(12);}
 
-                    dbg.location(85,15);
-                    match(input,61,FOLLOW_61_in_codeBlock316); if (state.failed) return ;
+                    dbg.location(80,15);
+                    match(input,61,FOLLOW_61_in_codeBlock356); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:86:4: statement
+                    // /Users/alexander/Code/nop/nopC.g:81:4: statement
                     {
-                    dbg.location(86,4);
-                    pushFollow(FOLLOW_statement_in_codeBlock321);
+                    dbg.location(81,4);
+                    pushFollow(FOLLOW_statement_in_codeBlock361);
                     statement();
 
                     state._fsp--;
@@ -1194,7 +1246,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 9, codeBlock_StartIndex); }
 
         }
-        dbg.location(88, 1);
+        dbg.location(83, 1);
 
         }
         finally {
@@ -1210,19 +1262,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "statement"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:90:1: statement : ( ( functionCall ';' ) | ( assignment ';' ) | variableDeclaration | selection_statement | iteration_statement | jump_statement | expression_statement );
+    // /Users/alexander/Code/nop/nopC.g:85:1: statement : ( ( functionCall ';' ) | ( assignment ';' ) | variableDeclaration | selection_statement | iteration_statement | jump_statement | expression_statement );
     public final void statement() throws RecognitionException {
         int statement_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "statement");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(90, 0);
+        dbg.location(85, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 10) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:91:2: ( ( functionCall ';' ) | ( assignment ';' ) | variableDeclaration | selection_statement | iteration_statement | jump_statement | expression_statement )
+            // /Users/alexander/Code/nop/nopC.g:86:2: ( ( functionCall ';' ) | ( assignment ';' ) | variableDeclaration | selection_statement | iteration_statement | jump_statement | expression_statement )
             int alt14=7;
             try { dbg.enterDecision(14, decisionCanBacktrack[14]);
 
@@ -1356,22 +1408,22 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:92:5: ( functionCall ';' )
+                    // /Users/alexander/Code/nop/nopC.g:87:5: ( functionCall ';' )
                     {
-                    dbg.location(92,5);
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:92:5: ( functionCall ';' )
+                    dbg.location(87,5);
+                    // /Users/alexander/Code/nop/nopC.g:87:5: ( functionCall ';' )
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:92:6: functionCall ';'
+                    // /Users/alexander/Code/nop/nopC.g:87:6: functionCall ';'
                     {
-                    dbg.location(92,6);
-                    pushFollow(FOLLOW_functionCall_in_statement340);
+                    dbg.location(87,6);
+                    pushFollow(FOLLOW_functionCall_in_statement380);
                     functionCall();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(92,19);
-                    match(input,30,FOLLOW_30_in_statement342); if (state.failed) return ;
+                    dbg.location(87,19);
+                    match(input,30,FOLLOW_30_in_statement382); if (state.failed) return ;
 
                     }
 
@@ -1381,22 +1433,22 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:93:5: ( assignment ';' )
+                    // /Users/alexander/Code/nop/nopC.g:88:5: ( assignment ';' )
                     {
-                    dbg.location(93,5);
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:93:5: ( assignment ';' )
+                    dbg.location(88,5);
+                    // /Users/alexander/Code/nop/nopC.g:88:5: ( assignment ';' )
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:93:7: assignment ';'
+                    // /Users/alexander/Code/nop/nopC.g:88:7: assignment ';'
                     {
-                    dbg.location(93,7);
-                    pushFollow(FOLLOW_assignment_in_statement351);
+                    dbg.location(88,7);
+                    pushFollow(FOLLOW_assignment_in_statement391);
                     assignment();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(93,18);
-                    match(input,30,FOLLOW_30_in_statement353); if (state.failed) return ;
+                    dbg.location(88,18);
+                    match(input,30,FOLLOW_30_in_statement393); if (state.failed) return ;
 
                     }
 
@@ -1406,10 +1458,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 3 :
                     dbg.enterAlt(3);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:94:5: variableDeclaration
+                    // /Users/alexander/Code/nop/nopC.g:89:5: variableDeclaration
                     {
-                    dbg.location(94,5);
-                    pushFollow(FOLLOW_variableDeclaration_in_statement361);
+                    dbg.location(89,5);
+                    pushFollow(FOLLOW_variableDeclaration_in_statement401);
                     variableDeclaration();
 
                     state._fsp--;
@@ -1420,10 +1472,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 4 :
                     dbg.enterAlt(4);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:95:5: selection_statement
+                    // /Users/alexander/Code/nop/nopC.g:90:5: selection_statement
                     {
-                    dbg.location(95,5);
-                    pushFollow(FOLLOW_selection_statement_in_statement367);
+                    dbg.location(90,5);
+                    pushFollow(FOLLOW_selection_statement_in_statement407);
                     selection_statement();
 
                     state._fsp--;
@@ -1434,10 +1486,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 5 :
                     dbg.enterAlt(5);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:96:6: iteration_statement
+                    // /Users/alexander/Code/nop/nopC.g:91:6: iteration_statement
                     {
-                    dbg.location(96,6);
-                    pushFollow(FOLLOW_iteration_statement_in_statement374);
+                    dbg.location(91,6);
+                    pushFollow(FOLLOW_iteration_statement_in_statement414);
                     iteration_statement();
 
                     state._fsp--;
@@ -1448,10 +1500,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 6 :
                     dbg.enterAlt(6);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:97:6: jump_statement
+                    // /Users/alexander/Code/nop/nopC.g:92:6: jump_statement
                     {
-                    dbg.location(97,6);
-                    pushFollow(FOLLOW_jump_statement_in_statement381);
+                    dbg.location(92,6);
+                    pushFollow(FOLLOW_jump_statement_in_statement421);
                     jump_statement();
 
                     state._fsp--;
@@ -1462,10 +1514,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 7 :
                     dbg.enterAlt(7);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:98:6: expression_statement
+                    // /Users/alexander/Code/nop/nopC.g:93:6: expression_statement
                     {
-                    dbg.location(98,6);
-                    pushFollow(FOLLOW_expression_statement_in_statement388);
+                    dbg.location(93,6);
+                    pushFollow(FOLLOW_expression_statement_in_statement428);
                     expression_statement();
 
                     state._fsp--;
@@ -1486,7 +1538,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 10, statement_StartIndex); }
 
         }
-        dbg.location(99, 1);
+        dbg.location(94, 1);
 
         }
         finally {
@@ -1502,43 +1554,43 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "selection_statement"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:102:1: selection_statement : 'if' '(' expression ')' codeBlock ( options {k=1; backtrack=false; } : 'else' codeBlock )? ;
+    // /Users/alexander/Code/nop/nopC.g:97:1: selection_statement : 'if' '(' expression ')' codeBlock ( options {k=1; backtrack=false; } : 'else' codeBlock )? ;
     public final void selection_statement() throws RecognitionException {
         int selection_statement_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "selection_statement");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(102, 0);
+        dbg.location(97, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 11) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:103:2: ( 'if' '(' expression ')' codeBlock ( options {k=1; backtrack=false; } : 'else' codeBlock )? )
+            // /Users/alexander/Code/nop/nopC.g:98:2: ( 'if' '(' expression ')' codeBlock ( options {k=1; backtrack=false; } : 'else' codeBlock )? )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:103:4: 'if' '(' expression ')' codeBlock ( options {k=1; backtrack=false; } : 'else' codeBlock )?
+            // /Users/alexander/Code/nop/nopC.g:98:4: 'if' '(' expression ')' codeBlock ( options {k=1; backtrack=false; } : 'else' codeBlock )?
             {
-            dbg.location(103,4);
-            match(input,52,FOLLOW_52_in_selection_statement402); if (state.failed) return ;
-            dbg.location(103,9);
-            match(input,16,FOLLOW_16_in_selection_statement404); if (state.failed) return ;
-            dbg.location(103,13);
-            pushFollow(FOLLOW_expression_in_selection_statement406);
+            dbg.location(98,4);
+            match(input,52,FOLLOW_52_in_selection_statement442); if (state.failed) return ;
+            dbg.location(98,9);
+            match(input,16,FOLLOW_16_in_selection_statement444); if (state.failed) return ;
+            dbg.location(98,13);
+            pushFollow(FOLLOW_expression_in_selection_statement446);
             expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(103,24);
-            match(input,17,FOLLOW_17_in_selection_statement408); if (state.failed) return ;
-            dbg.location(103,28);
-            pushFollow(FOLLOW_codeBlock_in_selection_statement410);
+            dbg.location(98,24);
+            match(input,17,FOLLOW_17_in_selection_statement448); if (state.failed) return ;
+            dbg.location(98,28);
+            pushFollow(FOLLOW_codeBlock_in_selection_statement450);
             codeBlock();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(103,38);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:103:38: ( options {k=1; backtrack=false; } : 'else' codeBlock )?
+            dbg.location(98,38);
+            // /Users/alexander/Code/nop/nopC.g:98:38: ( options {k=1; backtrack=false; } : 'else' codeBlock )?
             int alt15=2;
             try { dbg.enterSubRule(15);
             try { dbg.enterDecision(15, decisionCanBacktrack[15]);
@@ -1558,12 +1610,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:103:71: 'else' codeBlock
+                    // /Users/alexander/Code/nop/nopC.g:98:71: 'else' codeBlock
                     {
-                    dbg.location(103,71);
-                    match(input,49,FOLLOW_49_in_selection_statement425); if (state.failed) return ;
-                    dbg.location(103,78);
-                    pushFollow(FOLLOW_codeBlock_in_selection_statement427);
+                    dbg.location(98,71);
+                    match(input,49,FOLLOW_49_in_selection_statement465); if (state.failed) return ;
+                    dbg.location(98,78);
+                    pushFollow(FOLLOW_codeBlock_in_selection_statement467);
                     codeBlock();
 
                     state._fsp--;
@@ -1589,7 +1641,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 11, selection_statement_StartIndex); }
 
         }
-        dbg.location(104, 1);
+        dbg.location(99, 1);
 
         }
         finally {
@@ -1605,19 +1657,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "iteration_statement"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:106:1: iteration_statement : ( 'while' '(' expression ')' codeBlock | 'for' '(' expression_statement expression_statement ( expression )? ')' codeBlock );
+    // /Users/alexander/Code/nop/nopC.g:101:1: iteration_statement : ( 'while' '(' expression ')' codeBlock | 'for' '(' expression_statement expression_statement ( expression )? ')' codeBlock );
     public final void iteration_statement() throws RecognitionException {
         int iteration_statement_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "iteration_statement");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(106, 0);
+        dbg.location(101, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 12) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:107:2: ( 'while' '(' expression ')' codeBlock | 'for' '(' expression_statement expression_statement ( expression )? ')' codeBlock )
+            // /Users/alexander/Code/nop/nopC.g:102:2: ( 'while' '(' expression ')' codeBlock | 'for' '(' expression_statement expression_statement ( expression )? ')' codeBlock )
             int alt17=2;
             try { dbg.enterDecision(17, decisionCanBacktrack[17]);
 
@@ -1644,22 +1696,22 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:107:4: 'while' '(' expression ')' codeBlock
+                    // /Users/alexander/Code/nop/nopC.g:102:4: 'while' '(' expression ')' codeBlock
                     {
-                    dbg.location(107,4);
-                    match(input,56,FOLLOW_56_in_iteration_statement440); if (state.failed) return ;
-                    dbg.location(107,12);
-                    match(input,16,FOLLOW_16_in_iteration_statement442); if (state.failed) return ;
-                    dbg.location(107,16);
-                    pushFollow(FOLLOW_expression_in_iteration_statement444);
+                    dbg.location(102,4);
+                    match(input,56,FOLLOW_56_in_iteration_statement480); if (state.failed) return ;
+                    dbg.location(102,12);
+                    match(input,16,FOLLOW_16_in_iteration_statement482); if (state.failed) return ;
+                    dbg.location(102,16);
+                    pushFollow(FOLLOW_expression_in_iteration_statement484);
                     expression();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(107,27);
-                    match(input,17,FOLLOW_17_in_iteration_statement446); if (state.failed) return ;
-                    dbg.location(107,31);
-                    pushFollow(FOLLOW_codeBlock_in_iteration_statement448);
+                    dbg.location(102,27);
+                    match(input,17,FOLLOW_17_in_iteration_statement486); if (state.failed) return ;
+                    dbg.location(102,31);
+                    pushFollow(FOLLOW_codeBlock_in_iteration_statement488);
                     codeBlock();
 
                     state._fsp--;
@@ -1670,26 +1722,26 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:108:4: 'for' '(' expression_statement expression_statement ( expression )? ')' codeBlock
+                    // /Users/alexander/Code/nop/nopC.g:103:4: 'for' '(' expression_statement expression_statement ( expression )? ')' codeBlock
                     {
-                    dbg.location(108,4);
-                    match(input,50,FOLLOW_50_in_iteration_statement453); if (state.failed) return ;
-                    dbg.location(108,10);
-                    match(input,16,FOLLOW_16_in_iteration_statement455); if (state.failed) return ;
-                    dbg.location(108,14);
-                    pushFollow(FOLLOW_expression_statement_in_iteration_statement457);
+                    dbg.location(103,4);
+                    match(input,50,FOLLOW_50_in_iteration_statement493); if (state.failed) return ;
+                    dbg.location(103,10);
+                    match(input,16,FOLLOW_16_in_iteration_statement495); if (state.failed) return ;
+                    dbg.location(103,14);
+                    pushFollow(FOLLOW_expression_statement_in_iteration_statement497);
                     expression_statement();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(108,35);
-                    pushFollow(FOLLOW_expression_statement_in_iteration_statement459);
+                    dbg.location(103,35);
+                    pushFollow(FOLLOW_expression_statement_in_iteration_statement499);
                     expression_statement();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(108,56);
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:108:56: ( expression )?
+                    dbg.location(103,56);
+                    // /Users/alexander/Code/nop/nopC.g:103:56: ( expression )?
                     int alt16=2;
                     try { dbg.enterSubRule(16);
                     try { dbg.enterDecision(16, decisionCanBacktrack[16]);
@@ -1705,10 +1757,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                         case 1 :
                             dbg.enterAlt(1);
 
-                            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:108:56: expression
+                            // /Users/alexander/Code/nop/nopC.g:103:56: expression
                             {
-                            dbg.location(108,56);
-                            pushFollow(FOLLOW_expression_in_iteration_statement461);
+                            dbg.location(103,56);
+                            pushFollow(FOLLOW_expression_in_iteration_statement501);
                             expression();
 
                             state._fsp--;
@@ -1720,10 +1772,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                     }
                     } finally {dbg.exitSubRule(16);}
 
-                    dbg.location(108,68);
-                    match(input,17,FOLLOW_17_in_iteration_statement464); if (state.failed) return ;
-                    dbg.location(108,72);
-                    pushFollow(FOLLOW_codeBlock_in_iteration_statement466);
+                    dbg.location(103,68);
+                    match(input,17,FOLLOW_17_in_iteration_statement504); if (state.failed) return ;
+                    dbg.location(103,72);
+                    pushFollow(FOLLOW_codeBlock_in_iteration_statement506);
                     codeBlock();
 
                     state._fsp--;
@@ -1744,7 +1796,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 12, iteration_statement_StartIndex); }
 
         }
-        dbg.location(109, 1);
+        dbg.location(104, 1);
 
         }
         finally {
@@ -1760,19 +1812,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "expression_statement"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:111:1: expression_statement : ( ';' | expression ';' );
+    // /Users/alexander/Code/nop/nopC.g:106:1: expression_statement : ( ';' | expression ';' );
     public final void expression_statement() throws RecognitionException {
         int expression_statement_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "expression_statement");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(111, 0);
+        dbg.location(106, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 13) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:112:2: ( ';' | expression ';' )
+            // /Users/alexander/Code/nop/nopC.g:107:2: ( ';' | expression ';' )
             int alt18=2;
             try { dbg.enterDecision(18, decisionCanBacktrack[18]);
 
@@ -1799,26 +1851,26 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:112:4: ';'
+                    // /Users/alexander/Code/nop/nopC.g:107:4: ';'
                     {
-                    dbg.location(112,4);
-                    match(input,30,FOLLOW_30_in_expression_statement478); if (state.failed) return ;
+                    dbg.location(107,4);
+                    match(input,30,FOLLOW_30_in_expression_statement518); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:113:4: expression ';'
+                    // /Users/alexander/Code/nop/nopC.g:108:4: expression ';'
                     {
-                    dbg.location(113,4);
-                    pushFollow(FOLLOW_expression_in_expression_statement483);
+                    dbg.location(108,4);
+                    pushFollow(FOLLOW_expression_in_expression_statement523);
                     expression();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(113,15);
-                    match(input,30,FOLLOW_30_in_expression_statement485); if (state.failed) return ;
+                    dbg.location(108,15);
+                    match(input,30,FOLLOW_30_in_expression_statement525); if (state.failed) return ;
 
                     }
                     break;
@@ -1835,7 +1887,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 13, expression_statement_StartIndex); }
 
         }
-        dbg.location(114, 1);
+        dbg.location(109, 1);
 
         }
         finally {
@@ -1851,19 +1903,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "jump_statement"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:116:1: jump_statement : ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression ';' );
+    // /Users/alexander/Code/nop/nopC.g:111:1: jump_statement : ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression ';' );
     public final void jump_statement() throws RecognitionException {
         int jump_statement_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "jump_statement");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(116, 0);
+        dbg.location(111, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 14) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:117:2: ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression ';' )
+            // /Users/alexander/Code/nop/nopC.g:112:2: ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression ';' )
             int alt19=5;
             try { dbg.enterDecision(19, decisionCanBacktrack[19]);
 
@@ -1920,68 +1972,68 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:117:4: 'goto' NAME ';'
+                    // /Users/alexander/Code/nop/nopC.g:112:4: 'goto' NAME ';'
                     {
-                    dbg.location(117,4);
-                    match(input,51,FOLLOW_51_in_jump_statement496); if (state.failed) return ;
-                    dbg.location(117,11);
-                    match(input,NAME,FOLLOW_NAME_in_jump_statement498); if (state.failed) return ;
-                    dbg.location(117,16);
-                    match(input,30,FOLLOW_30_in_jump_statement500); if (state.failed) return ;
+                    dbg.location(112,4);
+                    match(input,51,FOLLOW_51_in_jump_statement536); if (state.failed) return ;
+                    dbg.location(112,11);
+                    match(input,NAME,FOLLOW_NAME_in_jump_statement538); if (state.failed) return ;
+                    dbg.location(112,16);
+                    match(input,30,FOLLOW_30_in_jump_statement540); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:118:4: 'continue' ';'
+                    // /Users/alexander/Code/nop/nopC.g:113:4: 'continue' ';'
                     {
-                    dbg.location(118,4);
-                    match(input,48,FOLLOW_48_in_jump_statement505); if (state.failed) return ;
-                    dbg.location(118,15);
-                    match(input,30,FOLLOW_30_in_jump_statement507); if (state.failed) return ;
+                    dbg.location(113,4);
+                    match(input,48,FOLLOW_48_in_jump_statement545); if (state.failed) return ;
+                    dbg.location(113,15);
+                    match(input,30,FOLLOW_30_in_jump_statement547); if (state.failed) return ;
 
                     }
                     break;
                 case 3 :
                     dbg.enterAlt(3);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:119:4: 'break' ';'
+                    // /Users/alexander/Code/nop/nopC.g:114:4: 'break' ';'
                     {
-                    dbg.location(119,4);
-                    match(input,47,FOLLOW_47_in_jump_statement512); if (state.failed) return ;
-                    dbg.location(119,12);
-                    match(input,30,FOLLOW_30_in_jump_statement514); if (state.failed) return ;
+                    dbg.location(114,4);
+                    match(input,47,FOLLOW_47_in_jump_statement552); if (state.failed) return ;
+                    dbg.location(114,12);
+                    match(input,30,FOLLOW_30_in_jump_statement554); if (state.failed) return ;
 
                     }
                     break;
                 case 4 :
                     dbg.enterAlt(4);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:120:4: 'return' ';'
+                    // /Users/alexander/Code/nop/nopC.g:115:4: 'return' ';'
                     {
-                    dbg.location(120,4);
-                    match(input,54,FOLLOW_54_in_jump_statement519); if (state.failed) return ;
-                    dbg.location(120,13);
-                    match(input,30,FOLLOW_30_in_jump_statement521); if (state.failed) return ;
+                    dbg.location(115,4);
+                    match(input,54,FOLLOW_54_in_jump_statement559); if (state.failed) return ;
+                    dbg.location(115,13);
+                    match(input,30,FOLLOW_30_in_jump_statement561); if (state.failed) return ;
 
                     }
                     break;
                 case 5 :
                     dbg.enterAlt(5);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:121:4: 'return' expression ';'
+                    // /Users/alexander/Code/nop/nopC.g:116:4: 'return' expression ';'
                     {
-                    dbg.location(121,4);
-                    match(input,54,FOLLOW_54_in_jump_statement526); if (state.failed) return ;
-                    dbg.location(121,13);
-                    pushFollow(FOLLOW_expression_in_jump_statement528);
+                    dbg.location(116,4);
+                    match(input,54,FOLLOW_54_in_jump_statement566); if (state.failed) return ;
+                    dbg.location(116,13);
+                    pushFollow(FOLLOW_expression_in_jump_statement568);
                     expression();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(121,24);
-                    match(input,30,FOLLOW_30_in_jump_statement530); if (state.failed) return ;
+                    dbg.location(116,24);
+                    match(input,30,FOLLOW_30_in_jump_statement570); if (state.failed) return ;
 
                     }
                     break;
@@ -1998,7 +2050,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 14, jump_statement_StartIndex); }
 
         }
-        dbg.location(122, 1);
+        dbg.location(117, 1);
 
         }
         finally {
@@ -2014,40 +2066,40 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "functionCall"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:124:1: functionCall : NAME '(' variableList ')' ;
+    // /Users/alexander/Code/nop/nopC.g:119:1: functionCall : NAME '(' variableList ')' ;
     public final void functionCall() throws RecognitionException {
         int functionCall_StartIndex = input.index();
 
-        Token NAME2=null;
+        Token NAME4=null;
 
         try { dbg.enterRule(getGrammarFileName(), "functionCall");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(124, 0);
+        dbg.location(119, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 15) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:125:2: ( NAME '(' variableList ')' )
+            // /Users/alexander/Code/nop/nopC.g:120:2: ( NAME '(' variableList ')' )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:126:2: NAME '(' variableList ')'
+            // /Users/alexander/Code/nop/nopC.g:121:2: NAME '(' variableList ')'
             {
-            dbg.location(126,2);
-            NAME2=(Token)match(input,NAME,FOLLOW_NAME_in_functionCall543); if (state.failed) return ;
-            dbg.location(126,7);
-            match(input,16,FOLLOW_16_in_functionCall545); if (state.failed) return ;
-            dbg.location(126,11);
-            pushFollow(FOLLOW_variableList_in_functionCall547);
+            dbg.location(121,2);
+            NAME4=(Token)match(input,NAME,FOLLOW_NAME_in_functionCall583); if (state.failed) return ;
+            dbg.location(121,7);
+            match(input,16,FOLLOW_16_in_functionCall585); if (state.failed) return ;
+            dbg.location(121,11);
+            pushFollow(FOLLOW_variableList_in_functionCall587);
             variableList();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(126,24);
-            match(input,17,FOLLOW_17_in_functionCall549); if (state.failed) return ;
-            dbg.location(127,3);
+            dbg.location(121,24);
+            match(input,17,FOLLOW_17_in_functionCall589); if (state.failed) return ;
+            dbg.location(122,3);
             if ( state.backtracking==0 ) {
-            			System.out.println("In functionTable gefunden " + functionTable.get((NAME2!=null?NAME2.getText():null))); 
+            			System.out.println("In functionTable gefunden " + functionTable.get((NAME4!=null?NAME4.getText():null))); 
             		}
 
             }
@@ -2063,7 +2115,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 15, functionCall_StartIndex); }
 
         }
-        dbg.location(130, 1);
+        dbg.location(125, 1);
 
         }
         finally {
@@ -2079,25 +2131,25 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "variableList"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:132:1: variableList : ( NAME )? ( ',' NAME )* ;
+    // /Users/alexander/Code/nop/nopC.g:127:1: variableList : ( NAME )? ( ',' NAME )* ;
     public final void variableList() throws RecognitionException {
         int variableList_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "variableList");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(132, 0);
+        dbg.location(127, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 16) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:133:2: ( ( NAME )? ( ',' NAME )* )
+            // /Users/alexander/Code/nop/nopC.g:128:2: ( ( NAME )? ( ',' NAME )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:134:3: ( NAME )? ( ',' NAME )*
+            // /Users/alexander/Code/nop/nopC.g:129:3: ( NAME )? ( ',' NAME )*
             {
-            dbg.location(134,3);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:134:3: ( NAME )?
+            dbg.location(129,3);
+            // /Users/alexander/Code/nop/nopC.g:129:3: ( NAME )?
             int alt20=2;
             try { dbg.enterSubRule(20);
             try { dbg.enterDecision(20, decisionCanBacktrack[20]);
@@ -2113,10 +2165,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:134:3: NAME
+                    // /Users/alexander/Code/nop/nopC.g:129:3: NAME
                     {
-                    dbg.location(134,3);
-                    match(input,NAME,FOLLOW_NAME_in_variableList568); if (state.failed) return ;
+                    dbg.location(129,3);
+                    match(input,NAME,FOLLOW_NAME_in_variableList608); if (state.failed) return ;
 
                     }
                     break;
@@ -2124,8 +2176,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
             }
             } finally {dbg.exitSubRule(20);}
 
-            dbg.location(134,9);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:134:9: ( ',' NAME )*
+            dbg.location(129,9);
+            // /Users/alexander/Code/nop/nopC.g:129:9: ( ',' NAME )*
             try { dbg.enterSubRule(21);
 
             loop21:
@@ -2146,12 +2198,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:134:10: ',' NAME
+            	    // /Users/alexander/Code/nop/nopC.g:129:10: ',' NAME
             	    {
-            	    dbg.location(134,10);
-            	    match(input,23,FOLLOW_23_in_variableList572); if (state.failed) return ;
-            	    dbg.location(134,14);
-            	    match(input,NAME,FOLLOW_NAME_in_variableList574); if (state.failed) return ;
+            	    dbg.location(129,10);
+            	    match(input,23,FOLLOW_23_in_variableList612); if (state.failed) return ;
+            	    dbg.location(129,14);
+            	    match(input,NAME,FOLLOW_NAME_in_variableList614); if (state.failed) return ;
 
             	    }
             	    break;
@@ -2176,7 +2228,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 16, variableList_StartIndex); }
 
         }
-        dbg.location(135, 1);
+        dbg.location(130, 1);
 
         }
         finally {
@@ -2192,33 +2244,33 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "assignment"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:137:1: assignment : NAME assignmentOperator expression ;
+    // /Users/alexander/Code/nop/nopC.g:132:1: assignment : NAME assignmentOperator expression ;
     public final void assignment() throws RecognitionException {
         int assignment_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "assignment");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(137, 0);
+        dbg.location(132, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 17) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:138:2: ( NAME assignmentOperator expression )
+            // /Users/alexander/Code/nop/nopC.g:133:2: ( NAME assignmentOperator expression )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:139:3: NAME assignmentOperator expression
+            // /Users/alexander/Code/nop/nopC.g:134:3: NAME assignmentOperator expression
             {
-            dbg.location(139,3);
-            match(input,NAME,FOLLOW_NAME_in_assignment590); if (state.failed) return ;
-            dbg.location(139,8);
-            pushFollow(FOLLOW_assignmentOperator_in_assignment592);
+            dbg.location(134,3);
+            match(input,NAME,FOLLOW_NAME_in_assignment630); if (state.failed) return ;
+            dbg.location(134,8);
+            pushFollow(FOLLOW_assignmentOperator_in_assignment632);
             assignmentOperator();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(139,27);
-            pushFollow(FOLLOW_expression_in_assignment594);
+            dbg.location(134,27);
+            pushFollow(FOLLOW_expression_in_assignment634);
             expression();
 
             state._fsp--;
@@ -2237,7 +2289,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 17, assignment_StartIndex); }
 
         }
-        dbg.location(140, 1);
+        dbg.location(135, 1);
 
         }
         finally {
@@ -2253,24 +2305,24 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "assignmentOperator"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:144:1: assignmentOperator : ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' );
+    // /Users/alexander/Code/nop/nopC.g:139:1: assignmentOperator : ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' );
     public final void assignmentOperator() throws RecognitionException {
         int assignmentOperator_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "assignmentOperator");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(144, 0);
+        dbg.location(139, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 18) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:145:2: ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' )
+            // /Users/alexander/Code/nop/nopC.g:140:2: ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:
+            // /Users/alexander/Code/nop/nopC.g:
             {
-            dbg.location(145,2);
+            dbg.location(140,2);
             if ( input.LA(1)==12||input.LA(1)==15||input.LA(1)==19||input.LA(1)==22||input.LA(1)==26||input.LA(1)==28||input.LA(1)==33||input.LA(1)==35||input.LA(1)==40||input.LA(1)==45||input.LA(1)==59 ) {
                 input.consume();
                 state.errorRecovery=false;
@@ -2297,7 +2349,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 18, assignmentOperator_StartIndex); }
 
         }
-        dbg.location(156, 1);
+        dbg.location(151, 1);
 
         }
         finally {
@@ -2313,31 +2365,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:158:2: expression : logical_or_expression ( '?' expression ':' expression )? ;
+    // /Users/alexander/Code/nop/nopC.g:153:2: expression : logical_or_expression ( '?' expression ':' expression )? ;
     public final void expression() throws RecognitionException {
         int expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(158, 1);
+        dbg.location(153, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 19) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:159:3: ( logical_or_expression ( '?' expression ':' expression )? )
+            // /Users/alexander/Code/nop/nopC.g:154:3: ( logical_or_expression ( '?' expression ':' expression )? )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:159:5: logical_or_expression ( '?' expression ':' expression )?
+            // /Users/alexander/Code/nop/nopC.g:154:5: logical_or_expression ( '?' expression ':' expression )?
             {
-            dbg.location(159,5);
-            pushFollow(FOLLOW_logical_or_expression_in_expression670);
+            dbg.location(154,5);
+            pushFollow(FOLLOW_logical_or_expression_in_expression710);
             logical_or_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(159,27);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:159:27: ( '?' expression ':' expression )?
+            dbg.location(154,27);
+            // /Users/alexander/Code/nop/nopC.g:154:27: ( '?' expression ':' expression )?
             int alt22=2;
             try { dbg.enterSubRule(22);
             try { dbg.enterDecision(22, decisionCanBacktrack[22]);
@@ -2353,20 +2405,20 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:159:28: '?' expression ':' expression
+                    // /Users/alexander/Code/nop/nopC.g:154:28: '?' expression ':' expression
                     {
-                    dbg.location(159,28);
-                    match(input,41,FOLLOW_41_in_expression673); if (state.failed) return ;
-                    dbg.location(159,32);
-                    pushFollow(FOLLOW_expression_in_expression675);
+                    dbg.location(154,28);
+                    match(input,41,FOLLOW_41_in_expression713); if (state.failed) return ;
+                    dbg.location(154,32);
+                    pushFollow(FOLLOW_expression_in_expression715);
                     expression();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(159,43);
-                    match(input,29,FOLLOW_29_in_expression677); if (state.failed) return ;
-                    dbg.location(159,47);
-                    pushFollow(FOLLOW_expression_in_expression679);
+                    dbg.location(154,43);
+                    match(input,29,FOLLOW_29_in_expression717); if (state.failed) return ;
+                    dbg.location(154,47);
+                    pushFollow(FOLLOW_expression_in_expression719);
                     expression();
 
                     state._fsp--;
@@ -2392,7 +2444,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 19, expression_StartIndex); }
 
         }
-        dbg.location(160, 2);
+        dbg.location(155, 2);
 
         }
         finally {
@@ -2408,31 +2460,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "logical_or_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:162:2: logical_or_expression : logical_and_expression ( '||' logical_and_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:157:2: logical_or_expression : logical_and_expression ( '||' logical_and_expression )* ;
     public final void logical_or_expression() throws RecognitionException {
         int logical_or_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "logical_or_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(162, 1);
+        dbg.location(157, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 20) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:163:3: ( logical_and_expression ( '||' logical_and_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:158:3: ( logical_and_expression ( '||' logical_and_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:163:5: logical_and_expression ( '||' logical_and_expression )*
+            // /Users/alexander/Code/nop/nopC.g:158:5: logical_and_expression ( '||' logical_and_expression )*
             {
-            dbg.location(163,5);
-            pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression695);
+            dbg.location(158,5);
+            pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression735);
             logical_and_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(163,28);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:163:28: ( '||' logical_and_expression )*
+            dbg.location(158,28);
+            // /Users/alexander/Code/nop/nopC.g:158:28: ( '||' logical_and_expression )*
             try { dbg.enterSubRule(23);
 
             loop23:
@@ -2453,12 +2505,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:163:29: '||' logical_and_expression
+            	    // /Users/alexander/Code/nop/nopC.g:158:29: '||' logical_and_expression
             	    {
-            	    dbg.location(163,29);
-            	    match(input,60,FOLLOW_60_in_logical_or_expression698); if (state.failed) return ;
-            	    dbg.location(163,34);
-            	    pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression700);
+            	    dbg.location(158,29);
+            	    match(input,60,FOLLOW_60_in_logical_or_expression738); if (state.failed) return ;
+            	    dbg.location(158,34);
+            	    pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression740);
             	    logical_and_expression();
 
             	    state._fsp--;
@@ -2487,7 +2539,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 20, logical_or_expression_StartIndex); }
 
         }
-        dbg.location(164, 2);
+        dbg.location(159, 2);
 
         }
         finally {
@@ -2503,31 +2555,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "logical_and_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:166:2: logical_and_expression : inclusive_or_expression ( '&&' inclusive_or_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:161:2: logical_and_expression : inclusive_or_expression ( '&&' inclusive_or_expression )* ;
     public final void logical_and_expression() throws RecognitionException {
         int logical_and_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "logical_and_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(166, 1);
+        dbg.location(161, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 21) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:167:3: ( inclusive_or_expression ( '&&' inclusive_or_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:162:3: ( inclusive_or_expression ( '&&' inclusive_or_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:167:5: inclusive_or_expression ( '&&' inclusive_or_expression )*
+            // /Users/alexander/Code/nop/nopC.g:162:5: inclusive_or_expression ( '&&' inclusive_or_expression )*
             {
-            dbg.location(167,5);
-            pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression716);
+            dbg.location(162,5);
+            pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression756);
             inclusive_or_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(167,29);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:167:29: ( '&&' inclusive_or_expression )*
+            dbg.location(162,29);
+            // /Users/alexander/Code/nop/nopC.g:162:29: ( '&&' inclusive_or_expression )*
             try { dbg.enterSubRule(24);
 
             loop24:
@@ -2548,12 +2600,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:167:30: '&&' inclusive_or_expression
+            	    // /Users/alexander/Code/nop/nopC.g:162:30: '&&' inclusive_or_expression
             	    {
-            	    dbg.location(167,30);
-            	    match(input,13,FOLLOW_13_in_logical_and_expression719); if (state.failed) return ;
-            	    dbg.location(167,35);
-            	    pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression721);
+            	    dbg.location(162,30);
+            	    match(input,13,FOLLOW_13_in_logical_and_expression759); if (state.failed) return ;
+            	    dbg.location(162,35);
+            	    pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression761);
             	    inclusive_or_expression();
 
             	    state._fsp--;
@@ -2582,7 +2634,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 21, logical_and_expression_StartIndex); }
 
         }
-        dbg.location(168, 2);
+        dbg.location(163, 2);
 
         }
         finally {
@@ -2598,31 +2650,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "inclusive_or_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:170:2: inclusive_or_expression : exclusive_or_expression ( '|' exclusive_or_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:165:2: inclusive_or_expression : exclusive_or_expression ( '|' exclusive_or_expression )* ;
     public final void inclusive_or_expression() throws RecognitionException {
         int inclusive_or_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "inclusive_or_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(170, 1);
+        dbg.location(165, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 22) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:171:3: ( exclusive_or_expression ( '|' exclusive_or_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:166:3: ( exclusive_or_expression ( '|' exclusive_or_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:171:5: exclusive_or_expression ( '|' exclusive_or_expression )*
+            // /Users/alexander/Code/nop/nopC.g:166:5: exclusive_or_expression ( '|' exclusive_or_expression )*
             {
-            dbg.location(171,5);
-            pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression737);
+            dbg.location(166,5);
+            pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression777);
             exclusive_or_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(171,29);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:171:29: ( '|' exclusive_or_expression )*
+            dbg.location(166,29);
+            // /Users/alexander/Code/nop/nopC.g:166:29: ( '|' exclusive_or_expression )*
             try { dbg.enterSubRule(25);
 
             loop25:
@@ -2643,12 +2695,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:171:30: '|' exclusive_or_expression
+            	    // /Users/alexander/Code/nop/nopC.g:166:30: '|' exclusive_or_expression
             	    {
-            	    dbg.location(171,30);
-            	    match(input,58,FOLLOW_58_in_inclusive_or_expression740); if (state.failed) return ;
-            	    dbg.location(171,34);
-            	    pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression742);
+            	    dbg.location(166,30);
+            	    match(input,58,FOLLOW_58_in_inclusive_or_expression780); if (state.failed) return ;
+            	    dbg.location(166,34);
+            	    pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression782);
             	    exclusive_or_expression();
 
             	    state._fsp--;
@@ -2677,7 +2729,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 22, inclusive_or_expression_StartIndex); }
 
         }
-        dbg.location(172, 2);
+        dbg.location(167, 2);
 
         }
         finally {
@@ -2693,31 +2745,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "exclusive_or_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:174:2: exclusive_or_expression : and_expression ( '^' and_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:169:2: exclusive_or_expression : and_expression ( '^' and_expression )* ;
     public final void exclusive_or_expression() throws RecognitionException {
         int exclusive_or_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "exclusive_or_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(174, 1);
+        dbg.location(169, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 23) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:175:3: ( and_expression ( '^' and_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:170:3: ( and_expression ( '^' and_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:175:5: and_expression ( '^' and_expression )*
+            // /Users/alexander/Code/nop/nopC.g:170:5: and_expression ( '^' and_expression )*
             {
-            dbg.location(175,5);
-            pushFollow(FOLLOW_and_expression_in_exclusive_or_expression758);
+            dbg.location(170,5);
+            pushFollow(FOLLOW_and_expression_in_exclusive_or_expression798);
             and_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(175,20);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:175:20: ( '^' and_expression )*
+            dbg.location(170,20);
+            // /Users/alexander/Code/nop/nopC.g:170:20: ( '^' and_expression )*
             try { dbg.enterSubRule(26);
 
             loop26:
@@ -2738,12 +2790,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:175:21: '^' and_expression
+            	    // /Users/alexander/Code/nop/nopC.g:170:21: '^' and_expression
             	    {
-            	    dbg.location(175,21);
-            	    match(input,44,FOLLOW_44_in_exclusive_or_expression761); if (state.failed) return ;
-            	    dbg.location(175,25);
-            	    pushFollow(FOLLOW_and_expression_in_exclusive_or_expression763);
+            	    dbg.location(170,21);
+            	    match(input,44,FOLLOW_44_in_exclusive_or_expression801); if (state.failed) return ;
+            	    dbg.location(170,25);
+            	    pushFollow(FOLLOW_and_expression_in_exclusive_or_expression803);
             	    and_expression();
 
             	    state._fsp--;
@@ -2772,7 +2824,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 23, exclusive_or_expression_StartIndex); }
 
         }
-        dbg.location(176, 2);
+        dbg.location(171, 2);
 
         }
         finally {
@@ -2788,31 +2840,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "and_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:178:2: and_expression : equality_expression ( '&' equality_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:173:2: and_expression : equality_expression ( '&' equality_expression )* ;
     public final void and_expression() throws RecognitionException {
         int and_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "and_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(178, 1);
+        dbg.location(173, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 24) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:179:3: ( equality_expression ( '&' equality_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:174:3: ( equality_expression ( '&' equality_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:179:5: equality_expression ( '&' equality_expression )*
+            // /Users/alexander/Code/nop/nopC.g:174:5: equality_expression ( '&' equality_expression )*
             {
-            dbg.location(179,5);
-            pushFollow(FOLLOW_equality_expression_in_and_expression779);
+            dbg.location(174,5);
+            pushFollow(FOLLOW_equality_expression_in_and_expression819);
             equality_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(179,25);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:179:25: ( '&' equality_expression )*
+            dbg.location(174,25);
+            // /Users/alexander/Code/nop/nopC.g:174:25: ( '&' equality_expression )*
             try { dbg.enterSubRule(27);
 
             loop27:
@@ -2833,12 +2885,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:179:26: '&' equality_expression
+            	    // /Users/alexander/Code/nop/nopC.g:174:26: '&' equality_expression
             	    {
-            	    dbg.location(179,26);
-            	    match(input,14,FOLLOW_14_in_and_expression782); if (state.failed) return ;
-            	    dbg.location(179,30);
-            	    pushFollow(FOLLOW_equality_expression_in_and_expression784);
+            	    dbg.location(174,26);
+            	    match(input,14,FOLLOW_14_in_and_expression822); if (state.failed) return ;
+            	    dbg.location(174,30);
+            	    pushFollow(FOLLOW_equality_expression_in_and_expression824);
             	    equality_expression();
 
             	    state._fsp--;
@@ -2867,7 +2919,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 24, and_expression_StartIndex); }
 
         }
-        dbg.location(180, 2);
+        dbg.location(175, 2);
 
         }
         finally {
@@ -2883,31 +2935,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "equality_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:181:2: equality_expression : relational_expression ( ( '==' | '!=' ) relational_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:176:2: equality_expression : relational_expression ( ( '==' | '!=' ) relational_expression )* ;
     public final void equality_expression() throws RecognitionException {
         int equality_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "equality_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(181, 1);
+        dbg.location(176, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 25) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:182:3: ( relational_expression ( ( '==' | '!=' ) relational_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:177:3: ( relational_expression ( ( '==' | '!=' ) relational_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:182:5: relational_expression ( ( '==' | '!=' ) relational_expression )*
+            // /Users/alexander/Code/nop/nopC.g:177:5: relational_expression ( ( '==' | '!=' ) relational_expression )*
             {
-            dbg.location(182,5);
-            pushFollow(FOLLOW_relational_expression_in_equality_expression799);
+            dbg.location(177,5);
+            pushFollow(FOLLOW_relational_expression_in_equality_expression839);
             relational_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(182,27);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:182:27: ( ( '==' | '!=' ) relational_expression )*
+            dbg.location(177,27);
+            // /Users/alexander/Code/nop/nopC.g:177:27: ( ( '==' | '!=' ) relational_expression )*
             try { dbg.enterSubRule(28);
 
             loop28:
@@ -2928,9 +2980,9 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:182:28: ( '==' | '!=' ) relational_expression
+            	    // /Users/alexander/Code/nop/nopC.g:177:28: ( '==' | '!=' ) relational_expression
             	    {
-            	    dbg.location(182,28);
+            	    dbg.location(177,28);
             	    if ( input.LA(1)==10||input.LA(1)==36 ) {
             	        input.consume();
             	        state.errorRecovery=false;
@@ -2943,8 +2995,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	        throw mse;
             	    }
 
-            	    dbg.location(182,40);
-            	    pushFollow(FOLLOW_relational_expression_in_equality_expression808);
+            	    dbg.location(177,40);
+            	    pushFollow(FOLLOW_relational_expression_in_equality_expression848);
             	    relational_expression();
 
             	    state._fsp--;
@@ -2973,7 +3025,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 25, equality_expression_StartIndex); }
 
         }
-        dbg.location(183, 2);
+        dbg.location(178, 2);
 
         }
         finally {
@@ -2989,31 +3041,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "relational_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:185:2: relational_expression : shift_expression ( ( '<' | '>' | '<=' | '>=' ) shift_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:180:2: relational_expression : shift_expression ( ( '<' | '>' | '<=' | '>=' ) shift_expression )* ;
     public final void relational_expression() throws RecognitionException {
         int relational_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "relational_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(185, 1);
+        dbg.location(180, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 26) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:186:3: ( shift_expression ( ( '<' | '>' | '<=' | '>=' ) shift_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:181:3: ( shift_expression ( ( '<' | '>' | '<=' | '>=' ) shift_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:186:5: shift_expression ( ( '<' | '>' | '<=' | '>=' ) shift_expression )*
+            // /Users/alexander/Code/nop/nopC.g:181:5: shift_expression ( ( '<' | '>' | '<=' | '>=' ) shift_expression )*
             {
-            dbg.location(186,5);
-            pushFollow(FOLLOW_shift_expression_in_relational_expression824);
+            dbg.location(181,5);
+            pushFollow(FOLLOW_shift_expression_in_relational_expression864);
             shift_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(186,22);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:186:22: ( ( '<' | '>' | '<=' | '>=' ) shift_expression )*
+            dbg.location(181,22);
+            // /Users/alexander/Code/nop/nopC.g:181:22: ( ( '<' | '>' | '<=' | '>=' ) shift_expression )*
             try { dbg.enterSubRule(29);
 
             loop29:
@@ -3034,9 +3086,9 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:186:23: ( '<' | '>' | '<=' | '>=' ) shift_expression
+            	    // /Users/alexander/Code/nop/nopC.g:181:23: ( '<' | '>' | '<=' | '>=' ) shift_expression
             	    {
-            	    dbg.location(186,23);
+            	    dbg.location(181,23);
             	    if ( input.LA(1)==31||input.LA(1)==34||(input.LA(1) >= 37 && input.LA(1) <= 38) ) {
             	        input.consume();
             	        state.errorRecovery=false;
@@ -3049,8 +3101,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	        throw mse;
             	    }
 
-            	    dbg.location(186,43);
-            	    pushFollow(FOLLOW_shift_expression_in_relational_expression837);
+            	    dbg.location(181,43);
+            	    pushFollow(FOLLOW_shift_expression_in_relational_expression877);
             	    shift_expression();
 
             	    state._fsp--;
@@ -3079,7 +3131,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 26, relational_expression_StartIndex); }
 
         }
-        dbg.location(187, 2);
+        dbg.location(182, 2);
 
         }
         finally {
@@ -3095,31 +3147,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "shift_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:189:2: shift_expression : additive_expression ( ( '<<' | '>>' ) additive_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:184:2: shift_expression : additive_expression ( ( '<<' | '>>' ) additive_expression )* ;
     public final void shift_expression() throws RecognitionException {
         int shift_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "shift_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(189, 1);
+        dbg.location(184, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 27) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:190:3: ( additive_expression ( ( '<<' | '>>' ) additive_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:185:3: ( additive_expression ( ( '<<' | '>>' ) additive_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:190:5: additive_expression ( ( '<<' | '>>' ) additive_expression )*
+            // /Users/alexander/Code/nop/nopC.g:185:5: additive_expression ( ( '<<' | '>>' ) additive_expression )*
             {
-            dbg.location(190,5);
-            pushFollow(FOLLOW_additive_expression_in_shift_expression853);
+            dbg.location(185,5);
+            pushFollow(FOLLOW_additive_expression_in_shift_expression893);
             additive_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(190,25);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:190:25: ( ( '<<' | '>>' ) additive_expression )*
+            dbg.location(185,25);
+            // /Users/alexander/Code/nop/nopC.g:185:25: ( ( '<<' | '>>' ) additive_expression )*
             try { dbg.enterSubRule(30);
 
             loop30:
@@ -3140,9 +3192,9 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:190:26: ( '<<' | '>>' ) additive_expression
+            	    // /Users/alexander/Code/nop/nopC.g:185:26: ( '<<' | '>>' ) additive_expression
             	    {
-            	    dbg.location(190,26);
+            	    dbg.location(185,26);
             	    if ( input.LA(1)==32||input.LA(1)==39 ) {
             	        input.consume();
             	        state.errorRecovery=false;
@@ -3155,8 +3207,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	        throw mse;
             	    }
 
-            	    dbg.location(190,38);
-            	    pushFollow(FOLLOW_additive_expression_in_shift_expression862);
+            	    dbg.location(185,38);
+            	    pushFollow(FOLLOW_additive_expression_in_shift_expression902);
             	    additive_expression();
 
             	    state._fsp--;
@@ -3185,7 +3237,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 27, shift_expression_StartIndex); }
 
         }
-        dbg.location(191, 2);
+        dbg.location(186, 2);
 
         }
         finally {
@@ -3201,31 +3253,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "additive_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:193:2: additive_expression : ( multiplicative_expression ) ( '+' multiplicative_expression | '-' multiplicative_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:188:2: additive_expression : ( multiplicative_expression ) ( '+' multiplicative_expression | '-' multiplicative_expression )* ;
     public final void additive_expression() throws RecognitionException {
         int additive_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "additive_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(193, 1);
+        dbg.location(188, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 28) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:194:3: ( ( multiplicative_expression ) ( '+' multiplicative_expression | '-' multiplicative_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:189:3: ( ( multiplicative_expression ) ( '+' multiplicative_expression | '-' multiplicative_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:194:5: ( multiplicative_expression ) ( '+' multiplicative_expression | '-' multiplicative_expression )*
+            // /Users/alexander/Code/nop/nopC.g:189:5: ( multiplicative_expression ) ( '+' multiplicative_expression | '-' multiplicative_expression )*
             {
-            dbg.location(194,5);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:194:5: ( multiplicative_expression )
+            dbg.location(189,5);
+            // /Users/alexander/Code/nop/nopC.g:189:5: ( multiplicative_expression )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:194:6: multiplicative_expression
+            // /Users/alexander/Code/nop/nopC.g:189:6: multiplicative_expression
             {
-            dbg.location(194,6);
-            pushFollow(FOLLOW_multiplicative_expression_in_additive_expression881);
+            dbg.location(189,6);
+            pushFollow(FOLLOW_multiplicative_expression_in_additive_expression921);
             multiplicative_expression();
 
             state._fsp--;
@@ -3233,8 +3285,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
             }
 
-            dbg.location(194,33);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:194:33: ( '+' multiplicative_expression | '-' multiplicative_expression )*
+            dbg.location(189,33);
+            // /Users/alexander/Code/nop/nopC.g:189:33: ( '+' multiplicative_expression | '-' multiplicative_expression )*
             try { dbg.enterSubRule(31);
 
             loop31:
@@ -3258,12 +3310,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:194:34: '+' multiplicative_expression
+            	    // /Users/alexander/Code/nop/nopC.g:189:34: '+' multiplicative_expression
             	    {
-            	    dbg.location(194,34);
-            	    match(input,20,FOLLOW_20_in_additive_expression885); if (state.failed) return ;
-            	    dbg.location(194,38);
-            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression887);
+            	    dbg.location(189,34);
+            	    match(input,20,FOLLOW_20_in_additive_expression925); if (state.failed) return ;
+            	    dbg.location(189,38);
+            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression927);
             	    multiplicative_expression();
 
             	    state._fsp--;
@@ -3274,12 +3326,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 2 :
             	    dbg.enterAlt(2);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:194:66: '-' multiplicative_expression
+            	    // /Users/alexander/Code/nop/nopC.g:189:66: '-' multiplicative_expression
             	    {
-            	    dbg.location(194,66);
-            	    match(input,24,FOLLOW_24_in_additive_expression891); if (state.failed) return ;
-            	    dbg.location(194,70);
-            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression893);
+            	    dbg.location(189,66);
+            	    match(input,24,FOLLOW_24_in_additive_expression931); if (state.failed) return ;
+            	    dbg.location(189,70);
+            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression933);
             	    multiplicative_expression();
 
             	    state._fsp--;
@@ -3308,7 +3360,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 28, additive_expression_StartIndex); }
 
         }
-        dbg.location(195, 2);
+        dbg.location(190, 2);
 
         }
         finally {
@@ -3324,31 +3376,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "multiplicative_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:197:2: multiplicative_expression : ( unary_expression ) ( '*' unary_expression | '/' unary_expression | '%' unary_expression )* ;
+    // /Users/alexander/Code/nop/nopC.g:192:2: multiplicative_expression : ( unary_expression ) ( '*' unary_expression | '/' unary_expression | '%' unary_expression )* ;
     public final void multiplicative_expression() throws RecognitionException {
         int multiplicative_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "multiplicative_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(197, 1);
+        dbg.location(192, 1);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 29) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:3: ( ( unary_expression ) ( '*' unary_expression | '/' unary_expression | '%' unary_expression )* )
+            // /Users/alexander/Code/nop/nopC.g:193:3: ( ( unary_expression ) ( '*' unary_expression | '/' unary_expression | '%' unary_expression )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:5: ( unary_expression ) ( '*' unary_expression | '/' unary_expression | '%' unary_expression )*
+            // /Users/alexander/Code/nop/nopC.g:193:5: ( unary_expression ) ( '*' unary_expression | '/' unary_expression | '%' unary_expression )*
             {
-            dbg.location(198,5);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:5: ( unary_expression )
+            dbg.location(193,5);
+            // /Users/alexander/Code/nop/nopC.g:193:5: ( unary_expression )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:6: unary_expression
+            // /Users/alexander/Code/nop/nopC.g:193:6: unary_expression
             {
-            dbg.location(198,6);
-            pushFollow(FOLLOW_unary_expression_in_multiplicative_expression910);
+            dbg.location(193,6);
+            pushFollow(FOLLOW_unary_expression_in_multiplicative_expression950);
             unary_expression();
 
             state._fsp--;
@@ -3356,8 +3408,8 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
             }
 
-            dbg.location(198,24);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:24: ( '*' unary_expression | '/' unary_expression | '%' unary_expression )*
+            dbg.location(193,24);
+            // /Users/alexander/Code/nop/nopC.g:193:24: ( '*' unary_expression | '/' unary_expression | '%' unary_expression )*
             try { dbg.enterSubRule(32);
 
             loop32:
@@ -3390,12 +3442,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:25: '*' unary_expression
+            	    // /Users/alexander/Code/nop/nopC.g:193:25: '*' unary_expression
             	    {
-            	    dbg.location(198,25);
-            	    match(input,18,FOLLOW_18_in_multiplicative_expression914); if (state.failed) return ;
-            	    dbg.location(198,29);
-            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression916);
+            	    dbg.location(193,25);
+            	    match(input,18,FOLLOW_18_in_multiplicative_expression954); if (state.failed) return ;
+            	    dbg.location(193,29);
+            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression956);
             	    unary_expression();
 
             	    state._fsp--;
@@ -3406,12 +3458,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 2 :
             	    dbg.enterAlt(2);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:48: '/' unary_expression
+            	    // /Users/alexander/Code/nop/nopC.g:193:48: '/' unary_expression
             	    {
-            	    dbg.location(198,48);
-            	    match(input,27,FOLLOW_27_in_multiplicative_expression920); if (state.failed) return ;
-            	    dbg.location(198,52);
-            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression922);
+            	    dbg.location(193,48);
+            	    match(input,27,FOLLOW_27_in_multiplicative_expression960); if (state.failed) return ;
+            	    dbg.location(193,52);
+            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression962);
             	    unary_expression();
 
             	    state._fsp--;
@@ -3422,12 +3474,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 3 :
             	    dbg.enterAlt(3);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:198:71: '%' unary_expression
+            	    // /Users/alexander/Code/nop/nopC.g:193:71: '%' unary_expression
             	    {
-            	    dbg.location(198,71);
-            	    match(input,11,FOLLOW_11_in_multiplicative_expression926); if (state.failed) return ;
-            	    dbg.location(198,75);
-            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression928);
+            	    dbg.location(193,71);
+            	    match(input,11,FOLLOW_11_in_multiplicative_expression966); if (state.failed) return ;
+            	    dbg.location(193,75);
+            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression968);
             	    unary_expression();
 
             	    state._fsp--;
@@ -3456,7 +3508,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 29, multiplicative_expression_StartIndex); }
 
         }
-        dbg.location(199, 2);
+        dbg.location(194, 2);
 
         }
         finally {
@@ -3472,19 +3524,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "unary_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:201:1: unary_expression : ( postfix_expression | '++' unary_expression | '--' unary_expression );
+    // /Users/alexander/Code/nop/nopC.g:196:1: unary_expression : ( postfix_expression | '++' unary_expression | '--' unary_expression );
     public final void unary_expression() throws RecognitionException {
         int unary_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "unary_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(201, 0);
+        dbg.location(196, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 30) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:202:2: ( postfix_expression | '++' unary_expression | '--' unary_expression )
+            // /Users/alexander/Code/nop/nopC.g:197:2: ( postfix_expression | '++' unary_expression | '--' unary_expression )
             int alt33=3;
             try { dbg.enterDecision(33, decisionCanBacktrack[33]);
 
@@ -3522,10 +3574,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:202:4: postfix_expression
+                    // /Users/alexander/Code/nop/nopC.g:197:4: postfix_expression
                     {
-                    dbg.location(202,4);
-                    pushFollow(FOLLOW_postfix_expression_in_unary_expression942);
+                    dbg.location(197,4);
+                    pushFollow(FOLLOW_postfix_expression_in_unary_expression982);
                     postfix_expression();
 
                     state._fsp--;
@@ -3536,12 +3588,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:203:4: '++' unary_expression
+                    // /Users/alexander/Code/nop/nopC.g:198:4: '++' unary_expression
                     {
-                    dbg.location(203,4);
-                    match(input,21,FOLLOW_21_in_unary_expression947); if (state.failed) return ;
-                    dbg.location(203,9);
-                    pushFollow(FOLLOW_unary_expression_in_unary_expression949);
+                    dbg.location(198,4);
+                    match(input,21,FOLLOW_21_in_unary_expression987); if (state.failed) return ;
+                    dbg.location(198,9);
+                    pushFollow(FOLLOW_unary_expression_in_unary_expression989);
                     unary_expression();
 
                     state._fsp--;
@@ -3552,12 +3604,12 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 3 :
                     dbg.enterAlt(3);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:204:4: '--' unary_expression
+                    // /Users/alexander/Code/nop/nopC.g:199:4: '--' unary_expression
                     {
-                    dbg.location(204,4);
-                    match(input,25,FOLLOW_25_in_unary_expression954); if (state.failed) return ;
-                    dbg.location(204,9);
-                    pushFollow(FOLLOW_unary_expression_in_unary_expression956);
+                    dbg.location(199,4);
+                    match(input,25,FOLLOW_25_in_unary_expression994); if (state.failed) return ;
+                    dbg.location(199,9);
+                    pushFollow(FOLLOW_unary_expression_in_unary_expression996);
                     unary_expression();
 
                     state._fsp--;
@@ -3578,7 +3630,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 30, unary_expression_StartIndex); }
 
         }
-        dbg.location(205, 1);
+        dbg.location(200, 1);
 
         }
         finally {
@@ -3594,31 +3646,31 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "postfix_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:207:1: postfix_expression : primary_expression ( '[' expression ']' | '++' | '--' )* ;
+    // /Users/alexander/Code/nop/nopC.g:202:1: postfix_expression : primary_expression ( '[' expression ']' | '++' | '--' )* ;
     public final void postfix_expression() throws RecognitionException {
         int postfix_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "postfix_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(207, 0);
+        dbg.location(202, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 31) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:208:2: ( primary_expression ( '[' expression ']' | '++' | '--' )* )
+            // /Users/alexander/Code/nop/nopC.g:203:2: ( primary_expression ( '[' expression ']' | '++' | '--' )* )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:208:6: primary_expression ( '[' expression ']' | '++' | '--' )*
+            // /Users/alexander/Code/nop/nopC.g:203:6: primary_expression ( '[' expression ']' | '++' | '--' )*
             {
-            dbg.location(208,6);
-            pushFollow(FOLLOW_primary_expression_in_postfix_expression969);
+            dbg.location(203,6);
+            pushFollow(FOLLOW_primary_expression_in_postfix_expression1009);
             primary_expression();
 
             state._fsp--;
             if (state.failed) return ;
-            dbg.location(209,9);
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:209:9: ( '[' expression ']' | '++' | '--' )*
+            dbg.location(204,9);
+            // /Users/alexander/Code/nop/nopC.g:204:9: ( '[' expression ']' | '++' | '--' )*
             try { dbg.enterSubRule(34);
 
             loop34:
@@ -3651,38 +3703,38 @@ protected boolean evalPredicate(boolean result, String predicate) {
             	case 1 :
             	    dbg.enterAlt(1);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:209:13: '[' expression ']'
+            	    // /Users/alexander/Code/nop/nopC.g:204:13: '[' expression ']'
             	    {
-            	    dbg.location(209,13);
-            	    match(input,42,FOLLOW_42_in_postfix_expression983); if (state.failed) return ;
-            	    dbg.location(209,17);
-            	    pushFollow(FOLLOW_expression_in_postfix_expression985);
+            	    dbg.location(204,13);
+            	    match(input,42,FOLLOW_42_in_postfix_expression1023); if (state.failed) return ;
+            	    dbg.location(204,17);
+            	    pushFollow(FOLLOW_expression_in_postfix_expression1025);
             	    expression();
 
             	    state._fsp--;
             	    if (state.failed) return ;
-            	    dbg.location(209,28);
-            	    match(input,43,FOLLOW_43_in_postfix_expression987); if (state.failed) return ;
+            	    dbg.location(204,28);
+            	    match(input,43,FOLLOW_43_in_postfix_expression1027); if (state.failed) return ;
 
             	    }
             	    break;
             	case 2 :
             	    dbg.enterAlt(2);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:210:13: '++'
+            	    // /Users/alexander/Code/nop/nopC.g:205:13: '++'
             	    {
-            	    dbg.location(210,13);
-            	    match(input,21,FOLLOW_21_in_postfix_expression1002); if (state.failed) return ;
+            	    dbg.location(205,13);
+            	    match(input,21,FOLLOW_21_in_postfix_expression1042); if (state.failed) return ;
 
             	    }
             	    break;
             	case 3 :
             	    dbg.enterAlt(3);
 
-            	    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:211:13: '--'
+            	    // /Users/alexander/Code/nop/nopC.g:206:13: '--'
             	    {
-            	    dbg.location(211,13);
-            	    match(input,25,FOLLOW_25_in_postfix_expression1016); if (state.failed) return ;
+            	    dbg.location(206,13);
+            	    match(input,25,FOLLOW_25_in_postfix_expression1056); if (state.failed) return ;
 
             	    }
             	    break;
@@ -3707,7 +3759,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 31, postfix_expression_StartIndex); }
 
         }
-        dbg.location(213, 1);
+        dbg.location(208, 1);
 
         }
         finally {
@@ -3723,19 +3775,19 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "primary_expression"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:215:1: primary_expression : ( NAME | '(' expression ')' | functionCall | WERT );
+    // /Users/alexander/Code/nop/nopC.g:210:1: primary_expression : ( NAME | '(' expression ')' | functionCall | WERT );
     public final void primary_expression() throws RecognitionException {
         int primary_expression_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "primary_expression");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(215, 0);
+        dbg.location(210, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 32) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:216:2: ( NAME | '(' expression ')' | functionCall | WERT )
+            // /Users/alexander/Code/nop/nopC.g:211:2: ( NAME | '(' expression ')' | functionCall | WERT )
             int alt35=4;
             try { dbg.enterDecision(35, decisionCanBacktrack[35]);
 
@@ -3787,38 +3839,38 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 1 :
                     dbg.enterAlt(1);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:216:4: NAME
+                    // /Users/alexander/Code/nop/nopC.g:211:4: NAME
                     {
-                    dbg.location(216,4);
-                    match(input,NAME,FOLLOW_NAME_in_primary_expression1038); if (state.failed) return ;
+                    dbg.location(211,4);
+                    match(input,NAME,FOLLOW_NAME_in_primary_expression1078); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
                     dbg.enterAlt(2);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:218:4: '(' expression ')'
+                    // /Users/alexander/Code/nop/nopC.g:213:4: '(' expression ')'
                     {
-                    dbg.location(218,4);
-                    match(input,16,FOLLOW_16_in_primary_expression1044); if (state.failed) return ;
-                    dbg.location(218,8);
-                    pushFollow(FOLLOW_expression_in_primary_expression1046);
+                    dbg.location(213,4);
+                    match(input,16,FOLLOW_16_in_primary_expression1084); if (state.failed) return ;
+                    dbg.location(213,8);
+                    pushFollow(FOLLOW_expression_in_primary_expression1086);
                     expression();
 
                     state._fsp--;
                     if (state.failed) return ;
-                    dbg.location(218,19);
-                    match(input,17,FOLLOW_17_in_primary_expression1048); if (state.failed) return ;
+                    dbg.location(213,19);
+                    match(input,17,FOLLOW_17_in_primary_expression1088); if (state.failed) return ;
 
                     }
                     break;
                 case 3 :
                     dbg.enterAlt(3);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:219:4: functionCall
+                    // /Users/alexander/Code/nop/nopC.g:214:4: functionCall
                     {
-                    dbg.location(219,4);
-                    pushFollow(FOLLOW_functionCall_in_primary_expression1053);
+                    dbg.location(214,4);
+                    pushFollow(FOLLOW_functionCall_in_primary_expression1093);
                     functionCall();
 
                     state._fsp--;
@@ -3829,10 +3881,10 @@ protected boolean evalPredicate(boolean result, String predicate) {
                 case 4 :
                     dbg.enterAlt(4);
 
-                    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:220:4: WERT
+                    // /Users/alexander/Code/nop/nopC.g:215:4: WERT
                     {
-                    dbg.location(220,4);
-                    match(input,WERT,FOLLOW_WERT_in_primary_expression1058); if (state.failed) return ;
+                    dbg.location(215,4);
+                    match(input,WERT,FOLLOW_WERT_in_primary_expression1098); if (state.failed) return ;
 
                     }
                     break;
@@ -3849,7 +3901,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 32, primary_expression_StartIndex); }
 
         }
-        dbg.location(221, 1);
+        dbg.location(216, 1);
 
         }
         finally {
@@ -3865,24 +3917,24 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
 
     // $ANTLR start "typeSpecifier"
-    // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:245:1: typeSpecifier : ( 'int' | 'void' | 'bool' );
+    // /Users/alexander/Code/nop/nopC.g:240:1: typeSpecifier : ( 'int' | 'void' | 'bool' );
     public final void typeSpecifier() throws RecognitionException {
         int typeSpecifier_StartIndex = input.index();
 
         try { dbg.enterRule(getGrammarFileName(), "typeSpecifier");
         if ( getRuleLevel()==0 ) {dbg.commence();}
         incRuleLevel();
-        dbg.location(245, 0);
+        dbg.location(240, 0);
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 33) ) { return ; }
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:246:2: ( 'int' | 'void' | 'bool' )
+            // /Users/alexander/Code/nop/nopC.g:241:2: ( 'int' | 'void' | 'bool' )
             dbg.enterAlt(1);
 
-            // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:
+            // /Users/alexander/Code/nop/nopC.g:
             {
-            dbg.location(246,2);
+            dbg.location(241,2);
             if ( input.LA(1)==46||input.LA(1)==53||input.LA(1)==55 ) {
                 input.consume();
                 state.errorRecovery=false;
@@ -3909,7 +3961,7 @@ protected boolean evalPredicate(boolean result, String predicate) {
             if ( state.backtracking>0 ) { memoize(input, 33, typeSpecifier_StartIndex); }
 
         }
-        dbg.location(250, 1);
+        dbg.location(245, 1);
 
         }
         finally {
@@ -3924,20 +3976,20 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
     // $ANTLR start synpred4_nopC
     public final void synpred4_nopC_fragment() throws RecognitionException {
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:41:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )
+        // /Users/alexander/Code/nop/nopC.g:36:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )
         dbg.enterAlt(1);
 
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:41:3: typeSpecifier NAME ( '=' | ';' | ',' )
+        // /Users/alexander/Code/nop/nopC.g:36:3: typeSpecifier NAME ( '=' | ';' | ',' )
         {
-        dbg.location(41,3);
-        pushFollow(FOLLOW_typeSpecifier_in_synpred4_nopC85);
+        dbg.location(36,3);
+        pushFollow(FOLLOW_typeSpecifier_in_synpred4_nopC89);
         typeSpecifier();
 
         state._fsp--;
         if (state.failed) return ;
-        dbg.location(41,17);
-        match(input,NAME,FOLLOW_NAME_in_synpred4_nopC87); if (state.failed) return ;
-        dbg.location(41,22);
+        dbg.location(36,17);
+        match(input,NAME,FOLLOW_NAME_in_synpred4_nopC91); if (state.failed) return ;
+        dbg.location(36,22);
         if ( input.LA(1)==23||input.LA(1)==30||input.LA(1)==35 ) {
             input.consume();
             state.errorRecovery=false;
@@ -3958,21 +4010,21 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
     // $ANTLR start synpred5_nopC
     public final void synpred5_nopC_fragment() throws RecognitionException {
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:42:4: ( typeSpecifier NAME '(' )
+        // /Users/alexander/Code/nop/nopC.g:37:4: ( typeSpecifier NAME '(' )
         dbg.enterAlt(1);
 
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:42:5: typeSpecifier NAME '('
+        // /Users/alexander/Code/nop/nopC.g:37:5: typeSpecifier NAME '('
         {
-        dbg.location(42,5);
-        pushFollow(FOLLOW_typeSpecifier_in_synpred5_nopC111);
+        dbg.location(37,5);
+        pushFollow(FOLLOW_typeSpecifier_in_synpred5_nopC117);
         typeSpecifier();
 
         state._fsp--;
         if (state.failed) return ;
-        dbg.location(42,19);
-        match(input,NAME,FOLLOW_NAME_in_synpred5_nopC113); if (state.failed) return ;
-        dbg.location(42,25);
-        match(input,16,FOLLOW_16_in_synpred5_nopC116); if (state.failed) return ;
+        dbg.location(37,19);
+        match(input,NAME,FOLLOW_NAME_in_synpred5_nopC119); if (state.failed) return ;
+        dbg.location(37,25);
+        match(input,16,FOLLOW_16_in_synpred5_nopC122); if (state.failed) return ;
 
         }
 
@@ -3981,25 +4033,25 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
     // $ANTLR start synpred17_nopC
     public final void synpred17_nopC_fragment() throws RecognitionException {
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:92:5: ( ( functionCall ';' ) )
+        // /Users/alexander/Code/nop/nopC.g:87:5: ( ( functionCall ';' ) )
         dbg.enterAlt(1);
 
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:92:5: ( functionCall ';' )
+        // /Users/alexander/Code/nop/nopC.g:87:5: ( functionCall ';' )
         {
-        dbg.location(92,5);
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:92:5: ( functionCall ';' )
+        dbg.location(87,5);
+        // /Users/alexander/Code/nop/nopC.g:87:5: ( functionCall ';' )
         dbg.enterAlt(1);
 
-        // /Users/alexander/Dropbox/Uni/Semester4/FLA/NOP/nopC.g:92:6: functionCall ';'
+        // /Users/alexander/Code/nop/nopC.g:87:6: functionCall ';'
         {
-        dbg.location(92,6);
-        pushFollow(FOLLOW_functionCall_in_synpred17_nopC340);
+        dbg.location(87,6);
+        pushFollow(FOLLOW_functionCall_in_synpred17_nopC380);
         functionCall();
 
         state._fsp--;
         if (state.failed) return ;
-        dbg.location(92,19);
-        match(input,30,FOLLOW_30_in_synpred17_nopC342); if (state.failed) return ;
+        dbg.location(87,19);
+        match(input,30,FOLLOW_30_in_synpred17_nopC382); if (state.failed) return ;
 
         }
 
@@ -4063,164 +4115,164 @@ protected boolean evalPredicate(boolean result, String predicate) {
 
  
 
-    public static final BitSet FOLLOW_globalFunctionOrStatement_in_cFile70 = new BitSet(new long[]{0x00A0400000000002L});
-    public static final BitSet FOLLOW_globalVariableDeclaration_in_globalFunctionOrStatement104 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_functionDefinition_in_globalFunctionOrStatement121 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeSpecifier_in_globalVariableDeclaration134 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_globalVariableDeclarationList_in_globalVariableDeclaration136 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_globalVariableDeclaration138 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAME_in_globalVariableDeclarationList158 = new BitSet(new long[]{0x0000000800800002L});
-    public static final BitSet FOLLOW_35_in_globalVariableDeclarationList161 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_WERT_in_globalVariableDeclarationList163 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_23_in_globalVariableDeclarationList168 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_globalVariableDeclarationList170 = new BitSet(new long[]{0x0000000800800002L});
-    public static final BitSet FOLLOW_35_in_globalVariableDeclarationList173 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_WERT_in_globalVariableDeclarationList175 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_typeSpecifier_in_variableDeclaration196 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_variableDeclarationList_in_variableDeclaration198 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_variableDeclaration200 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAME_in_variableDeclarationList215 = new BitSet(new long[]{0x0000000800800002L});
-    public static final BitSet FOLLOW_35_in_variableDeclarationList218 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_variableDeclarationList220 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_23_in_variableDeclarationList225 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_variableDeclarationList227 = new BitSet(new long[]{0x0000000800800002L});
-    public static final BitSet FOLLOW_35_in_variableDeclarationList230 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_variableDeclarationList232 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_typeSpecifier_in_functionDefinition253 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_functionDefinition255 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_functionDefinition257 = new BitSet(new long[]{0x00A0400000020000L});
-    public static final BitSet FOLLOW_parameterList_in_functionDefinition259 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_functionDefinition261 = new BitSet(new long[]{0x0200000000000000L});
-    public static final BitSet FOLLOW_57_in_functionDefinition263 = new BitSet(new long[]{0x21FDC00042210180L});
-    public static final BitSet FOLLOW_statement_in_functionDefinition265 = new BitSet(new long[]{0x21FDC00042210180L});
-    public static final BitSet FOLLOW_61_in_functionDefinition268 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeSpecifier_in_parameterList288 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_parameterList290 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_23_in_parameterList293 = new BitSet(new long[]{0x00A0400000000000L});
-    public static final BitSet FOLLOW_typeSpecifier_in_parameterList295 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_parameterList297 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_57_in_codeBlock313 = new BitSet(new long[]{0x21FDC00042210180L});
-    public static final BitSet FOLLOW_statement_in_codeBlock314 = new BitSet(new long[]{0x21FDC00042210180L});
-    public static final BitSet FOLLOW_61_in_codeBlock316 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_statement_in_codeBlock321 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_functionCall_in_statement340 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_statement342 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_assignment_in_statement351 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_statement353 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_variableDeclaration_in_statement361 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_selection_statement_in_statement367 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_iteration_statement_in_statement374 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_jump_statement_in_statement381 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expression_statement_in_statement388 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_52_in_selection_statement402 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_selection_statement404 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_selection_statement406 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_selection_statement408 = new BitSet(new long[]{0x03FDC00042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_selection_statement410 = new BitSet(new long[]{0x0002000000000002L});
-    public static final BitSet FOLLOW_49_in_selection_statement425 = new BitSet(new long[]{0x03FDC00042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_selection_statement427 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_56_in_iteration_statement440 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_iteration_statement442 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_iteration_statement444 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_iteration_statement446 = new BitSet(new long[]{0x03FDC00042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_iteration_statement448 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_50_in_iteration_statement453 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_iteration_statement455 = new BitSet(new long[]{0x0000000042210180L});
-    public static final BitSet FOLLOW_expression_statement_in_iteration_statement457 = new BitSet(new long[]{0x0000000042210180L});
-    public static final BitSet FOLLOW_expression_statement_in_iteration_statement459 = new BitSet(new long[]{0x0000000002230180L});
-    public static final BitSet FOLLOW_expression_in_iteration_statement461 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_iteration_statement464 = new BitSet(new long[]{0x03FDC00042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_iteration_statement466 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_30_in_expression_statement478 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expression_in_expression_statement483 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_expression_statement485 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_51_in_jump_statement496 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_jump_statement498 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement500 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_48_in_jump_statement505 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement507 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_47_in_jump_statement512 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement514 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_54_in_jump_statement519 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement521 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_54_in_jump_statement526 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_jump_statement528 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement530 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAME_in_functionCall543 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_functionCall545 = new BitSet(new long[]{0x0000000000820080L});
-    public static final BitSet FOLLOW_variableList_in_functionCall547 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_functionCall549 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAME_in_variableList568 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_23_in_variableList572 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_variableList574 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_NAME_in_assignment590 = new BitSet(new long[]{0x0800210A14489000L});
-    public static final BitSet FOLLOW_assignmentOperator_in_assignment592 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_assignment594 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_logical_or_expression_in_expression670 = new BitSet(new long[]{0x0000020000000002L});
-    public static final BitSet FOLLOW_41_in_expression673 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_expression675 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_expression677 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_expression679 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression695 = new BitSet(new long[]{0x1000000000000002L});
-    public static final BitSet FOLLOW_60_in_logical_or_expression698 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression700 = new BitSet(new long[]{0x1000000000000002L});
-    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression716 = new BitSet(new long[]{0x0000000000002002L});
-    public static final BitSet FOLLOW_13_in_logical_and_expression719 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression721 = new BitSet(new long[]{0x0000000000002002L});
-    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression737 = new BitSet(new long[]{0x0400000000000002L});
-    public static final BitSet FOLLOW_58_in_inclusive_or_expression740 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression742 = new BitSet(new long[]{0x0400000000000002L});
-    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression758 = new BitSet(new long[]{0x0000100000000002L});
-    public static final BitSet FOLLOW_44_in_exclusive_or_expression761 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression763 = new BitSet(new long[]{0x0000100000000002L});
-    public static final BitSet FOLLOW_equality_expression_in_and_expression779 = new BitSet(new long[]{0x0000000000004002L});
-    public static final BitSet FOLLOW_14_in_and_expression782 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_equality_expression_in_and_expression784 = new BitSet(new long[]{0x0000000000004002L});
-    public static final BitSet FOLLOW_relational_expression_in_equality_expression799 = new BitSet(new long[]{0x0000001000000402L});
-    public static final BitSet FOLLOW_set_in_equality_expression802 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_relational_expression_in_equality_expression808 = new BitSet(new long[]{0x0000001000000402L});
-    public static final BitSet FOLLOW_shift_expression_in_relational_expression824 = new BitSet(new long[]{0x0000006480000002L});
-    public static final BitSet FOLLOW_set_in_relational_expression827 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_shift_expression_in_relational_expression837 = new BitSet(new long[]{0x0000006480000002L});
-    public static final BitSet FOLLOW_additive_expression_in_shift_expression853 = new BitSet(new long[]{0x0000008100000002L});
-    public static final BitSet FOLLOW_set_in_shift_expression856 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_additive_expression_in_shift_expression862 = new BitSet(new long[]{0x0000008100000002L});
-    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression881 = new BitSet(new long[]{0x0000000001100002L});
-    public static final BitSet FOLLOW_20_in_additive_expression885 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression887 = new BitSet(new long[]{0x0000000001100002L});
-    public static final BitSet FOLLOW_24_in_additive_expression891 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression893 = new BitSet(new long[]{0x0000000001100002L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression910 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_18_in_multiplicative_expression914 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression916 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_27_in_multiplicative_expression920 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression922 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_11_in_multiplicative_expression926 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression928 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_postfix_expression_in_unary_expression942 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_21_in_unary_expression947 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_unary_expression949 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_25_in_unary_expression954 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_unary_expression956 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_primary_expression_in_postfix_expression969 = new BitSet(new long[]{0x0000040002200002L});
-    public static final BitSet FOLLOW_42_in_postfix_expression983 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_postfix_expression985 = new BitSet(new long[]{0x0000080000000000L});
-    public static final BitSet FOLLOW_43_in_postfix_expression987 = new BitSet(new long[]{0x0000040002200002L});
-    public static final BitSet FOLLOW_21_in_postfix_expression1002 = new BitSet(new long[]{0x0000040002200002L});
-    public static final BitSet FOLLOW_25_in_postfix_expression1016 = new BitSet(new long[]{0x0000040002200002L});
-    public static final BitSet FOLLOW_NAME_in_primary_expression1038 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_16_in_primary_expression1044 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_primary_expression1046 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_primary_expression1048 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_functionCall_in_primary_expression1053 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_WERT_in_primary_expression1058 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeSpecifier_in_synpred4_nopC85 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_synpred4_nopC87 = new BitSet(new long[]{0x0000000840800000L});
-    public static final BitSet FOLLOW_set_in_synpred4_nopC89 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeSpecifier_in_synpred5_nopC111 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_synpred5_nopC113 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_synpred5_nopC116 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_functionCall_in_synpred17_nopC340 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_synpred17_nopC342 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_globalFunctionOrStatement_in_cFile65 = new BitSet(new long[]{0x00A0400000000002L});
+    public static final BitSet FOLLOW_globalVariableDeclaration_in_globalFunctionOrStatement108 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_functionDefinition_in_globalFunctionOrStatement127 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeSpecifier_in_globalVariableDeclaration148 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_globalVariableDeclarationList_in_globalVariableDeclaration150 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_globalVariableDeclaration153 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAME_in_globalVariableDeclarationList183 = new BitSet(new long[]{0x0000000800800002L});
+    public static final BitSet FOLLOW_35_in_globalVariableDeclarationList185 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_WERT_in_globalVariableDeclarationList191 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_23_in_globalVariableDeclarationList198 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_globalVariableDeclarationList205 = new BitSet(new long[]{0x0000000800800002L});
+    public static final BitSet FOLLOW_35_in_globalVariableDeclarationList207 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_WERT_in_globalVariableDeclarationList213 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_typeSpecifier_in_variableDeclaration235 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_variableDeclarationList_in_variableDeclaration237 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_variableDeclaration239 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAME_in_variableDeclarationList254 = new BitSet(new long[]{0x0000000800800002L});
+    public static final BitSet FOLLOW_35_in_variableDeclarationList257 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_variableDeclarationList259 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_23_in_variableDeclarationList264 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_variableDeclarationList266 = new BitSet(new long[]{0x0000000800800002L});
+    public static final BitSet FOLLOW_35_in_variableDeclarationList269 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_variableDeclarationList271 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_typeSpecifier_in_functionDefinition293 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_functionDefinition295 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_functionDefinition297 = new BitSet(new long[]{0x00A0400000020000L});
+    public static final BitSet FOLLOW_parameterList_in_functionDefinition299 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_functionDefinition301 = new BitSet(new long[]{0x0200000000000000L});
+    public static final BitSet FOLLOW_57_in_functionDefinition303 = new BitSet(new long[]{0x21FDC00042210180L});
+    public static final BitSet FOLLOW_statement_in_functionDefinition305 = new BitSet(new long[]{0x21FDC00042210180L});
+    public static final BitSet FOLLOW_61_in_functionDefinition308 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeSpecifier_in_parameterList328 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_parameterList330 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_23_in_parameterList333 = new BitSet(new long[]{0x00A0400000000000L});
+    public static final BitSet FOLLOW_typeSpecifier_in_parameterList335 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_parameterList337 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_57_in_codeBlock353 = new BitSet(new long[]{0x21FDC00042210180L});
+    public static final BitSet FOLLOW_statement_in_codeBlock354 = new BitSet(new long[]{0x21FDC00042210180L});
+    public static final BitSet FOLLOW_61_in_codeBlock356 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_statement_in_codeBlock361 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_functionCall_in_statement380 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_statement382 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_assignment_in_statement391 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_statement393 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_variableDeclaration_in_statement401 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_selection_statement_in_statement407 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_iteration_statement_in_statement414 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_jump_statement_in_statement421 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expression_statement_in_statement428 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_52_in_selection_statement442 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_selection_statement444 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_selection_statement446 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_selection_statement448 = new BitSet(new long[]{0x03FDC00042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_selection_statement450 = new BitSet(new long[]{0x0002000000000002L});
+    public static final BitSet FOLLOW_49_in_selection_statement465 = new BitSet(new long[]{0x03FDC00042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_selection_statement467 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_56_in_iteration_statement480 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_iteration_statement482 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_iteration_statement484 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_iteration_statement486 = new BitSet(new long[]{0x03FDC00042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_iteration_statement488 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_50_in_iteration_statement493 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_iteration_statement495 = new BitSet(new long[]{0x0000000042210180L});
+    public static final BitSet FOLLOW_expression_statement_in_iteration_statement497 = new BitSet(new long[]{0x0000000042210180L});
+    public static final BitSet FOLLOW_expression_statement_in_iteration_statement499 = new BitSet(new long[]{0x0000000002230180L});
+    public static final BitSet FOLLOW_expression_in_iteration_statement501 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_iteration_statement504 = new BitSet(new long[]{0x03FDC00042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_iteration_statement506 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_30_in_expression_statement518 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expression_in_expression_statement523 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_expression_statement525 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_51_in_jump_statement536 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_jump_statement538 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement540 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_48_in_jump_statement545 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement547 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_47_in_jump_statement552 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement554 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_54_in_jump_statement559 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement561 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_54_in_jump_statement566 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_jump_statement568 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement570 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAME_in_functionCall583 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_functionCall585 = new BitSet(new long[]{0x0000000000820080L});
+    public static final BitSet FOLLOW_variableList_in_functionCall587 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_functionCall589 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAME_in_variableList608 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_23_in_variableList612 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_variableList614 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_NAME_in_assignment630 = new BitSet(new long[]{0x0800210A14489000L});
+    public static final BitSet FOLLOW_assignmentOperator_in_assignment632 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_assignment634 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_logical_or_expression_in_expression710 = new BitSet(new long[]{0x0000020000000002L});
+    public static final BitSet FOLLOW_41_in_expression713 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_expression715 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_expression717 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_expression719 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression735 = new BitSet(new long[]{0x1000000000000002L});
+    public static final BitSet FOLLOW_60_in_logical_or_expression738 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression740 = new BitSet(new long[]{0x1000000000000002L});
+    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression756 = new BitSet(new long[]{0x0000000000002002L});
+    public static final BitSet FOLLOW_13_in_logical_and_expression759 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression761 = new BitSet(new long[]{0x0000000000002002L});
+    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression777 = new BitSet(new long[]{0x0400000000000002L});
+    public static final BitSet FOLLOW_58_in_inclusive_or_expression780 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression782 = new BitSet(new long[]{0x0400000000000002L});
+    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression798 = new BitSet(new long[]{0x0000100000000002L});
+    public static final BitSet FOLLOW_44_in_exclusive_or_expression801 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression803 = new BitSet(new long[]{0x0000100000000002L});
+    public static final BitSet FOLLOW_equality_expression_in_and_expression819 = new BitSet(new long[]{0x0000000000004002L});
+    public static final BitSet FOLLOW_14_in_and_expression822 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_equality_expression_in_and_expression824 = new BitSet(new long[]{0x0000000000004002L});
+    public static final BitSet FOLLOW_relational_expression_in_equality_expression839 = new BitSet(new long[]{0x0000001000000402L});
+    public static final BitSet FOLLOW_set_in_equality_expression842 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_relational_expression_in_equality_expression848 = new BitSet(new long[]{0x0000001000000402L});
+    public static final BitSet FOLLOW_shift_expression_in_relational_expression864 = new BitSet(new long[]{0x0000006480000002L});
+    public static final BitSet FOLLOW_set_in_relational_expression867 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_shift_expression_in_relational_expression877 = new BitSet(new long[]{0x0000006480000002L});
+    public static final BitSet FOLLOW_additive_expression_in_shift_expression893 = new BitSet(new long[]{0x0000008100000002L});
+    public static final BitSet FOLLOW_set_in_shift_expression896 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_additive_expression_in_shift_expression902 = new BitSet(new long[]{0x0000008100000002L});
+    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression921 = new BitSet(new long[]{0x0000000001100002L});
+    public static final BitSet FOLLOW_20_in_additive_expression925 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression927 = new BitSet(new long[]{0x0000000001100002L});
+    public static final BitSet FOLLOW_24_in_additive_expression931 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression933 = new BitSet(new long[]{0x0000000001100002L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression950 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_18_in_multiplicative_expression954 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression956 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_27_in_multiplicative_expression960 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression962 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_11_in_multiplicative_expression966 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression968 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_postfix_expression_in_unary_expression982 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_21_in_unary_expression987 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_unary_expression989 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_unary_expression994 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_unary_expression996 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_primary_expression_in_postfix_expression1009 = new BitSet(new long[]{0x0000040002200002L});
+    public static final BitSet FOLLOW_42_in_postfix_expression1023 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_postfix_expression1025 = new BitSet(new long[]{0x0000080000000000L});
+    public static final BitSet FOLLOW_43_in_postfix_expression1027 = new BitSet(new long[]{0x0000040002200002L});
+    public static final BitSet FOLLOW_21_in_postfix_expression1042 = new BitSet(new long[]{0x0000040002200002L});
+    public static final BitSet FOLLOW_25_in_postfix_expression1056 = new BitSet(new long[]{0x0000040002200002L});
+    public static final BitSet FOLLOW_NAME_in_primary_expression1078 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_16_in_primary_expression1084 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_primary_expression1086 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_primary_expression1088 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_functionCall_in_primary_expression1093 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_WERT_in_primary_expression1098 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeSpecifier_in_synpred4_nopC89 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_synpred4_nopC91 = new BitSet(new long[]{0x0000000840800000L});
+    public static final BitSet FOLLOW_set_in_synpred4_nopC93 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeSpecifier_in_synpred5_nopC117 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_synpred5_nopC119 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_synpred5_nopC122 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_functionCall_in_synpred17_nopC380 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_synpred17_nopC382 = new BitSet(new long[]{0x0000000000000002L});
 
 }

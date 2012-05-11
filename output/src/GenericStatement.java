@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 public class GenericStatement {
 	HashMap<String, String> scope;
-	TreeMap<String, String> funTable;
+	TreeMap<String, String> functionTable;
 	HashMap<String, String> varTable;
 	static int VARCOUNTER;
 	static int FUNCOUNTER;
@@ -14,9 +14,9 @@ public class GenericStatement {
 		FUNCOUNTER = 0;
 	}
 	
-	public GenericStatement(HashMap<String, String> oldScope, TreeMap<String, String> reffunTable, HashMap<String, String> refVarTable){
+	public GenericStatement(HashMap<String, String> oldScope, TreeMap<String, String> refFunctionTable, HashMap<String, String> refVarTable){
 		scope = oldScope;
-		funTable = reffunTable;
+		functionTable = refFunctionTable;
 		varTable = refVarTable;
 	}
 	
@@ -30,48 +30,21 @@ public class GenericStatement {
 		return "V" + Integer.toString(VARCOUNTER++) + varName;
 	}
 	
-	private String generateFunLabel(String funName){
-		return "F" + Integer.toString(FUNCOUNTER++) + funName;
-	}
-	
-	void addFun(String funName){
-		
-		String label = generateFunLabel(funName);
-		funTable.put(funName, label);
-
-		// für speicherplatzreservierung von return wert
-		String  functionReturnValLabel = generateVarLabel(funName)
-		varTable.put(functionReturnValLabel, "0");
-		
-		printFunTable();
-	}
-	
+	void addVarToScope(String varName){
+		addVarToScope(varName, "0");
+	}	
 	
 	void addVarToScope(String varName, String val){
-		if (val == null) {
-			val = "0";
-		}
-		
 		String label = generateVarLabel(varName);
-		varTable.put(label, val);
+		varTable.put(varName, val)
 		scope.put(varName, label);
 		printVarTable();
-		printScope();
-	}
-	
-	public void printFunTable(){
-		System.out.println("Hier kommt ne funTable");
-
-		for (String key : funTable.keySet()) {
-			System.out.println(key + " : " + funTable.get(key));			
-		}
 	}
 	
 	public void printVarTable(){
 		System.out.println("Hier kommt ne varTable");
-
-		for (String key : varTable.keySet()) {
-			System.out.println(key + " : " + varTable.get(key));			
+		for (String label : varTable) {
+			System.out.println(label);			
 		}
 	}
 	

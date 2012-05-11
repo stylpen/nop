@@ -11,35 +11,36 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.TreeMap;
+import src.*;
 }
 
 @members {
     TreeMap<String, String> functionTable = new TreeMap<String, String>();
-    HashSet<String> varTable = new HashSet<String>;
+    HashMap<String, String> varTable = new HashMap<String, String>();
 }
 
 cFile returns [GenericStatement ret]
 @init{
-HashMap<String, String> scope = new HashMap<String, String>;
+HashMap<String, String> scope = new HashMap<String, String>();
 GenericStatement cFile = new GenericStatement(scope, functionTable, varTable);
 }
 	: 
 	globalFunctionOrStatement[cFile]+{$ret = $globalFunctionOrStatement.ret;}
 	;
 
+
+// Parent wird nur weitergeschoben, weil das nur ne art Weiche ist. 
 globalFunctionOrStatement [GenericStatement parent] returns [GenericStatement ret]
-@init{
-  GenericStatement globalFunctionOrStatement = new GenericStatement(parent.getScope), functionTable, varTable);
-}
 	:
-	(typeSpecifier NAME ('=' | ';' | ',')) => globalVariableDeclaration {$ret = globalVariableDeclaration.ret;}
-	| (typeSpecifier NAME  '(') => functionDefinition
+	(typeSpecifier NAME ('=' | ';' | ',')) => globalVariableDeclaration[parent] {$ret = $globalVariableDeclaration.ret;}
+	| (typeSpecifier NAME  '(') => functionDefinition[parent]
 	;
 
-globalVariableDeclaration 
-
+globalVariableDeclaration [GenericStatement parent] returns [GenericStatement ret]
 	:
-	typeSpecifier globalVariableDeclarationList ';' {System.out.println($globalVariableDeclaration.text);}
+	// hier wird noch das cFile als parent weitergereicht
+	typeSpecifier globalVariableDeclarationList[parent] ';' {System.out.println($globalVariableDeclaration.text);}
 	;
 	
 // Sollte matchen: 
@@ -47,46 +48,49 @@ globalVariableDeclaration
 // foo, bar = 1, baz = 2;
 // foo; 
 // foo, bar;
-globalVariableDeclarationList
+globalVariableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
 	:
-	NAME ('=' WERT)? (',' NAME ('=' WERT)?)*   
+	(n1 = NAME('=' w1 = WERT)?){parent.addVarToScope($n1.text, $w1.text);} (',' (n2 = NAME('=' w2 = WERT)?){parent.addVarToScope($n2.text, $w2.text);})*   
 	;
 
-
-variableDeclaration 
+variableDeclaration[GenericStatement parent] returns [GenericStatement ret]
 	:
-	typeSpecifier variableDeclarationList ';' {System.out.println($variableDeclaration.text);}
-	;
-	
-variableDeclarationList
-	:
-	NAME ('=' expression)? (',' NAME ('=' expression)?)*   
-	;
-
-
-functionDefinition
-	:
-		typeSpecifier NAME '(' parameterList ')' '{' statement* '}' {System.out.println($functionDefinition.text); functionTable.put($NAME.text, "istDa");}
+	typeSpecifier variableDeclarationList[parent] ';' {System.out.println($variableDeclaration.text);}
 	;
 	
+variableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
+	:	
+	// scope bekommt erstmal nur den text und null, weil das ergebniss zur laufzeit erzeugt wird und wir nur mal platz brauchen
+	(n1 = NAME ('=' expression)?){parent.addVarToScope($n1.text, null);} (',' (n2 = NAME ('=' expression)?){parent.addVarToScope($n2.text, null);})*   
+	;
 
-parameterList 
+
+functionDefinition[GenericStatement parent] returns [GenericStatement ret]
+@init{
+ScopedStatement functionDefinition = new ScopedStatement(parent.getScope(), functionTable, varTable);
+}
+	:
+		typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' statement[functionDefinition]* '}' {System.out.println($functionDefinition.text); functionDefinition.addFun($NAME.text);}
+	;
+	
+
+parameterList[GenericStatement parent]
 	: 
-		(typeSpecifier NAME (',' typeSpecifier NAME)*)?
+		(typeSpecifier (n1 = NAME){parent.addVarToScope($n1.text, null);} (',' typeSpecifier (n2 = NAME){parent.addVarToScope($n2.text, null);} )*)?
 	;
 
 codeBlock
 	:
-	'{'statement*'}'
-	| statement
+	'{'statement[null]*'}'
+	| statement[null]
 	
 	;
 	
-statement
+statement[GenericStatement parent]
 	:
 		  (functionCall ';')
 		| ( assignment ';'	)
-		| variableDeclaration
+		| variableDeclaration[parent]
 		| selection_statement
 	  | iteration_statement
 	  | jump_statement
@@ -217,9 +221,9 @@ primary_expression
 			
 	
 	
-WERT 
+WERT
 	: 
-		'0'..'9'+
+		'0'..'9'+ 
 	;
 	
 NAME

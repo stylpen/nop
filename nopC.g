@@ -16,7 +16,7 @@ import src.*;
 }
 
 @members {
-    TreeMap<String, String> functionTable = new TreeMap<String, String>();
+    TreeMap<String, FunctionDefinition> functionTable = new TreeMap<String, FunctionDefinition>();
     HashMap<String, String> varTable = new HashMap<String, String>();
 }
 
@@ -61,81 +61,88 @@ variableDeclaration[GenericStatement parent] returns [GenericStatement ret]
 variableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
 	:	
 	// scope bekommt erstmal nur den text und null, weil das ergebniss zur laufzeit erzeugt wird und wir nur mal platz brauchen
-	(n1 = NAME ('=' expression)?){parent.addVarToScope($n1.text, null);} (',' (n2 = NAME ('=' expression)?){parent.addVarToScope($n2.text, null);})*   
+	(n1 = NAME ('=' expression[parent])?){parent.addVarToScope($n1.text, null);} (',' (n2 = NAME ('=' expression[parent])?){parent.addVarToScope($n2.text, null);})*   
 	;
 
 
 functionDefinition[GenericStatement parent] returns [GenericStatement ret]
 @init{
-ScopedStatement functionDefinition = new ScopedStatement(parent.getScope(), functionTable, varTable);
+FunctionDefinition functionDefinition = new FunctionDefinition(parent.getScope(), functionTable, varTable);
 }
 	:
 		typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' statement[functionDefinition]* '}' {System.out.println($functionDefinition.text); functionDefinition.addFun($NAME.text);}
 	;
 	
 
-parameterList[GenericStatement parent]
+parameterList[FunctionDefinition parent]
 	: 
-		(typeSpecifier (n1 = NAME){parent.addVarToScope($n1.text, null);} (',' typeSpecifier (n2 = NAME){parent.addVarToScope($n2.text, null);} )*)?
+		(typeSpecifier (n1 = NAME){parent.addParam($n1.text);} (',' typeSpecifier (n2 = NAME){parent.addParam($n2.text);} )*)?
 	;
 
-codeBlock
+codeBlock [GenericStatement parent]
 	:
-	'{'statement[null]*'}'
-	| statement[null]
+	'{'statement[parent]*'}'
+	| statement[parent]
 	
 	;
 	
 statement[GenericStatement parent]
 	:
-		  (functionCall ';')
-		| ( assignment ';'	)
+//		  ( functionCall[parent] ';')
+		 ( assignment[parent] ';'	)
 		| variableDeclaration[parent]
-		| selection_statement
-	  | iteration_statement
-	  | jump_statement
-	  | expression_statement
+		| selection_statement[parent]
+	  | iteration_statement[parent]
+	  | jump_statement[parent]
+	  | expression_statement[parent]
 	;
 	
 	
-selection_statement
-	: 'if' '(' expression ')' codeBlock (options {k=1; backtrack=false;}:'else' codeBlock)?
+selection_statement [GenericStatement parent]
+@init{
+ScopedStatement selection_statement_if = new ScopedStatement(parent.getScope(), functionTable, varTable);
+ScopedStatement selection_statement_else = new ScopedStatement(parent.getScope(), functionTable, varTable);
+}
+	: 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] (options {k=1; backtrack=false;}:'else' codeBlock[selection_statement_else])?
 	;
 
-iteration_statement
-	: 'while' '(' expression ')' codeBlock
-	| 'for' '(' expression_statement expression_statement expression? ')' codeBlock
+iteration_statement [GenericStatement parent]
+@init{
+ScopedStatement iteration_statement = new ScopedStatement(parent.getScope(), functionTable, varTable);
+}
+	: 'while' '(' expression[parent] ')' codeBlock[iteration_statement]
+	| 'for' '(' expression_statement[parent] expression_statement[parent] expression[parent]? ')' codeBlock[iteration_statement]
 	;
 	
-expression_statement
+expression_statement [GenericStatement parent]
 	: ';'
-	| expression ';'
+	| expression[parent] ';'
 	;
 
-jump_statement
+jump_statement [GenericStatement parent]
 	: 'goto' NAME ';'
 	| 'continue' ';'
 	| 'break' ';'
 	| 'return' ';'
-	| 'return' expression ';'
+	| 'return' expression[parent] ';'
 	;
 
-functionCall
+functionCall [GenericStatement parent]
+@init {
+	FunctionDefinition fun = null;
+}
 	: 
-	NAME '(' variableList ')' 
-		{
-			System.out.println("In functionTable gefunden " + functionTable.get($NAME.text)); 
-		}
+	NAME '(' {fun = functionTable.get($NAME.text); System.out.println(functionTable.get($NAME.text).getLabel());} variableList[parent, fun] ')' 
 	;
 	
-variableList
+variableList[GenericStatement parent, FunctionDefinition fun]
 	:
 		NAME? (',' NAME)*
 	;
 
-assignment 
+assignment[GenericStatement parent]
 	:
-		NAME assignmentOperator expression
+		NAME assignmentOperator expression[parent]
 	;
 
 
@@ -154,8 +161,8 @@ assignmentOperator
 	| '|='
 	;
 
-	expression
-		: logical_or_expression ('?' expression ':' expression)?
+	expression[GenericStatement parent]
+		: logical_or_expression ('?' expression[parent] ':' expression[parent])?
 		;
 
 	logical_or_expression
@@ -205,17 +212,15 @@ unary_expression
 
 postfix_expression
 	:   primary_expression
-        (   '[' expression ']' //werden wir nie brauchen
-        |   '++'
-        |   '--'
+        ( '++'
+        | '--'
         )*
 	;
 
 primary_expression
 	: NAME
-//	| constant
-	| '(' expression ')'
-	| functionCall
+	| '(' expression[null] ')' // TODO: backpatch parent
+	| functionCall[null]
 	| WERT
 	;
 			

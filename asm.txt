@@ -1,47 +1,68 @@
 
-;COMPILED BY NOPC VERSION 0.0000000000000001 ON 2012/05/12 16:20:10 
+;COMPILED BY NOPC VERSION 0.0000000000000001 ON 2012/05/13 01:04:24 
 ;NOPC WAS WRITTEN BY STEPHAN WYPLER AND ALEXANDER RUST
 ;SEE https://github.com/stylpen/nop FOR MORE INFORMATION
 
 ;BEGIN ASM
 SET PC, START 
 F0foo: 
-F1main: 
-SET X, 9
-SET [V8z], X
-SET X, 1
-SET [V9x], X
-SET X, 0
-SET [V10a], X
-SET X, 1
-SET [V11b], X
-SET X, [V9x]
+SET X, [V6a]
 SET PUSH, X
-SET X, [V8z]
+SET X, [V7b]
 SET Y, POP 
- OR X, Y
-IFG X, 0
-   SET X, 1
-SET X, [V10a]
+ADD X, Y
+F1bar: 
+SET X, 1
 SET PUSH, X
-SET X, [V11b]
+SET X, 3
 SET Y, POP 
-IFG Y, 0
-   SET Y, FFFF
- AND X, Y
-IFG X, 0
-   SET X, 1
+SHR Y, X
+ SET X, Y
+SET [V10b], X
+SET X, [V9c]
+ADD X, 1
+SET X, [V9c]
+ADD X, 1
+SET [V9c], X
+SET [V11a], X
+F2main: 
+SET [V13b], X
+SET [V14a], X
+SET X, [V4c]
+SET PUSH, X
+SET X, 399
+SET B, 0
+SET Y, POP 
+IFG X, Y
+   SET B, 1
+IFE X, Y
+    SET B, 1
+SET X, B
+SET X, [V4c]
+ADD X, 1
+SET [V4c], X
+SET X, 213
+SET [V15a], X
+SET [V16x], X
+SET X, [V2k]
+ADD X, 1
+SET [V2k], X
 ; BEGIN DSEG
-:V7k dat 0000
-:V4i dat 0000
-:V3foo dat 0000
-:V9x dat 0000
-:V8z dat 0000
-:V6main dat 0000
+:V16x dat 0000
+:V9c dat 0000
+:V12main dat 0000
+:V14a dat 0000
+:V3b dat 0003
+:V5foo dat 0000
+:V8bar dat 0000
 :V0i dat 0000
-:V10a dat 0000
-:V5o dat 0000
-:V2j dat 0005
-:V1c dat 0000
-:V11b dat 0000
-:START JSR F1main
+:V7b dat 0000
+:V11a dat 0000
+:V1j dat 0001
+:V4c dat 0000
+:V6a dat 0000
+:V15a dat 0000
+:V13b dat 0000
+:V2k dat 0000
+:V10b dat 0000
+:START JSR F2main

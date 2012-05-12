@@ -49,7 +49,7 @@ public class FunctionDefinition extends ScopedStatement {
 		
 		funTable.put(funName, this);
 
-		// für speicherplatzreservierung von return wert
+		// f√ºr speicherplatzreservierung von return wert
 		String  functionReturnValLabel = generateVarLabel(funName);
 		varTable.put(functionReturnValLabel, "0");
 		

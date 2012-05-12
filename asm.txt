@@ -1,10 +1,28 @@
-_____ STARTING NEW RUN _____ 
-:V6foo dat 0000
-:V7k dat 0000
-:V8main dat 0000
-:V5z dat 0000
+
+;COMPILED BY NOPC VERSION 0.0000000000000001 ON 2012/05/12 14:38:32 
+;NOPC WAS WRITTEN BY STEPHAN WYPLER AND ALEXANDER RUST
+;SEE https://github.com/stylpen/nop FOR MORE INFORMATION
+
+;BEGIN ASM
+SET PC, START 
+F0foo: 
+SET X, 1
+SET [V6z], X
+SET X, [V6z]
+ADD X, 1
+SET [V6z], X
+SET X, [V6z]
+SUB X, 1
+SET [V6z], X
+F1main: 
+; BEGIN DSEG
+:V6z dat 0000
+:V4i dat 0000
+:V3foo dat 0000
+:V8k dat 0000
+:V7main dat 0000
 :V0i dat 0000
-:V3i dat 0000
+:V5o dat 0000
 :V2j dat 0005
 :V1c dat 0000
-:V4o dat 0000
+:START JSR F1main

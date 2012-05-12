@@ -4,6 +4,8 @@ int j = 5;
 
 int foo(int i, int o) {
 	int z = 1;
+	z++;
+	z--;
 }
 
 int main (int k)

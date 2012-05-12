@@ -15,6 +15,9 @@ import java.util.TreeMap;
 import src.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+ import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 }
 
 @members {
@@ -24,22 +27,28 @@ import java.io.FileWriter;
 		
 		FileWriter fstream;
 	  BufferedWriter out;
-	
-	
-	
-		void openWriter () {
+		String version = "0.0000000000000001";
+
+
+
+    private String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+		void startWritingASM () {
 			try {
 			fstream = new FileWriter("asm.txt");
 			out = new BufferedWriter(fstream);
-			writeASM("_____ STARTING NEW RUN _____ \n");
-			
+			writeInit();	// sets pc to start label
 			 } catch (Exception e) {
 				System.err.println("Error: " + e.getMessage());
 			}
 		}
-		void closeWriter () {
+		
+		void stopWritingASM () {
 			try {
-			
 			out.close();
 			 } catch (Exception e) {
 				System.err.println("Error: " + e.getMessage());
@@ -54,14 +63,37 @@ import java.io.FileWriter;
 		  }
 		}
 		
+		void writeSetRegToMemory(String reg, String varname, HashMap<String, String> scope) {
+			writeASM("SET [" + scope.get(varname) + "], " + reg + "\n" );
+		}
+		
+		void writeSetImmidiateToReg(String reg, String immidiate) {
+			writeASM("SET " + reg + ", " + immidiate + "\n" );
+		}
+		
+		void writeSetVarToReg(String reg, String varname, HashMap<String, String> scope) {
+			writeASM("SET " + reg + ", [" + scope.get(varname) + "]\n" );
+		}
 		
 		
-
+		
+		
+		void writeInit () {
+			writeASM("\n;COMPILED BY NOPC VERSION " + version + " ON " + getDateTime() +  " \n");
+			writeASM(";NOPC WAS WRITTEN BY STEPHAN WYPLER AND ALEXANDER RUST\n");
+			writeASM(";SEE https://github.com/stylpen/nop FOR MORE INFORMATION\n\n");
+			writeASM(";BEGIN ASM\n");			
+			writeASM("SET PC, START \n");
+		}
+				
 		void writeDSEG () {
 			System.out.println("Writing DSEG");
+			writeASM("; BEGIN DSEG\n");
+			
 			for (String label : varTable.keySet()) {
 				writeASM(":" + label + " dat " +  String.format("\%04x", Integer.parseInt(varTable.get(label))) + "\n");				
 			}
+			writeASM(":START JSR " + functionTable.get("main").getLabel() + "\n");				// Writes jump to main function so we can set pc to START at the beginning wihtout knowing where the main function will be
 		}
 		
 		
@@ -104,9 +136,10 @@ cFile returns [GenericStatement ret]
 @init{
 HashMap<String, String> scope = new HashMap<String, String>();
 GenericStatement cFile = new GenericStatement(scope, functionTable, varTable);
+startWritingASM();
 }
 	: 
-	globalFunctionOrStatement[cFile]+{openWriter(); writeDSEG(); closeWriter();}
+	globalFunctionOrStatement[cFile]+{writeDSEG(); stopWritingASM();}
 	;
 
 
@@ -141,7 +174,7 @@ variableDeclaration[GenericStatement parent] returns [GenericStatement ret]
 variableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
 	:	
 	// scope bekommt erstmal nur den text und null, weil das ergebniss zur laufzeit erzeugt wird und wir nur mal platz brauchen
-	(n1 = NAME ('=' expression[parent])?){parent.addVarToScope($n1.text, null);} (',' (n2 = NAME ('=' expression[parent])?){parent.addVarToScope($n2.text, null);})*   
+	(n1 = NAME ('=' expression[parent])?){parent.addVarToScope($n1.text, null); writeSetRegToMemory("X", $n1.text, parent.getScope());     } (',' (n2 = NAME ('=' expression[parent])?){parent.addVarToScope($n2.text, null);})*   
 	;
 
 
@@ -150,7 +183,7 @@ functionDefinition[GenericStatement parent] returns [GenericStatement ret]
 FunctionDefinition functionDefinition = new FunctionDefinition(parent.getScope(), functionTable, varTable);
 }
 	:
-		typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' statement[functionDefinition]* '}' {System.out.println($functionDefinition.text); functionDefinition.addFun($NAME.text);}
+		typeSpecifier NAME {functionDefinition.addFun($NAME.text); writeASM(functionDefinition.getLabel() + ": \n"); } '(' parameterList[functionDefinition] ')' '{' statement[functionDefinition]* '}' {System.out.println($functionDefinition.text); }
 	;
 	
 
@@ -299,29 +332,31 @@ assignmentOperator
 	multiplicative_expression[GenericStatement parent]
 		: (unary_expression[parent]) ('*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent])*
 		;
-
+		
+		
+// murks murks
+// rettet varname für so sachen wie x++, ++x etc. damit wir das ergebniss wieder zurück in den memory schreiben können
 unary_expression[GenericStatement parent]
-	: postfix_expression[parent]
-	| '++' unary_expression[parent]
-	| '--' unary_expression[parent]
+	: p = postfix_expression[parent] 
+	| '++' unary_expression[parent]{writeASM("ADD X, 1\n"); if ($p.varname != null) {writeSetRegToMemory("X", $p.varname, parent.getScope()); }}
+	| '--' unary_expression[parent]{writeASM("SUB X, 1\n"); if ($p.varname != null) {writeSetRegToMemory("X", $p.varname, parent.getScope()); }}
 	;
 
-postfix_expression[GenericStatement parent]
-	:   primary_expression[parent]
-        ( '++'
-        | '--'
+postfix_expression[GenericStatement parent] returns [String varname]
+	:   p = primary_expression[parent]
+        ( '++' {writeASM("ADD X, 1\n"); if ($p.varname != null) {writeSetRegToMemory("X", $p.varname, parent.getScope()); }}
+        | '--' {writeASM("SUB X, 1\n"); if ($p.varname != null) {writeSetRegToMemory("X", $p.varname, parent.getScope()); }}
         )*
+			{$varname = $p.varname;}
 	;
 
-primary_expression[GenericStatement parent]
-	: NAME
+primary_expression[GenericStatement parent] returns [String varname]
+	: NAME {writeSetVarToReg("X", $NAME.text, parent.getScope()); $varname = $NAME.text;}
 	| '(' expression[parent] ')' // TODO: backpatch parent
 	| functionCall[parent]
-	| WERT
+	| WERT {writeSetImmidiateToReg("X", $WERT.text);}
 	;
-			
-	
-	
+				
 WERT
 	: 
 		'0'..'9'+ 

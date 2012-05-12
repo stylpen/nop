@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nopC.g 2012-05-12 12:45:15
+// $ANTLR 3.4 nopC.g 2012-05-12 14:38:27
 
 import java.util.Map;
 import java.util.HashMap;
@@ -8,6 +8,9 @@ import java.util.TreeMap;
 import src.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+ import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 
 import org.antlr.runtime.*;
@@ -109,22 +112,28 @@ public class nopCParser extends Parser {
     		
     		FileWriter fstream;
     	  BufferedWriter out;
-    	
-    	
-    	
-    		void openWriter () {
+    		String version = "0.0000000000000001";
+
+
+
+        private String getDateTime() {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            return dateFormat.format(date);
+        }
+
+    		void startWritingASM () {
     			try {
     			fstream = new FileWriter("asm.txt");
     			out = new BufferedWriter(fstream);
-    			writeASM("_____ STARTING NEW RUN _____ \n");
-    			
+    			writeInit();	// sets pc to start label
     			 } catch (Exception e) {
     				System.err.println("Error: " + e.getMessage());
     			}
     		}
-    		void closeWriter () {
+    		
+    		void stopWritingASM () {
     			try {
-    			
     			out.close();
     			 } catch (Exception e) {
     				System.err.println("Error: " + e.getMessage());
@@ -139,14 +148,37 @@ public class nopCParser extends Parser {
     		  }
     		}
     		
+    		void writeSetRegToMemory(String reg, String varname, HashMap<String, String> scope) {
+    			writeASM("SET [" + scope.get(varname) + "], " + reg + "\n" );
+    		}
+    		
+    		void writeSetImmidiateToReg(String reg, String immidiate) {
+    			writeASM("SET " + reg + ", " + immidiate + "\n" );
+    		}
+    		
+    		void writeSetVarToReg(String reg, String varname, HashMap<String, String> scope) {
+    			writeASM("SET " + reg + ", [" + scope.get(varname) + "]\n" );
+    		}
     		
     		
-
+    		
+    		
+    		void writeInit () {
+    			writeASM("\n;COMPILED BY NOPC VERSION " + version + " ON " + getDateTime() +  " \n");
+    			writeASM(";NOPC WAS WRITTEN BY STEPHAN WYPLER AND ALEXANDER RUST\n");
+    			writeASM(";SEE https://github.com/stylpen/nop FOR MORE INFORMATION\n\n");
+    			writeASM(";BEGIN ASM\n");			
+    			writeASM("SET PC, START \n");
+    		}
+    				
     		void writeDSEG () {
     			System.out.println("Writing DSEG");
+    			writeASM("; BEGIN DSEG\n");
+    			
     			for (String label : varTable.keySet()) {
     				writeASM(":" + label + " dat " +  String.format("%04x", Integer.parseInt(varTable.get(label))) + "\n");				
     			}
+    			writeASM(":START JSR " + functionTable.get("main").getLabel() + "\n");				// Writes jump to main function so we can set pc to START at the beginning wihtout knowing where the main function will be
     		}
     		
     		
@@ -187,7 +219,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "cFile"
-    // nopC.g:103:1: cFile returns [GenericStatement ret] : ( globalFunctionOrStatement[cFile] )+ ;
+    // nopC.g:135:1: cFile returns [GenericStatement ret] : ( globalFunctionOrStatement[cFile] )+ ;
     public final GenericStatement cFile() throws RecognitionException {
         GenericStatement ret = null;
 
@@ -196,14 +228,15 @@ public class nopCParser extends Parser {
 
         HashMap<String, String> scope = new HashMap<String, String>();
         GenericStatement cFile = new GenericStatement(scope, functionTable, varTable);
+        startWritingASM();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 1) ) { return ret; }
 
-            // nopC.g:108:2: ( ( globalFunctionOrStatement[cFile] )+ )
-            // nopC.g:109:2: ( globalFunctionOrStatement[cFile] )+
+            // nopC.g:141:2: ( ( globalFunctionOrStatement[cFile] )+ )
+            // nopC.g:142:2: ( globalFunctionOrStatement[cFile] )+
             {
-            // nopC.g:109:2: ( globalFunctionOrStatement[cFile] )+
+            // nopC.g:142:2: ( globalFunctionOrStatement[cFile] )+
             int cnt1=0;
             loop1:
             do {
@@ -217,7 +250,7 @@ public class nopCParser extends Parser {
 
                 switch (alt1) {
             	case 1 :
-            	    // nopC.g:109:2: globalFunctionOrStatement[cFile]
+            	    // nopC.g:142:2: globalFunctionOrStatement[cFile]
             	    {
             	    pushFollow(FOLLOW_globalFunctionOrStatement_in_cFile65);
             	    globalFunctionOrStatement(cFile);
@@ -239,7 +272,7 @@ public class nopCParser extends Parser {
             } while (true);
 
 
-            if ( state.backtracking==0 ) {openWriter(); writeDSEG(); closeWriter();}
+            if ( state.backtracking==0 ) {writeDSEG(); stopWritingASM();}
 
             }
 
@@ -261,7 +294,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "globalFunctionOrStatement"
-    // nopC.g:114:1: globalFunctionOrStatement[GenericStatement parent] returns [GenericStatement ret] : ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent] | ( typeSpecifier NAME '(' )=> functionDefinition[parent] );
+    // nopC.g:147:1: globalFunctionOrStatement[GenericStatement parent] returns [GenericStatement ret] : ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent] | ( typeSpecifier NAME '(' )=> functionDefinition[parent] );
     public final GenericStatement globalFunctionOrStatement(GenericStatement parent) throws RecognitionException {
         GenericStatement ret = null;
 
@@ -273,7 +306,7 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 2) ) { return ret; }
 
-            // nopC.g:115:2: ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent] | ( typeSpecifier NAME '(' )=> functionDefinition[parent] )
+            // nopC.g:148:2: ( ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent] | ( typeSpecifier NAME '(' )=> functionDefinition[parent] )
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -317,7 +350,7 @@ public class nopCParser extends Parser {
             }
             switch (alt2) {
                 case 1 :
-                    // nopC.g:116:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent]
+                    // nopC.g:149:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )=> globalVariableDeclaration[parent]
                     {
                     pushFollow(FOLLOW_globalVariableDeclaration_in_globalFunctionOrStatement108);
                     globalVariableDeclaration1=globalVariableDeclaration(parent);
@@ -330,7 +363,7 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // nopC.g:117:4: ( typeSpecifier NAME '(' )=> functionDefinition[parent]
+                    // nopC.g:150:4: ( typeSpecifier NAME '(' )=> functionDefinition[parent]
                     {
                     pushFollow(FOLLOW_functionDefinition_in_globalFunctionOrStatement127);
                     functionDefinition(parent);
@@ -364,7 +397,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "globalVariableDeclaration"
-    // nopC.g:120:1: globalVariableDeclaration[GenericStatement parent] returns [GenericStatement ret] : typeSpecifier globalVariableDeclarationList[parent] ';' ;
+    // nopC.g:153:1: globalVariableDeclaration[GenericStatement parent] returns [GenericStatement ret] : typeSpecifier globalVariableDeclarationList[parent] ';' ;
     public final nopCParser.globalVariableDeclaration_return globalVariableDeclaration(GenericStatement parent) throws RecognitionException {
         nopCParser.globalVariableDeclaration_return retval = new nopCParser.globalVariableDeclaration_return();
         retval.start = input.LT(1);
@@ -374,8 +407,8 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 3) ) { return retval; }
 
-            // nopC.g:121:2: ( typeSpecifier globalVariableDeclarationList[parent] ';' )
-            // nopC.g:123:2: typeSpecifier globalVariableDeclarationList[parent] ';'
+            // nopC.g:154:2: ( typeSpecifier globalVariableDeclarationList[parent] ';' )
+            // nopC.g:156:2: typeSpecifier globalVariableDeclarationList[parent] ';'
             {
             pushFollow(FOLLOW_typeSpecifier_in_globalVariableDeclaration148);
             typeSpecifier();
@@ -416,7 +449,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "globalVariableDeclarationList"
-    // nopC.g:131:1: globalVariableDeclarationList[GenericStatement parent] returns [GenericStatement ret] : (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )* ;
+    // nopC.g:164:1: globalVariableDeclarationList[GenericStatement parent] returns [GenericStatement ret] : (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )* ;
     public final GenericStatement globalVariableDeclarationList(GenericStatement parent) throws RecognitionException {
         GenericStatement ret = null;
 
@@ -430,15 +463,15 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 4) ) { return ret; }
 
-            // nopC.g:132:2: ( (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )* )
-            // nopC.g:133:2: (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )*
+            // nopC.g:165:2: ( (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )* )
+            // nopC.g:166:2: (n1= NAME ( '=' w1= WERT )? ) ( ',' (n2= NAME ( '=' w2= WERT )? ) )*
             {
-            // nopC.g:133:2: (n1= NAME ( '=' w1= WERT )? )
-            // nopC.g:133:3: n1= NAME ( '=' w1= WERT )?
+            // nopC.g:166:2: (n1= NAME ( '=' w1= WERT )? )
+            // nopC.g:166:3: n1= NAME ( '=' w1= WERT )?
             {
             n1=(Token)match(input,NAME,FOLLOW_NAME_in_globalVariableDeclarationList183); if (state.failed) return ret;
 
-            // nopC.g:133:12: ( '=' w1= WERT )?
+            // nopC.g:166:12: ( '=' w1= WERT )?
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -447,7 +480,7 @@ public class nopCParser extends Parser {
             }
             switch (alt3) {
                 case 1 :
-                    // nopC.g:133:13: '=' w1= WERT
+                    // nopC.g:166:13: '=' w1= WERT
                     {
                     match(input,35,FOLLOW_35_in_globalVariableDeclarationList185); if (state.failed) return ret;
 
@@ -464,7 +497,7 @@ public class nopCParser extends Parser {
 
             if ( state.backtracking==0 ) {parent.addVarToScope((n1!=null?n1.getText():null), (w1!=null?w1.getText():null));}
 
-            // nopC.g:133:73: ( ',' (n2= NAME ( '=' w2= WERT )? ) )*
+            // nopC.g:166:73: ( ',' (n2= NAME ( '=' w2= WERT )? ) )*
             loop5:
             do {
                 int alt5=2;
@@ -477,16 +510,16 @@ public class nopCParser extends Parser {
 
                 switch (alt5) {
             	case 1 :
-            	    // nopC.g:133:74: ',' (n2= NAME ( '=' w2= WERT )? )
+            	    // nopC.g:166:74: ',' (n2= NAME ( '=' w2= WERT )? )
             	    {
             	    match(input,23,FOLLOW_23_in_globalVariableDeclarationList198); if (state.failed) return ret;
 
-            	    // nopC.g:133:78: (n2= NAME ( '=' w2= WERT )? )
-            	    // nopC.g:133:79: n2= NAME ( '=' w2= WERT )?
+            	    // nopC.g:166:78: (n2= NAME ( '=' w2= WERT )? )
+            	    // nopC.g:166:79: n2= NAME ( '=' w2= WERT )?
             	    {
             	    n2=(Token)match(input,NAME,FOLLOW_NAME_in_globalVariableDeclarationList205); if (state.failed) return ret;
 
-            	    // nopC.g:133:88: ( '=' w2= WERT )?
+            	    // nopC.g:166:88: ( '=' w2= WERT )?
             	    int alt4=2;
             	    int LA4_0 = input.LA(1);
 
@@ -495,7 +528,7 @@ public class nopCParser extends Parser {
             	    }
             	    switch (alt4) {
             	        case 1 :
-            	            // nopC.g:133:89: '=' w2= WERT
+            	            // nopC.g:166:89: '=' w2= WERT
             	            {
             	            match(input,35,FOLLOW_35_in_globalVariableDeclarationList207); if (state.failed) return ret;
 
@@ -545,7 +578,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "variableDeclaration"
-    // nopC.g:136:1: variableDeclaration[GenericStatement parent] returns [GenericStatement ret] : typeSpecifier variableDeclarationList[parent] ';' ;
+    // nopC.g:169:1: variableDeclaration[GenericStatement parent] returns [GenericStatement ret] : typeSpecifier variableDeclarationList[parent] ';' ;
     public final nopCParser.variableDeclaration_return variableDeclaration(GenericStatement parent) throws RecognitionException {
         nopCParser.variableDeclaration_return retval = new nopCParser.variableDeclaration_return();
         retval.start = input.LT(1);
@@ -555,8 +588,8 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 5) ) { return retval; }
 
-            // nopC.g:137:2: ( typeSpecifier variableDeclarationList[parent] ';' )
-            // nopC.g:138:2: typeSpecifier variableDeclarationList[parent] ';'
+            // nopC.g:170:2: ( typeSpecifier variableDeclarationList[parent] ';' )
+            // nopC.g:171:2: typeSpecifier variableDeclarationList[parent] ';'
             {
             pushFollow(FOLLOW_typeSpecifier_in_variableDeclaration239);
             typeSpecifier();
@@ -597,7 +630,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "variableDeclarationList"
-    // nopC.g:141:1: variableDeclarationList[GenericStatement parent] returns [GenericStatement ret] : (n1= NAME ( '=' expression[parent] )? ) ( ',' (n2= NAME ( '=' expression[parent] )? ) )* ;
+    // nopC.g:174:1: variableDeclarationList[GenericStatement parent] returns [GenericStatement ret] : (n1= NAME ( '=' expression[parent] )? ) ( ',' (n2= NAME ( '=' expression[parent] )? ) )* ;
     public final GenericStatement variableDeclarationList(GenericStatement parent) throws RecognitionException {
         GenericStatement ret = null;
 
@@ -609,15 +642,15 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 6) ) { return ret; }
 
-            // nopC.g:142:2: ( (n1= NAME ( '=' expression[parent] )? ) ( ',' (n2= NAME ( '=' expression[parent] )? ) )* )
-            // nopC.g:144:2: (n1= NAME ( '=' expression[parent] )? ) ( ',' (n2= NAME ( '=' expression[parent] )? ) )*
+            // nopC.g:175:2: ( (n1= NAME ( '=' expression[parent] )? ) ( ',' (n2= NAME ( '=' expression[parent] )? ) )* )
+            // nopC.g:177:2: (n1= NAME ( '=' expression[parent] )? ) ( ',' (n2= NAME ( '=' expression[parent] )? ) )*
             {
-            // nopC.g:144:2: (n1= NAME ( '=' expression[parent] )? )
-            // nopC.g:144:3: n1= NAME ( '=' expression[parent] )?
+            // nopC.g:177:2: (n1= NAME ( '=' expression[parent] )? )
+            // nopC.g:177:3: n1= NAME ( '=' expression[parent] )?
             {
             n1=(Token)match(input,NAME,FOLLOW_NAME_in_variableDeclarationList272); if (state.failed) return ret;
 
-            // nopC.g:144:13: ( '=' expression[parent] )?
+            // nopC.g:177:13: ( '=' expression[parent] )?
             int alt6=2;
             int LA6_0 = input.LA(1);
 
@@ -626,7 +659,7 @@ public class nopCParser extends Parser {
             }
             switch (alt6) {
                 case 1 :
-                    // nopC.g:144:14: '=' expression[parent]
+                    // nopC.g:177:14: '=' expression[parent]
                     {
                     match(input,35,FOLLOW_35_in_variableDeclarationList275); if (state.failed) return ret;
 
@@ -645,9 +678,9 @@ public class nopCParser extends Parser {
             }
 
 
-            if ( state.backtracking==0 ) {parent.addVarToScope((n1!=null?n1.getText():null), null);}
+            if ( state.backtracking==0 ) {parent.addVarToScope((n1!=null?n1.getText():null), null); writeSetRegToMemory("X", (n1!=null?n1.getText():null), parent.getScope());     }
 
-            // nopC.g:144:79: ( ',' (n2= NAME ( '=' expression[parent] )? ) )*
+            // nopC.g:177:139: ( ',' (n2= NAME ( '=' expression[parent] )? ) )*
             loop8:
             do {
                 int alt8=2;
@@ -660,16 +693,16 @@ public class nopCParser extends Parser {
 
                 switch (alt8) {
             	case 1 :
-            	    // nopC.g:144:80: ',' (n2= NAME ( '=' expression[parent] )? )
+            	    // nopC.g:177:140: ',' (n2= NAME ( '=' expression[parent] )? )
             	    {
             	    match(input,23,FOLLOW_23_in_variableDeclarationList285); if (state.failed) return ret;
 
-            	    // nopC.g:144:84: (n2= NAME ( '=' expression[parent] )? )
-            	    // nopC.g:144:85: n2= NAME ( '=' expression[parent] )?
+            	    // nopC.g:177:144: (n2= NAME ( '=' expression[parent] )? )
+            	    // nopC.g:177:145: n2= NAME ( '=' expression[parent] )?
             	    {
             	    n2=(Token)match(input,NAME,FOLLOW_NAME_in_variableDeclarationList292); if (state.failed) return ret;
 
-            	    // nopC.g:144:95: ( '=' expression[parent] )?
+            	    // nopC.g:177:155: ( '=' expression[parent] )?
             	    int alt7=2;
             	    int LA7_0 = input.LA(1);
 
@@ -678,7 +711,7 @@ public class nopCParser extends Parser {
             	    }
             	    switch (alt7) {
             	        case 1 :
-            	            // nopC.g:144:96: '=' expression[parent]
+            	            // nopC.g:177:156: '=' expression[parent]
             	            {
             	            match(input,35,FOLLOW_35_in_variableDeclarationList295); if (state.failed) return ret;
 
@@ -732,7 +765,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "functionDefinition"
-    // nopC.g:148:1: functionDefinition[GenericStatement parent] returns [GenericStatement ret] : typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' ( statement[functionDefinition] )* '}' ;
+    // nopC.g:181:1: functionDefinition[GenericStatement parent] returns [GenericStatement ret] : typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' ( statement[functionDefinition] )* '}' ;
     public final nopCParser.functionDefinition_return functionDefinition(GenericStatement parent) throws RecognitionException {
         nopCParser.functionDefinition_return retval = new nopCParser.functionDefinition_return();
         retval.start = input.LT(1);
@@ -747,8 +780,8 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 7) ) { return retval; }
 
-            // nopC.g:152:2: ( typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' ( statement[functionDefinition] )* '}' )
-            // nopC.g:153:3: typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' ( statement[functionDefinition] )* '}'
+            // nopC.g:185:2: ( typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' ( statement[functionDefinition] )* '}' )
+            // nopC.g:186:3: typeSpecifier NAME '(' parameterList[functionDefinition] ')' '{' ( statement[functionDefinition] )* '}'
             {
             pushFollow(FOLLOW_typeSpecifier_in_functionDefinition330);
             typeSpecifier();
@@ -758,19 +791,21 @@ public class nopCParser extends Parser {
 
             NAME2=(Token)match(input,NAME,FOLLOW_NAME_in_functionDefinition332); if (state.failed) return retval;
 
-            match(input,16,FOLLOW_16_in_functionDefinition334); if (state.failed) return retval;
+            if ( state.backtracking==0 ) {functionDefinition.addFun((NAME2!=null?NAME2.getText():null)); writeASM(functionDefinition.getLabel() + ": \n"); }
 
-            pushFollow(FOLLOW_parameterList_in_functionDefinition336);
+            match(input,16,FOLLOW_16_in_functionDefinition336); if (state.failed) return retval;
+
+            pushFollow(FOLLOW_parameterList_in_functionDefinition338);
             parameterList(functionDefinition);
 
             state._fsp--;
             if (state.failed) return retval;
 
-            match(input,17,FOLLOW_17_in_functionDefinition339); if (state.failed) return retval;
+            match(input,17,FOLLOW_17_in_functionDefinition341); if (state.failed) return retval;
 
-            match(input,55,FOLLOW_55_in_functionDefinition341); if (state.failed) return retval;
+            match(input,55,FOLLOW_55_in_functionDefinition343); if (state.failed) return retval;
 
-            // nopC.g:153:68: ( statement[functionDefinition] )*
+            // nopC.g:186:160: ( statement[functionDefinition] )*
             loop9:
             do {
                 int alt9=2;
@@ -783,9 +818,9 @@ public class nopCParser extends Parser {
 
                 switch (alt9) {
             	case 1 :
-            	    // nopC.g:153:68: statement[functionDefinition]
+            	    // nopC.g:186:160: statement[functionDefinition]
             	    {
-            	    pushFollow(FOLLOW_statement_in_functionDefinition343);
+            	    pushFollow(FOLLOW_statement_in_functionDefinition345);
             	    statement(functionDefinition);
 
             	    state._fsp--;
@@ -800,9 +835,9 @@ public class nopCParser extends Parser {
             } while (true);
 
 
-            match(input,59,FOLLOW_59_in_functionDefinition347); if (state.failed) return retval;
+            match(input,59,FOLLOW_59_in_functionDefinition349); if (state.failed) return retval;
 
-            if ( state.backtracking==0 ) {System.out.println(input.toString(retval.start,input.LT(-1))); functionDefinition.addFun((NAME2!=null?NAME2.getText():null));}
+            if ( state.backtracking==0 ) {System.out.println(input.toString(retval.start,input.LT(-1))); }
 
             }
 
@@ -827,7 +862,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "parameterList"
-    // nopC.g:157:1: parameterList[FunctionDefinition parent] : ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )? ;
+    // nopC.g:190:1: parameterList[FunctionDefinition parent] : ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )? ;
     public final void parameterList(FunctionDefinition parent) throws RecognitionException {
         int parameterList_StartIndex = input.index();
 
@@ -837,10 +872,10 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 8) ) { return ; }
 
-            // nopC.g:158:2: ( ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )? )
-            // nopC.g:159:3: ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )?
+            // nopC.g:191:2: ( ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )? )
+            // nopC.g:192:3: ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )?
             {
-            // nopC.g:159:3: ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )?
+            // nopC.g:192:3: ( typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )* )?
             int alt11=2;
             int LA11_0 = input.LA(1);
 
@@ -849,25 +884,25 @@ public class nopCParser extends Parser {
             }
             switch (alt11) {
                 case 1 :
-                    // nopC.g:159:4: typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )*
+                    // nopC.g:192:4: typeSpecifier (n1= NAME ) ( ',' typeSpecifier (n2= NAME ) )*
                     {
-                    pushFollow(FOLLOW_typeSpecifier_in_parameterList367);
+                    pushFollow(FOLLOW_typeSpecifier_in_parameterList369);
                     typeSpecifier();
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    // nopC.g:159:18: (n1= NAME )
-                    // nopC.g:159:19: n1= NAME
+                    // nopC.g:192:18: (n1= NAME )
+                    // nopC.g:192:19: n1= NAME
                     {
-                    n1=(Token)match(input,NAME,FOLLOW_NAME_in_parameterList374); if (state.failed) return ;
+                    n1=(Token)match(input,NAME,FOLLOW_NAME_in_parameterList376); if (state.failed) return ;
 
                     }
 
 
                     if ( state.backtracking==0 ) {parent.addParam((n1!=null?n1.getText():null));}
 
-                    // nopC.g:159:58: ( ',' typeSpecifier (n2= NAME ) )*
+                    // nopC.g:192:58: ( ',' typeSpecifier (n2= NAME ) )*
                     loop10:
                     do {
                         int alt10=2;
@@ -880,20 +915,20 @@ public class nopCParser extends Parser {
 
                         switch (alt10) {
                     	case 1 :
-                    	    // nopC.g:159:59: ',' typeSpecifier (n2= NAME )
+                    	    // nopC.g:192:59: ',' typeSpecifier (n2= NAME )
                     	    {
-                    	    match(input,23,FOLLOW_23_in_parameterList379); if (state.failed) return ;
+                    	    match(input,23,FOLLOW_23_in_parameterList381); if (state.failed) return ;
 
-                    	    pushFollow(FOLLOW_typeSpecifier_in_parameterList381);
+                    	    pushFollow(FOLLOW_typeSpecifier_in_parameterList383);
                     	    typeSpecifier();
 
                     	    state._fsp--;
                     	    if (state.failed) return ;
 
-                    	    // nopC.g:159:77: (n2= NAME )
-                    	    // nopC.g:159:78: n2= NAME
+                    	    // nopC.g:192:77: (n2= NAME )
+                    	    // nopC.g:192:78: n2= NAME
                     	    {
-                    	    n2=(Token)match(input,NAME,FOLLOW_NAME_in_parameterList388); if (state.failed) return ;
+                    	    n2=(Token)match(input,NAME,FOLLOW_NAME_in_parameterList390); if (state.failed) return ;
 
                     	    }
 
@@ -935,14 +970,14 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "codeBlock"
-    // nopC.g:162:1: codeBlock[GenericStatement parent] : ( '{' ( statement[parent] )* '}' | statement[parent] );
+    // nopC.g:195:1: codeBlock[GenericStatement parent] : ( '{' ( statement[parent] )* '}' | statement[parent] );
     public final void codeBlock(GenericStatement parent) throws RecognitionException {
         int codeBlock_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 9) ) { return ; }
 
-            // nopC.g:163:2: ( '{' ( statement[parent] )* '}' | statement[parent] )
+            // nopC.g:196:2: ( '{' ( statement[parent] )* '}' | statement[parent] )
             int alt13=2;
             int LA13_0 = input.LA(1);
 
@@ -962,11 +997,11 @@ public class nopCParser extends Parser {
             }
             switch (alt13) {
                 case 1 :
-                    // nopC.g:164:2: '{' ( statement[parent] )* '}'
+                    // nopC.g:197:2: '{' ( statement[parent] )* '}'
                     {
-                    match(input,55,FOLLOW_55_in_codeBlock409); if (state.failed) return ;
+                    match(input,55,FOLLOW_55_in_codeBlock411); if (state.failed) return ;
 
-                    // nopC.g:164:5: ( statement[parent] )*
+                    // nopC.g:197:5: ( statement[parent] )*
                     loop12:
                     do {
                         int alt12=2;
@@ -979,9 +1014,9 @@ public class nopCParser extends Parser {
 
                         switch (alt12) {
                     	case 1 :
-                    	    // nopC.g:164:5: statement[parent]
+                    	    // nopC.g:197:5: statement[parent]
                     	    {
-                    	    pushFollow(FOLLOW_statement_in_codeBlock410);
+                    	    pushFollow(FOLLOW_statement_in_codeBlock412);
                     	    statement(parent);
 
                     	    state._fsp--;
@@ -996,14 +1031,14 @@ public class nopCParser extends Parser {
                     } while (true);
 
 
-                    match(input,59,FOLLOW_59_in_codeBlock413); if (state.failed) return ;
+                    match(input,59,FOLLOW_59_in_codeBlock415); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // nopC.g:165:4: statement[parent]
+                    // nopC.g:198:4: statement[parent]
                     {
-                    pushFollow(FOLLOW_statement_in_codeBlock418);
+                    pushFollow(FOLLOW_statement_in_codeBlock420);
                     statement(parent);
 
                     state._fsp--;
@@ -1031,7 +1066,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "statement"
-    // nopC.g:169:1: statement[GenericStatement parent] : ( ( functionCall[null] ';' ) ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] );
+    // nopC.g:202:1: statement[GenericStatement parent] : ( ( functionCall[null] ';' ) ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] );
     public final void statement(GenericStatement parent) throws RecognitionException {
         int statement_StartIndex = input.index();
 
@@ -1041,7 +1076,7 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 10) ) { return ; }
 
-            // nopC.g:173:2: ( ( functionCall[null] ';' ) ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] )
+            // nopC.g:206:2: ( ( functionCall[null] ';' ) ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] )
             int alt14=6;
             switch ( input.LA(1) ) {
             case NAME:
@@ -1125,32 +1160,32 @@ public class nopCParser extends Parser {
 
             switch (alt14) {
                 case 1 :
-                    // nopC.g:174:5: ( functionCall[null] ';' ) ( assignment[null] ';' )
+                    // nopC.g:207:5: ( functionCall[null] ';' ) ( assignment[null] ';' )
                     {
-                    // nopC.g:174:5: ( functionCall[null] ';' )
-                    // nopC.g:174:7: functionCall[null] ';'
+                    // nopC.g:207:5: ( functionCall[null] ';' )
+                    // nopC.g:207:7: functionCall[null] ';'
                     {
-                    pushFollow(FOLLOW_functionCall_in_statement445);
+                    pushFollow(FOLLOW_functionCall_in_statement447);
                     functionCall(null);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_statement448); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_statement450); if (state.failed) return ;
 
                     }
 
 
-                    // nopC.g:175:5: ( assignment[null] ';' )
-                    // nopC.g:175:7: assignment[null] ';'
+                    // nopC.g:208:5: ( assignment[null] ';' )
+                    // nopC.g:208:7: assignment[null] ';'
                     {
-                    pushFollow(FOLLOW_assignment_in_statement457);
+                    pushFollow(FOLLOW_assignment_in_statement459);
                     assignment(null);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_statement460); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_statement462); if (state.failed) return ;
 
                     }
 
@@ -1158,9 +1193,9 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // nopC.g:176:5: variableDeclaration[parent]
+                    // nopC.g:209:5: variableDeclaration[parent]
                     {
-                    pushFollow(FOLLOW_variableDeclaration_in_statement468);
+                    pushFollow(FOLLOW_variableDeclaration_in_statement470);
                     variableDeclaration(parent);
 
                     state._fsp--;
@@ -1169,9 +1204,9 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // nopC.g:177:5: selection_statement[parent]
+                    // nopC.g:210:5: selection_statement[parent]
                     {
-                    pushFollow(FOLLOW_selection_statement_in_statement475);
+                    pushFollow(FOLLOW_selection_statement_in_statement477);
                     selection_statement(parent);
 
                     state._fsp--;
@@ -1180,9 +1215,9 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 4 :
-                    // nopC.g:178:6: iteration_statement[parent]
+                    // nopC.g:211:6: iteration_statement[parent]
                     {
-                    pushFollow(FOLLOW_iteration_statement_in_statement483);
+                    pushFollow(FOLLOW_iteration_statement_in_statement485);
                     iteration_statement(parent);
 
                     state._fsp--;
@@ -1191,9 +1226,9 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 5 :
-                    // nopC.g:179:6: jump_statement[parent]
+                    // nopC.g:212:6: jump_statement[parent]
                     {
-                    pushFollow(FOLLOW_jump_statement_in_statement491);
+                    pushFollow(FOLLOW_jump_statement_in_statement493);
                     jump_statement(parent);
 
                     state._fsp--;
@@ -1202,9 +1237,9 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 6 :
-                    // nopC.g:180:6: expression_statement[parent]
+                    // nopC.g:213:6: expression_statement[parent]
                     {
-                    pushFollow(FOLLOW_expression_statement_in_statement499);
+                    pushFollow(FOLLOW_expression_statement_in_statement501);
                     expression_statement(parent);
 
                     state._fsp--;
@@ -1232,7 +1267,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "selection_statement"
-    // nopC.g:184:1: selection_statement[GenericStatement parent] : 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )? ;
+    // nopC.g:217:1: selection_statement[GenericStatement parent] : 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )? ;
     public final void selection_statement(GenericStatement parent) throws RecognitionException {
         int selection_statement_StartIndex = input.index();
 
@@ -1243,28 +1278,28 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 11) ) { return ; }
 
-            // nopC.g:189:2: ( 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )? )
-            // nopC.g:189:4: 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )?
+            // nopC.g:222:2: ( 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )? )
+            // nopC.g:222:4: 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )?
             {
-            match(input,50,FOLLOW_50_in_selection_statement520); if (state.failed) return ;
+            match(input,50,FOLLOW_50_in_selection_statement522); if (state.failed) return ;
 
-            match(input,16,FOLLOW_16_in_selection_statement522); if (state.failed) return ;
+            match(input,16,FOLLOW_16_in_selection_statement524); if (state.failed) return ;
 
-            pushFollow(FOLLOW_expression_in_selection_statement524);
+            pushFollow(FOLLOW_expression_in_selection_statement526);
             expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            match(input,17,FOLLOW_17_in_selection_statement527); if (state.failed) return ;
+            match(input,17,FOLLOW_17_in_selection_statement529); if (state.failed) return ;
 
-            pushFollow(FOLLOW_codeBlock_in_selection_statement529);
+            pushFollow(FOLLOW_codeBlock_in_selection_statement531);
             codeBlock(selection_statement_if);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:189:70: ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )?
+            // nopC.g:222:70: ( options {k=1; backtrack=false; } : 'else' codeBlock[selection_statement_else] )?
             int alt15=2;
             int LA15_0 = input.LA(1);
 
@@ -1277,11 +1312,11 @@ public class nopCParser extends Parser {
             }
             switch (alt15) {
                 case 1 :
-                    // nopC.g:189:103: 'else' codeBlock[selection_statement_else]
+                    // nopC.g:222:103: 'else' codeBlock[selection_statement_else]
                     {
-                    match(input,47,FOLLOW_47_in_selection_statement545); if (state.failed) return ;
+                    match(input,47,FOLLOW_47_in_selection_statement547); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_codeBlock_in_selection_statement547);
+                    pushFollow(FOLLOW_codeBlock_in_selection_statement549);
                     codeBlock(selection_statement_else);
 
                     state._fsp--;
@@ -1313,7 +1348,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "iteration_statement"
-    // nopC.g:192:1: iteration_statement[GenericStatement parent] : ( 'while' '(' expression[parent] ')' codeBlock[iteration_statement] | 'for' '(' expression_statement[parent] expression_statement[parent] ( expression[parent] )? ')' codeBlock[iteration_statement] );
+    // nopC.g:225:1: iteration_statement[GenericStatement parent] : ( 'while' '(' expression[parent] ')' codeBlock[iteration_statement] | 'for' '(' expression_statement[parent] expression_statement[parent] ( expression[parent] )? ')' codeBlock[iteration_statement] );
     public final void iteration_statement(GenericStatement parent) throws RecognitionException {
         int iteration_statement_StartIndex = input.index();
 
@@ -1323,7 +1358,7 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 12) ) { return ; }
 
-            // nopC.g:196:2: ( 'while' '(' expression[parent] ')' codeBlock[iteration_statement] | 'for' '(' expression_statement[parent] expression_statement[parent] ( expression[parent] )? ')' codeBlock[iteration_statement] )
+            // nopC.g:229:2: ( 'while' '(' expression[parent] ')' codeBlock[iteration_statement] | 'for' '(' expression_statement[parent] expression_statement[parent] ( expression[parent] )? ')' codeBlock[iteration_statement] )
             int alt17=2;
             int LA17_0 = input.LA(1);
 
@@ -1343,21 +1378,21 @@ public class nopCParser extends Parser {
             }
             switch (alt17) {
                 case 1 :
-                    // nopC.g:196:4: 'while' '(' expression[parent] ')' codeBlock[iteration_statement]
+                    // nopC.g:229:4: 'while' '(' expression[parent] ')' codeBlock[iteration_statement]
                     {
-                    match(input,54,FOLLOW_54_in_iteration_statement567); if (state.failed) return ;
+                    match(input,54,FOLLOW_54_in_iteration_statement569); if (state.failed) return ;
 
-                    match(input,16,FOLLOW_16_in_iteration_statement569); if (state.failed) return ;
+                    match(input,16,FOLLOW_16_in_iteration_statement571); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_expression_in_iteration_statement571);
+                    pushFollow(FOLLOW_expression_in_iteration_statement573);
                     expression(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    match(input,17,FOLLOW_17_in_iteration_statement574); if (state.failed) return ;
+                    match(input,17,FOLLOW_17_in_iteration_statement576); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_codeBlock_in_iteration_statement576);
+                    pushFollow(FOLLOW_codeBlock_in_iteration_statement578);
                     codeBlock(iteration_statement);
 
                     state._fsp--;
@@ -1366,25 +1401,25 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // nopC.g:197:4: 'for' '(' expression_statement[parent] expression_statement[parent] ( expression[parent] )? ')' codeBlock[iteration_statement]
+                    // nopC.g:230:4: 'for' '(' expression_statement[parent] expression_statement[parent] ( expression[parent] )? ')' codeBlock[iteration_statement]
                     {
-                    match(input,48,FOLLOW_48_in_iteration_statement582); if (state.failed) return ;
+                    match(input,48,FOLLOW_48_in_iteration_statement584); if (state.failed) return ;
 
-                    match(input,16,FOLLOW_16_in_iteration_statement584); if (state.failed) return ;
+                    match(input,16,FOLLOW_16_in_iteration_statement586); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_expression_statement_in_iteration_statement586);
+                    pushFollow(FOLLOW_expression_statement_in_iteration_statement588);
                     expression_statement(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    pushFollow(FOLLOW_expression_statement_in_iteration_statement589);
+                    pushFollow(FOLLOW_expression_statement_in_iteration_statement591);
                     expression_statement(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    // nopC.g:197:72: ( expression[parent] )?
+                    // nopC.g:230:72: ( expression[parent] )?
                     int alt16=2;
                     int LA16_0 = input.LA(1);
 
@@ -1393,9 +1428,9 @@ public class nopCParser extends Parser {
                     }
                     switch (alt16) {
                         case 1 :
-                            // nopC.g:197:72: expression[parent]
+                            // nopC.g:230:72: expression[parent]
                             {
-                            pushFollow(FOLLOW_expression_in_iteration_statement592);
+                            pushFollow(FOLLOW_expression_in_iteration_statement594);
                             expression(parent);
 
                             state._fsp--;
@@ -1407,9 +1442,9 @@ public class nopCParser extends Parser {
                     }
 
 
-                    match(input,17,FOLLOW_17_in_iteration_statement596); if (state.failed) return ;
+                    match(input,17,FOLLOW_17_in_iteration_statement598); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_codeBlock_in_iteration_statement598);
+                    pushFollow(FOLLOW_codeBlock_in_iteration_statement600);
                     codeBlock(iteration_statement);
 
                     state._fsp--;
@@ -1437,14 +1472,14 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "expression_statement"
-    // nopC.g:200:1: expression_statement[GenericStatement parent] : ( ';' | expression[parent] ';' );
+    // nopC.g:233:1: expression_statement[GenericStatement parent] : ( ';' | expression[parent] ';' );
     public final void expression_statement(GenericStatement parent) throws RecognitionException {
         int expression_statement_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 13) ) { return ; }
 
-            // nopC.g:201:2: ( ';' | expression[parent] ';' )
+            // nopC.g:234:2: ( ';' | expression[parent] ';' )
             int alt18=2;
             int LA18_0 = input.LA(1);
 
@@ -1464,22 +1499,22 @@ public class nopCParser extends Parser {
             }
             switch (alt18) {
                 case 1 :
-                    // nopC.g:201:4: ';'
+                    // nopC.g:234:4: ';'
                     {
-                    match(input,30,FOLLOW_30_in_expression_statement613); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_expression_statement615); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // nopC.g:202:4: expression[parent] ';'
+                    // nopC.g:235:4: expression[parent] ';'
                     {
-                    pushFollow(FOLLOW_expression_in_expression_statement618);
+                    pushFollow(FOLLOW_expression_in_expression_statement620);
                     expression(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_expression_statement621); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_expression_statement623); if (state.failed) return ;
 
                     }
                     break;
@@ -1503,14 +1538,14 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "jump_statement"
-    // nopC.g:205:1: jump_statement[GenericStatement parent] : ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression[parent] ';' );
+    // nopC.g:238:1: jump_statement[GenericStatement parent] : ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression[parent] ';' );
     public final void jump_statement(GenericStatement parent) throws RecognitionException {
         int jump_statement_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 14) ) { return ; }
 
-            // nopC.g:206:2: ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression[parent] ';' )
+            // nopC.g:239:2: ( 'goto' NAME ';' | 'continue' ';' | 'break' ';' | 'return' ';' | 'return' expression[parent] ';' )
             int alt19=5;
             switch ( input.LA(1) ) {
             case 49:
@@ -1559,55 +1594,55 @@ public class nopCParser extends Parser {
 
             switch (alt19) {
                 case 1 :
-                    // nopC.g:206:4: 'goto' NAME ';'
+                    // nopC.g:239:4: 'goto' NAME ';'
                     {
-                    match(input,49,FOLLOW_49_in_jump_statement634); if (state.failed) return ;
+                    match(input,49,FOLLOW_49_in_jump_statement636); if (state.failed) return ;
 
-                    match(input,NAME,FOLLOW_NAME_in_jump_statement636); if (state.failed) return ;
+                    match(input,NAME,FOLLOW_NAME_in_jump_statement638); if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_jump_statement638); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_jump_statement640); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // nopC.g:207:4: 'continue' ';'
+                    // nopC.g:240:4: 'continue' ';'
                     {
-                    match(input,46,FOLLOW_46_in_jump_statement643); if (state.failed) return ;
+                    match(input,46,FOLLOW_46_in_jump_statement645); if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_jump_statement645); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_jump_statement647); if (state.failed) return ;
 
                     }
                     break;
                 case 3 :
-                    // nopC.g:208:4: 'break' ';'
+                    // nopC.g:241:4: 'break' ';'
                     {
-                    match(input,45,FOLLOW_45_in_jump_statement650); if (state.failed) return ;
+                    match(input,45,FOLLOW_45_in_jump_statement652); if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_jump_statement652); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_jump_statement654); if (state.failed) return ;
 
                     }
                     break;
                 case 4 :
-                    // nopC.g:209:4: 'return' ';'
+                    // nopC.g:242:4: 'return' ';'
                     {
-                    match(input,52,FOLLOW_52_in_jump_statement657); if (state.failed) return ;
+                    match(input,52,FOLLOW_52_in_jump_statement659); if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_jump_statement659); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_jump_statement661); if (state.failed) return ;
 
                     }
                     break;
                 case 5 :
-                    // nopC.g:210:4: 'return' expression[parent] ';'
+                    // nopC.g:243:4: 'return' expression[parent] ';'
                     {
-                    match(input,52,FOLLOW_52_in_jump_statement664); if (state.failed) return ;
+                    match(input,52,FOLLOW_52_in_jump_statement666); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_expression_in_jump_statement666);
+                    pushFollow(FOLLOW_expression_in_jump_statement668);
                     expression(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    match(input,30,FOLLOW_30_in_jump_statement669); if (state.failed) return ;
+                    match(input,30,FOLLOW_30_in_jump_statement671); if (state.failed) return ;
 
                     }
                     break;
@@ -1631,7 +1666,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "functionCall"
-    // nopC.g:213:1: functionCall[GenericStatement parent] : NAME '(' functionCallArgumentList[p, fun] ')' ;
+    // nopC.g:246:1: functionCall[GenericStatement parent] : NAME '(' functionCallArgumentList[p, fun] ')' ;
     public final void functionCall(GenericStatement parent) throws RecognitionException {
         int functionCall_StartIndex = input.index();
 
@@ -1649,22 +1684,22 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 15) ) { return ; }
 
-            // nopC.g:223:2: ( NAME '(' functionCallArgumentList[p, fun] ')' )
-            // nopC.g:224:2: NAME '(' functionCallArgumentList[p, fun] ')'
+            // nopC.g:256:2: ( NAME '(' functionCallArgumentList[p, fun] ')' )
+            // nopC.g:257:2: NAME '(' functionCallArgumentList[p, fun] ')'
             {
-            NAME3=(Token)match(input,NAME,FOLLOW_NAME_in_functionCall689); if (state.failed) return ;
+            NAME3=(Token)match(input,NAME,FOLLOW_NAME_in_functionCall691); if (state.failed) return ;
 
-            match(input,16,FOLLOW_16_in_functionCall691); if (state.failed) return ;
+            match(input,16,FOLLOW_16_in_functionCall693); if (state.failed) return ;
 
             if ( state.backtracking==0 ) {fun = functionTable.get((NAME3!=null?NAME3.getText():null));}
 
-            pushFollow(FOLLOW_functionCallArgumentList_in_functionCall695);
+            pushFollow(FOLLOW_functionCallArgumentList_in_functionCall697);
             functionCallArgumentList(p, fun);
 
             state._fsp--;
             if (state.failed) return ;
 
-            match(input,17,FOLLOW_17_in_functionCall698); if (state.failed) return ;
+            match(input,17,FOLLOW_17_in_functionCall700); if (state.failed) return ;
 
             }
 
@@ -1686,17 +1721,17 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "functionCallArgumentList"
-    // nopC.g:227:1: functionCallArgumentList[GenericStatement parent, FunctionDefinition fun] : ( NAME | functionCall[parent] | WERT )? ( ',' ( NAME | functionCall[parent] | WERT ) )* ;
+    // nopC.g:260:1: functionCallArgumentList[GenericStatement parent, FunctionDefinition fun] : ( NAME | functionCall[parent] | WERT )? ( ',' ( NAME | functionCall[parent] | WERT ) )* ;
     public final void functionCallArgumentList(GenericStatement parent, FunctionDefinition fun) throws RecognitionException {
         int functionCallArgumentList_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 16) ) { return ; }
 
-            // nopC.g:228:2: ( ( NAME | functionCall[parent] | WERT )? ( ',' ( NAME | functionCall[parent] | WERT ) )* )
-            // nopC.g:229:5: ( NAME | functionCall[parent] | WERT )? ( ',' ( NAME | functionCall[parent] | WERT ) )*
+            // nopC.g:261:2: ( ( NAME | functionCall[parent] | WERT )? ( ',' ( NAME | functionCall[parent] | WERT ) )* )
+            // nopC.g:262:5: ( NAME | functionCall[parent] | WERT )? ( ',' ( NAME | functionCall[parent] | WERT ) )*
             {
-            // nopC.g:229:5: ( NAME | functionCall[parent] | WERT )?
+            // nopC.g:262:5: ( NAME | functionCall[parent] | WERT )?
             int alt20=4;
             int LA20_0 = input.LA(1);
 
@@ -1715,16 +1750,16 @@ public class nopCParser extends Parser {
             }
             switch (alt20) {
                 case 1 :
-                    // nopC.g:229:6: NAME
+                    // nopC.g:262:6: NAME
                     {
-                    match(input,NAME,FOLLOW_NAME_in_functionCallArgumentList717); if (state.failed) return ;
+                    match(input,NAME,FOLLOW_NAME_in_functionCallArgumentList719); if (state.failed) return ;
 
                     }
                     break;
                 case 2 :
-                    // nopC.g:229:13: functionCall[parent]
+                    // nopC.g:262:13: functionCall[parent]
                     {
-                    pushFollow(FOLLOW_functionCall_in_functionCallArgumentList721);
+                    pushFollow(FOLLOW_functionCall_in_functionCallArgumentList723);
                     functionCall(parent);
 
                     state._fsp--;
@@ -1733,9 +1768,9 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 3 :
-                    // nopC.g:229:36: WERT
+                    // nopC.g:262:36: WERT
                     {
-                    match(input,WERT,FOLLOW_WERT_in_functionCallArgumentList726); if (state.failed) return ;
+                    match(input,WERT,FOLLOW_WERT_in_functionCallArgumentList728); if (state.failed) return ;
 
                     }
                     break;
@@ -1743,7 +1778,7 @@ public class nopCParser extends Parser {
             }
 
 
-            // nopC.g:229:43: ( ',' ( NAME | functionCall[parent] | WERT ) )*
+            // nopC.g:262:43: ( ',' ( NAME | functionCall[parent] | WERT ) )*
             loop22:
             do {
                 int alt22=2;
@@ -1756,11 +1791,11 @@ public class nopCParser extends Parser {
 
                 switch (alt22) {
             	case 1 :
-            	    // nopC.g:229:44: ',' ( NAME | functionCall[parent] | WERT )
+            	    // nopC.g:262:44: ',' ( NAME | functionCall[parent] | WERT )
             	    {
-            	    match(input,23,FOLLOW_23_in_functionCallArgumentList731); if (state.failed) return ;
+            	    match(input,23,FOLLOW_23_in_functionCallArgumentList733); if (state.failed) return ;
 
-            	    // nopC.g:229:48: ( NAME | functionCall[parent] | WERT )
+            	    // nopC.g:262:48: ( NAME | functionCall[parent] | WERT )
             	    int alt21=3;
             	    int LA21_0 = input.LA(1);
 
@@ -1795,16 +1830,16 @@ public class nopCParser extends Parser {
             	    }
             	    switch (alt21) {
             	        case 1 :
-            	            // nopC.g:229:49: NAME
+            	            // nopC.g:262:49: NAME
             	            {
-            	            match(input,NAME,FOLLOW_NAME_in_functionCallArgumentList734); if (state.failed) return ;
+            	            match(input,NAME,FOLLOW_NAME_in_functionCallArgumentList736); if (state.failed) return ;
 
             	            }
             	            break;
             	        case 2 :
-            	            // nopC.g:229:56: functionCall[parent]
+            	            // nopC.g:262:56: functionCall[parent]
             	            {
-            	            pushFollow(FOLLOW_functionCall_in_functionCallArgumentList738);
+            	            pushFollow(FOLLOW_functionCall_in_functionCallArgumentList740);
             	            functionCall(parent);
 
             	            state._fsp--;
@@ -1813,9 +1848,9 @@ public class nopCParser extends Parser {
             	            }
             	            break;
             	        case 3 :
-            	            // nopC.g:229:79: WERT
+            	            // nopC.g:262:79: WERT
             	            {
-            	            match(input,WERT,FOLLOW_WERT_in_functionCallArgumentList743); if (state.failed) return ;
+            	            match(input,WERT,FOLLOW_WERT_in_functionCallArgumentList745); if (state.failed) return ;
 
             	            }
             	            break;
@@ -1852,7 +1887,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "assignment"
-    // nopC.g:232:1: assignment[GenericStatement parent] : NAME assignmentOperator expression[p] ;
+    // nopC.g:265:1: assignment[GenericStatement parent] : NAME assignmentOperator expression[p] ;
     public final void assignment(GenericStatement parent) throws RecognitionException {
         int assignment_StartIndex = input.index();
 
@@ -1866,18 +1901,18 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 17) ) { return ; }
 
-            // nopC.g:240:2: ( NAME assignmentOperator expression[p] )
-            // nopC.g:241:3: NAME assignmentOperator expression[p]
+            // nopC.g:273:2: ( NAME assignmentOperator expression[p] )
+            // nopC.g:274:3: NAME assignmentOperator expression[p]
             {
-            match(input,NAME,FOLLOW_NAME_in_assignment765); if (state.failed) return ;
+            match(input,NAME,FOLLOW_NAME_in_assignment767); if (state.failed) return ;
 
-            pushFollow(FOLLOW_assignmentOperator_in_assignment767);
+            pushFollow(FOLLOW_assignmentOperator_in_assignment769);
             assignmentOperator();
 
             state._fsp--;
             if (state.failed) return ;
 
-            pushFollow(FOLLOW_expression_in_assignment769);
+            pushFollow(FOLLOW_expression_in_assignment771);
             expression(p);
 
             state._fsp--;
@@ -1903,14 +1938,14 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "assignmentOperator"
-    // nopC.g:246:1: assignmentOperator : ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' );
+    // nopC.g:279:1: assignmentOperator : ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' );
     public final void assignmentOperator() throws RecognitionException {
         int assignmentOperator_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 18) ) { return ; }
 
-            // nopC.g:247:2: ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' )
+            // nopC.g:280:2: ( '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' )
             // nopC.g:
             {
             if ( input.LA(1)==12||input.LA(1)==15||input.LA(1)==19||input.LA(1)==22||input.LA(1)==26||input.LA(1)==28||input.LA(1)==33||input.LA(1)==35||input.LA(1)==40||input.LA(1)==43||input.LA(1)==57 ) {
@@ -1945,23 +1980,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "expression"
-    // nopC.g:260:2: expression[GenericStatement parent] : logical_or_expression[parent] ( '?' expression[parent] ':' expression[parent] )? ;
+    // nopC.g:293:2: expression[GenericStatement parent] : logical_or_expression[parent] ( '?' expression[parent] ':' expression[parent] )? ;
     public final void expression(GenericStatement parent) throws RecognitionException {
         int expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 19) ) { return ; }
 
-            // nopC.g:261:3: ( logical_or_expression[parent] ( '?' expression[parent] ':' expression[parent] )? )
-            // nopC.g:261:5: logical_or_expression[parent] ( '?' expression[parent] ':' expression[parent] )?
+            // nopC.g:294:3: ( logical_or_expression[parent] ( '?' expression[parent] ':' expression[parent] )? )
+            // nopC.g:294:5: logical_or_expression[parent] ( '?' expression[parent] ':' expression[parent] )?
             {
-            pushFollow(FOLLOW_logical_or_expression_in_expression847);
+            pushFollow(FOLLOW_logical_or_expression_in_expression849);
             logical_or_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:261:35: ( '?' expression[parent] ':' expression[parent] )?
+            // nopC.g:294:35: ( '?' expression[parent] ':' expression[parent] )?
             int alt23=2;
             int LA23_0 = input.LA(1);
 
@@ -1970,19 +2005,19 @@ public class nopCParser extends Parser {
             }
             switch (alt23) {
                 case 1 :
-                    // nopC.g:261:36: '?' expression[parent] ':' expression[parent]
+                    // nopC.g:294:36: '?' expression[parent] ':' expression[parent]
                     {
-                    match(input,41,FOLLOW_41_in_expression851); if (state.failed) return ;
+                    match(input,41,FOLLOW_41_in_expression853); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_expression_in_expression853);
+                    pushFollow(FOLLOW_expression_in_expression855);
                     expression(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
 
-                    match(input,29,FOLLOW_29_in_expression856); if (state.failed) return ;
+                    match(input,29,FOLLOW_29_in_expression858); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_expression_in_expression858);
+                    pushFollow(FOLLOW_expression_in_expression860);
                     expression(parent);
 
                     state._fsp--;
@@ -2014,23 +2049,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "logical_or_expression"
-    // nopC.g:264:2: logical_or_expression[GenericStatement parent] : logical_and_expression[parent] ( '||' logical_and_expression[parent] )* ;
+    // nopC.g:297:2: logical_or_expression[GenericStatement parent] : logical_and_expression[parent] ( '||' logical_and_expression[parent] )* ;
     public final void logical_or_expression(GenericStatement parent) throws RecognitionException {
         int logical_or_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 20) ) { return ; }
 
-            // nopC.g:265:3: ( logical_and_expression[parent] ( '||' logical_and_expression[parent] )* )
-            // nopC.g:265:5: logical_and_expression[parent] ( '||' logical_and_expression[parent] )*
+            // nopC.g:298:3: ( logical_and_expression[parent] ( '||' logical_and_expression[parent] )* )
+            // nopC.g:298:5: logical_and_expression[parent] ( '||' logical_and_expression[parent] )*
             {
-            pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression876);
+            pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression878);
             logical_and_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:265:36: ( '||' logical_and_expression[parent] )*
+            // nopC.g:298:36: ( '||' logical_and_expression[parent] )*
             loop24:
             do {
                 int alt24=2;
@@ -2043,11 +2078,11 @@ public class nopCParser extends Parser {
 
                 switch (alt24) {
             	case 1 :
-            	    // nopC.g:265:37: '||' logical_and_expression[parent]
+            	    // nopC.g:298:37: '||' logical_and_expression[parent]
             	    {
-            	    match(input,58,FOLLOW_58_in_logical_or_expression880); if (state.failed) return ;
+            	    match(input,58,FOLLOW_58_in_logical_or_expression882); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression882);
+            	    pushFollow(FOLLOW_logical_and_expression_in_logical_or_expression884);
             	    logical_and_expression(parent);
 
             	    state._fsp--;
@@ -2082,23 +2117,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "logical_and_expression"
-    // nopC.g:268:2: logical_and_expression[GenericStatement parent] : inclusive_or_expression[parent] ( '&&' inclusive_or_expression[parent] )* ;
+    // nopC.g:301:2: logical_and_expression[GenericStatement parent] : inclusive_or_expression[parent] ( '&&' inclusive_or_expression[parent] )* ;
     public final void logical_and_expression(GenericStatement parent) throws RecognitionException {
         int logical_and_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 21) ) { return ; }
 
-            // nopC.g:269:3: ( inclusive_or_expression[parent] ( '&&' inclusive_or_expression[parent] )* )
-            // nopC.g:269:5: inclusive_or_expression[parent] ( '&&' inclusive_or_expression[parent] )*
+            // nopC.g:302:3: ( inclusive_or_expression[parent] ( '&&' inclusive_or_expression[parent] )* )
+            // nopC.g:302:5: inclusive_or_expression[parent] ( '&&' inclusive_or_expression[parent] )*
             {
-            pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression900);
+            pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression902);
             inclusive_or_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:269:37: ( '&&' inclusive_or_expression[parent] )*
+            // nopC.g:302:37: ( '&&' inclusive_or_expression[parent] )*
             loop25:
             do {
                 int alt25=2;
@@ -2111,11 +2146,11 @@ public class nopCParser extends Parser {
 
                 switch (alt25) {
             	case 1 :
-            	    // nopC.g:269:38: '&&' inclusive_or_expression[parent]
+            	    // nopC.g:302:38: '&&' inclusive_or_expression[parent]
             	    {
-            	    match(input,13,FOLLOW_13_in_logical_and_expression904); if (state.failed) return ;
+            	    match(input,13,FOLLOW_13_in_logical_and_expression906); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression906);
+            	    pushFollow(FOLLOW_inclusive_or_expression_in_logical_and_expression908);
             	    inclusive_or_expression(parent);
 
             	    state._fsp--;
@@ -2150,23 +2185,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "inclusive_or_expression"
-    // nopC.g:272:2: inclusive_or_expression[GenericStatement parent] : exclusive_or_expression[parent] ( '|' exclusive_or_expression[parent] )* ;
+    // nopC.g:305:2: inclusive_or_expression[GenericStatement parent] : exclusive_or_expression[parent] ( '|' exclusive_or_expression[parent] )* ;
     public final void inclusive_or_expression(GenericStatement parent) throws RecognitionException {
         int inclusive_or_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 22) ) { return ; }
 
-            // nopC.g:273:3: ( exclusive_or_expression[parent] ( '|' exclusive_or_expression[parent] )* )
-            // nopC.g:273:5: exclusive_or_expression[parent] ( '|' exclusive_or_expression[parent] )*
+            // nopC.g:306:3: ( exclusive_or_expression[parent] ( '|' exclusive_or_expression[parent] )* )
+            // nopC.g:306:5: exclusive_or_expression[parent] ( '|' exclusive_or_expression[parent] )*
             {
-            pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression924);
+            pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression926);
             exclusive_or_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:273:37: ( '|' exclusive_or_expression[parent] )*
+            // nopC.g:306:37: ( '|' exclusive_or_expression[parent] )*
             loop26:
             do {
                 int alt26=2;
@@ -2179,11 +2214,11 @@ public class nopCParser extends Parser {
 
                 switch (alt26) {
             	case 1 :
-            	    // nopC.g:273:38: '|' exclusive_or_expression[parent]
+            	    // nopC.g:306:38: '|' exclusive_or_expression[parent]
             	    {
-            	    match(input,56,FOLLOW_56_in_inclusive_or_expression928); if (state.failed) return ;
+            	    match(input,56,FOLLOW_56_in_inclusive_or_expression930); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression930);
+            	    pushFollow(FOLLOW_exclusive_or_expression_in_inclusive_or_expression932);
             	    exclusive_or_expression(parent);
 
             	    state._fsp--;
@@ -2218,23 +2253,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "exclusive_or_expression"
-    // nopC.g:276:2: exclusive_or_expression[GenericStatement parent] : and_expression[parent] ( '^' and_expression[parent] )* ;
+    // nopC.g:309:2: exclusive_or_expression[GenericStatement parent] : and_expression[parent] ( '^' and_expression[parent] )* ;
     public final void exclusive_or_expression(GenericStatement parent) throws RecognitionException {
         int exclusive_or_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 23) ) { return ; }
 
-            // nopC.g:277:3: ( and_expression[parent] ( '^' and_expression[parent] )* )
-            // nopC.g:277:5: and_expression[parent] ( '^' and_expression[parent] )*
+            // nopC.g:310:3: ( and_expression[parent] ( '^' and_expression[parent] )* )
+            // nopC.g:310:5: and_expression[parent] ( '^' and_expression[parent] )*
             {
-            pushFollow(FOLLOW_and_expression_in_exclusive_or_expression948);
+            pushFollow(FOLLOW_and_expression_in_exclusive_or_expression950);
             and_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:277:28: ( '^' and_expression[parent] )*
+            // nopC.g:310:28: ( '^' and_expression[parent] )*
             loop27:
             do {
                 int alt27=2;
@@ -2247,11 +2282,11 @@ public class nopCParser extends Parser {
 
                 switch (alt27) {
             	case 1 :
-            	    // nopC.g:277:29: '^' and_expression[parent]
+            	    // nopC.g:310:29: '^' and_expression[parent]
             	    {
-            	    match(input,42,FOLLOW_42_in_exclusive_or_expression952); if (state.failed) return ;
+            	    match(input,42,FOLLOW_42_in_exclusive_or_expression954); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_and_expression_in_exclusive_or_expression954);
+            	    pushFollow(FOLLOW_and_expression_in_exclusive_or_expression956);
             	    and_expression(parent);
 
             	    state._fsp--;
@@ -2286,23 +2321,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "and_expression"
-    // nopC.g:280:2: and_expression[GenericStatement parent] : equality_expression[parent] ( '&' equality_expression[parent] )* ;
+    // nopC.g:313:2: and_expression[GenericStatement parent] : equality_expression[parent] ( '&' equality_expression[parent] )* ;
     public final void and_expression(GenericStatement parent) throws RecognitionException {
         int and_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 24) ) { return ; }
 
-            // nopC.g:281:3: ( equality_expression[parent] ( '&' equality_expression[parent] )* )
-            // nopC.g:281:5: equality_expression[parent] ( '&' equality_expression[parent] )*
+            // nopC.g:314:3: ( equality_expression[parent] ( '&' equality_expression[parent] )* )
+            // nopC.g:314:5: equality_expression[parent] ( '&' equality_expression[parent] )*
             {
-            pushFollow(FOLLOW_equality_expression_in_and_expression972);
+            pushFollow(FOLLOW_equality_expression_in_and_expression974);
             equality_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:281:33: ( '&' equality_expression[parent] )*
+            // nopC.g:314:33: ( '&' equality_expression[parent] )*
             loop28:
             do {
                 int alt28=2;
@@ -2315,11 +2350,11 @@ public class nopCParser extends Parser {
 
                 switch (alt28) {
             	case 1 :
-            	    // nopC.g:281:34: '&' equality_expression[parent]
+            	    // nopC.g:314:34: '&' equality_expression[parent]
             	    {
-            	    match(input,14,FOLLOW_14_in_and_expression976); if (state.failed) return ;
+            	    match(input,14,FOLLOW_14_in_and_expression978); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_equality_expression_in_and_expression978);
+            	    pushFollow(FOLLOW_equality_expression_in_and_expression980);
             	    equality_expression(parent);
 
             	    state._fsp--;
@@ -2354,23 +2389,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "equality_expression"
-    // nopC.g:283:2: equality_expression[GenericStatement parent] : relational_expression[parent] ( ( '==' | '!=' ) relational_expression[parent] )* ;
+    // nopC.g:316:2: equality_expression[GenericStatement parent] : relational_expression[parent] ( ( '==' | '!=' ) relational_expression[parent] )* ;
     public final void equality_expression(GenericStatement parent) throws RecognitionException {
         int equality_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 25) ) { return ; }
 
-            // nopC.g:284:3: ( relational_expression[parent] ( ( '==' | '!=' ) relational_expression[parent] )* )
-            // nopC.g:284:5: relational_expression[parent] ( ( '==' | '!=' ) relational_expression[parent] )*
+            // nopC.g:317:3: ( relational_expression[parent] ( ( '==' | '!=' ) relational_expression[parent] )* )
+            // nopC.g:317:5: relational_expression[parent] ( ( '==' | '!=' ) relational_expression[parent] )*
             {
-            pushFollow(FOLLOW_relational_expression_in_equality_expression995);
+            pushFollow(FOLLOW_relational_expression_in_equality_expression997);
             relational_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:284:35: ( ( '==' | '!=' ) relational_expression[parent] )*
+            // nopC.g:317:35: ( ( '==' | '!=' ) relational_expression[parent] )*
             loop29:
             do {
                 int alt29=2;
@@ -2383,7 +2418,7 @@ public class nopCParser extends Parser {
 
                 switch (alt29) {
             	case 1 :
-            	    // nopC.g:284:36: ( '==' | '!=' ) relational_expression[parent]
+            	    // nopC.g:317:36: ( '==' | '!=' ) relational_expression[parent]
             	    {
             	    if ( input.LA(1)==10||input.LA(1)==36 ) {
             	        input.consume();
@@ -2397,7 +2432,7 @@ public class nopCParser extends Parser {
             	    }
 
 
-            	    pushFollow(FOLLOW_relational_expression_in_equality_expression1005);
+            	    pushFollow(FOLLOW_relational_expression_in_equality_expression1007);
             	    relational_expression(parent);
 
             	    state._fsp--;
@@ -2432,23 +2467,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "relational_expression"
-    // nopC.g:287:2: relational_expression[GenericStatement parent] : shift_expression[parent] ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )* ;
+    // nopC.g:320:2: relational_expression[GenericStatement parent] : shift_expression[parent] ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )* ;
     public final void relational_expression(GenericStatement parent) throws RecognitionException {
         int relational_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 26) ) { return ; }
 
-            // nopC.g:288:3: ( shift_expression[parent] ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )* )
-            // nopC.g:288:5: shift_expression[parent] ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )*
+            // nopC.g:321:3: ( shift_expression[parent] ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )* )
+            // nopC.g:321:5: shift_expression[parent] ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )*
             {
-            pushFollow(FOLLOW_shift_expression_in_relational_expression1023);
+            pushFollow(FOLLOW_shift_expression_in_relational_expression1025);
             shift_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:288:30: ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )*
+            // nopC.g:321:30: ( ( '<' | '>' | '<=' | '>=' ) shift_expression[parent] )*
             loop30:
             do {
                 int alt30=2;
@@ -2461,7 +2496,7 @@ public class nopCParser extends Parser {
 
                 switch (alt30) {
             	case 1 :
-            	    // nopC.g:288:31: ( '<' | '>' | '<=' | '>=' ) shift_expression[parent]
+            	    // nopC.g:321:31: ( '<' | '>' | '<=' | '>=' ) shift_expression[parent]
             	    {
             	    if ( input.LA(1)==31||input.LA(1)==34||(input.LA(1) >= 37 && input.LA(1) <= 38) ) {
             	        input.consume();
@@ -2475,7 +2510,7 @@ public class nopCParser extends Parser {
             	    }
 
 
-            	    pushFollow(FOLLOW_shift_expression_in_relational_expression1037);
+            	    pushFollow(FOLLOW_shift_expression_in_relational_expression1039);
             	    shift_expression(parent);
 
             	    state._fsp--;
@@ -2510,23 +2545,23 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "shift_expression"
-    // nopC.g:291:2: shift_expression[GenericStatement parent] : additive_expression[parent] ( ( '<<' | '>>' ) additive_expression[parent] )* ;
+    // nopC.g:324:2: shift_expression[GenericStatement parent] : additive_expression[parent] ( ( '<<' | '>>' ) additive_expression[parent] )* ;
     public final void shift_expression(GenericStatement parent) throws RecognitionException {
         int shift_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 27) ) { return ; }
 
-            // nopC.g:292:3: ( additive_expression[parent] ( ( '<<' | '>>' ) additive_expression[parent] )* )
-            // nopC.g:292:5: additive_expression[parent] ( ( '<<' | '>>' ) additive_expression[parent] )*
+            // nopC.g:325:3: ( additive_expression[parent] ( ( '<<' | '>>' ) additive_expression[parent] )* )
+            // nopC.g:325:5: additive_expression[parent] ( ( '<<' | '>>' ) additive_expression[parent] )*
             {
-            pushFollow(FOLLOW_additive_expression_in_shift_expression1055);
+            pushFollow(FOLLOW_additive_expression_in_shift_expression1057);
             additive_expression(parent);
 
             state._fsp--;
             if (state.failed) return ;
 
-            // nopC.g:292:33: ( ( '<<' | '>>' ) additive_expression[parent] )*
+            // nopC.g:325:33: ( ( '<<' | '>>' ) additive_expression[parent] )*
             loop31:
             do {
                 int alt31=2;
@@ -2539,7 +2574,7 @@ public class nopCParser extends Parser {
 
                 switch (alt31) {
             	case 1 :
-            	    // nopC.g:292:34: ( '<<' | '>>' ) additive_expression[parent]
+            	    // nopC.g:325:34: ( '<<' | '>>' ) additive_expression[parent]
             	    {
             	    if ( input.LA(1)==32||input.LA(1)==39 ) {
             	        input.consume();
@@ -2553,7 +2588,7 @@ public class nopCParser extends Parser {
             	    }
 
 
-            	    pushFollow(FOLLOW_additive_expression_in_shift_expression1065);
+            	    pushFollow(FOLLOW_additive_expression_in_shift_expression1067);
             	    additive_expression(parent);
 
             	    state._fsp--;
@@ -2588,20 +2623,20 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "additive_expression"
-    // nopC.g:295:2: additive_expression[GenericStatement parent] : ( multiplicative_expression[parent] ) ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )* ;
+    // nopC.g:328:2: additive_expression[GenericStatement parent] : ( multiplicative_expression[parent] ) ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )* ;
     public final void additive_expression(GenericStatement parent) throws RecognitionException {
         int additive_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 28) ) { return ; }
 
-            // nopC.g:296:3: ( ( multiplicative_expression[parent] ) ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )* )
-            // nopC.g:296:5: ( multiplicative_expression[parent] ) ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )*
+            // nopC.g:329:3: ( ( multiplicative_expression[parent] ) ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )* )
+            // nopC.g:329:5: ( multiplicative_expression[parent] ) ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )*
             {
-            // nopC.g:296:5: ( multiplicative_expression[parent] )
-            // nopC.g:296:6: multiplicative_expression[parent]
+            // nopC.g:329:5: ( multiplicative_expression[parent] )
+            // nopC.g:329:6: multiplicative_expression[parent]
             {
-            pushFollow(FOLLOW_multiplicative_expression_in_additive_expression1086);
+            pushFollow(FOLLOW_multiplicative_expression_in_additive_expression1088);
             multiplicative_expression(parent);
 
             state._fsp--;
@@ -2610,7 +2645,7 @@ public class nopCParser extends Parser {
             }
 
 
-            // nopC.g:296:41: ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )*
+            // nopC.g:329:41: ( '+' multiplicative_expression[parent] | '-' multiplicative_expression[parent] )*
             loop32:
             do {
                 int alt32=3;
@@ -2626,11 +2661,11 @@ public class nopCParser extends Parser {
 
                 switch (alt32) {
             	case 1 :
-            	    // nopC.g:296:42: '+' multiplicative_expression[parent]
+            	    // nopC.g:329:42: '+' multiplicative_expression[parent]
             	    {
-            	    match(input,20,FOLLOW_20_in_additive_expression1091); if (state.failed) return ;
+            	    match(input,20,FOLLOW_20_in_additive_expression1093); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression1093);
+            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression1095);
             	    multiplicative_expression(parent);
 
             	    state._fsp--;
@@ -2639,11 +2674,11 @@ public class nopCParser extends Parser {
             	    }
             	    break;
             	case 2 :
-            	    // nopC.g:296:82: '-' multiplicative_expression[parent]
+            	    // nopC.g:329:82: '-' multiplicative_expression[parent]
             	    {
-            	    match(input,24,FOLLOW_24_in_additive_expression1098); if (state.failed) return ;
+            	    match(input,24,FOLLOW_24_in_additive_expression1100); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression1100);
+            	    pushFollow(FOLLOW_multiplicative_expression_in_additive_expression1102);
             	    multiplicative_expression(parent);
 
             	    state._fsp--;
@@ -2678,20 +2713,20 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "multiplicative_expression"
-    // nopC.g:299:2: multiplicative_expression[GenericStatement parent] : ( unary_expression[parent] ) ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )* ;
+    // nopC.g:332:2: multiplicative_expression[GenericStatement parent] : ( unary_expression[parent] ) ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )* ;
     public final void multiplicative_expression(GenericStatement parent) throws RecognitionException {
         int multiplicative_expression_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 29) ) { return ; }
 
-            // nopC.g:300:3: ( ( unary_expression[parent] ) ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )* )
-            // nopC.g:300:5: ( unary_expression[parent] ) ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )*
+            // nopC.g:333:3: ( ( unary_expression[parent] ) ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )* )
+            // nopC.g:333:5: ( unary_expression[parent] ) ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )*
             {
-            // nopC.g:300:5: ( unary_expression[parent] )
-            // nopC.g:300:6: unary_expression[parent]
+            // nopC.g:333:5: ( unary_expression[parent] )
+            // nopC.g:333:6: unary_expression[parent]
             {
-            pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1119);
+            pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1121);
             unary_expression(parent);
 
             state._fsp--;
@@ -2700,7 +2735,7 @@ public class nopCParser extends Parser {
             }
 
 
-            // nopC.g:300:32: ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )*
+            // nopC.g:333:32: ( '*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent] )*
             loop33:
             do {
                 int alt33=4;
@@ -2725,11 +2760,11 @@ public class nopCParser extends Parser {
 
                 switch (alt33) {
             	case 1 :
-            	    // nopC.g:300:33: '*' unary_expression[parent]
+            	    // nopC.g:333:33: '*' unary_expression[parent]
             	    {
-            	    match(input,18,FOLLOW_18_in_multiplicative_expression1124); if (state.failed) return ;
+            	    match(input,18,FOLLOW_18_in_multiplicative_expression1126); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1126);
+            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1128);
             	    unary_expression(parent);
 
             	    state._fsp--;
@@ -2738,11 +2773,11 @@ public class nopCParser extends Parser {
             	    }
             	    break;
             	case 2 :
-            	    // nopC.g:300:64: '/' unary_expression[parent]
+            	    // nopC.g:333:64: '/' unary_expression[parent]
             	    {
-            	    match(input,27,FOLLOW_27_in_multiplicative_expression1131); if (state.failed) return ;
+            	    match(input,27,FOLLOW_27_in_multiplicative_expression1133); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1133);
+            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1135);
             	    unary_expression(parent);
 
             	    state._fsp--;
@@ -2751,11 +2786,11 @@ public class nopCParser extends Parser {
             	    }
             	    break;
             	case 3 :
-            	    // nopC.g:300:95: '%' unary_expression[parent]
+            	    // nopC.g:333:95: '%' unary_expression[parent]
             	    {
-            	    match(input,11,FOLLOW_11_in_multiplicative_expression1138); if (state.failed) return ;
+            	    match(input,11,FOLLOW_11_in_multiplicative_expression1140); if (state.failed) return ;
 
-            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1140);
+            	    pushFollow(FOLLOW_unary_expression_in_multiplicative_expression1142);
             	    unary_expression(parent);
 
             	    state._fsp--;
@@ -2790,14 +2825,17 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "unary_expression"
-    // nopC.g:303:1: unary_expression[GenericStatement parent] : ( postfix_expression[parent] | '++' unary_expression[parent] | '--' unary_expression[parent] );
+    // nopC.g:336:1: unary_expression[GenericStatement parent] : (p= postfix_expression[parent] | '++' unary_expression[parent] | '--' unary_expression[parent] );
     public final void unary_expression(GenericStatement parent) throws RecognitionException {
         int unary_expression_StartIndex = input.index();
+
+        String p =null;
+
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 30) ) { return ; }
 
-            // nopC.g:304:2: ( postfix_expression[parent] | '++' unary_expression[parent] | '--' unary_expression[parent] )
+            // nopC.g:337:2: (p= postfix_expression[parent] | '++' unary_expression[parent] | '--' unary_expression[parent] )
             int alt34=3;
             switch ( input.LA(1) ) {
             case NAME:
@@ -2828,10 +2866,10 @@ public class nopCParser extends Parser {
 
             switch (alt34) {
                 case 1 :
-                    // nopC.g:304:4: postfix_expression[parent]
+                    // nopC.g:337:4: p= postfix_expression[parent]
                     {
-                    pushFollow(FOLLOW_postfix_expression_in_unary_expression1156);
-                    postfix_expression(parent);
+                    pushFollow(FOLLOW_postfix_expression_in_unary_expression1162);
+                    p=postfix_expression(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
@@ -2839,28 +2877,32 @@ public class nopCParser extends Parser {
                     }
                     break;
                 case 2 :
-                    // nopC.g:305:4: '++' unary_expression[parent]
+                    // nopC.g:338:4: '++' unary_expression[parent]
                     {
-                    match(input,21,FOLLOW_21_in_unary_expression1162); if (state.failed) return ;
+                    match(input,21,FOLLOW_21_in_unary_expression1169); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_unary_expression_in_unary_expression1164);
+                    pushFollow(FOLLOW_unary_expression_in_unary_expression1171);
                     unary_expression(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
+
+                    if ( state.backtracking==0 ) {writeASM("ADD X, 1\n"); if (p != null) {writeSetRegToMemory("X", p, parent.getScope()); }}
 
                     }
                     break;
                 case 3 :
-                    // nopC.g:306:4: '--' unary_expression[parent]
+                    // nopC.g:339:4: '--' unary_expression[parent]
                     {
-                    match(input,25,FOLLOW_25_in_unary_expression1170); if (state.failed) return ;
+                    match(input,25,FOLLOW_25_in_unary_expression1178); if (state.failed) return ;
 
-                    pushFollow(FOLLOW_unary_expression_in_unary_expression1172);
+                    pushFollow(FOLLOW_unary_expression_in_unary_expression1180);
                     unary_expression(parent);
 
                     state._fsp--;
                     if (state.failed) return ;
+
+                    if ( state.backtracking==0 ) {writeASM("SUB X, 1\n"); if (p != null) {writeSetRegToMemory("X", p, parent.getScope()); }}
 
                     }
                     break;
@@ -2884,48 +2926,57 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "postfix_expression"
-    // nopC.g:309:1: postfix_expression[GenericStatement parent] : primary_expression[parent] ( '++' | '--' )* ;
-    public final void postfix_expression(GenericStatement parent) throws RecognitionException {
+    // nopC.g:342:1: postfix_expression[GenericStatement parent] returns [String varname] : p= primary_expression[parent] ( '++' | '--' )* ;
+    public final String postfix_expression(GenericStatement parent) throws RecognitionException {
+        String varname = null;
+
         int postfix_expression_StartIndex = input.index();
 
-        try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 31) ) { return ; }
+        String p =null;
 
-            // nopC.g:310:2: ( primary_expression[parent] ( '++' | '--' )* )
-            // nopC.g:310:6: primary_expression[parent] ( '++' | '--' )*
+
+        try {
+            if ( state.backtracking>0 && alreadyParsedRule(input, 31) ) { return varname; }
+
+            // nopC.g:343:2: (p= primary_expression[parent] ( '++' | '--' )* )
+            // nopC.g:343:6: p= primary_expression[parent] ( '++' | '--' )*
             {
-            pushFollow(FOLLOW_primary_expression_in_postfix_expression1187);
-            primary_expression(parent);
+            pushFollow(FOLLOW_primary_expression_in_postfix_expression1204);
+            p=primary_expression(parent);
 
             state._fsp--;
-            if (state.failed) return ;
+            if (state.failed) return varname;
 
-            // nopC.g:311:9: ( '++' | '--' )*
+            // nopC.g:344:9: ( '++' | '--' )*
             loop35:
             do {
-                int alt35=2;
+                int alt35=3;
                 int LA35_0 = input.LA(1);
 
-                if ( (LA35_0==21||LA35_0==25) ) {
+                if ( (LA35_0==21) ) {
                     alt35=1;
+                }
+                else if ( (LA35_0==25) ) {
+                    alt35=2;
                 }
 
 
                 switch (alt35) {
             	case 1 :
-            	    // nopC.g:
+            	    // nopC.g:344:11: '++'
             	    {
-            	    if ( input.LA(1)==21||input.LA(1)==25 ) {
-            	        input.consume();
-            	        state.errorRecovery=false;
-            	        state.failed=false;
-            	    }
-            	    else {
-            	        if (state.backtracking>0) {state.failed=true; return ;}
-            	        MismatchedSetException mse = new MismatchedSetException(null,input);
-            	        throw mse;
-            	    }
+            	    match(input,21,FOLLOW_21_in_postfix_expression1217); if (state.failed) return varname;
 
+            	    if ( state.backtracking==0 ) {writeASM("ADD X, 1\n"); if (p != null) {writeSetRegToMemory("X", p, parent.getScope()); }}
+
+            	    }
+            	    break;
+            	case 2 :
+            	    // nopC.g:345:11: '--'
+            	    {
+            	    match(input,25,FOLLOW_25_in_postfix_expression1231); if (state.failed) return varname;
+
+            	    if ( state.backtracking==0 ) {writeASM("SUB X, 1\n"); if (p != null) {writeSetRegToMemory("X", p, parent.getScope()); }}
 
             	    }
             	    break;
@@ -2935,6 +2986,8 @@ public class nopCParser extends Parser {
                 }
             } while (true);
 
+
+            if ( state.backtracking==0 ) {varname = p;}
 
             }
 
@@ -2949,21 +3002,26 @@ public class nopCParser extends Parser {
             if ( state.backtracking>0 ) { memoize(input, 31, postfix_expression_StartIndex); }
 
         }
-        return ;
+        return varname;
     }
     // $ANTLR end "postfix_expression"
 
 
 
     // $ANTLR start "primary_expression"
-    // nopC.g:316:1: primary_expression[GenericStatement parent] : ( NAME | '(' expression[parent] ')' | functionCall[parent] | WERT );
-    public final void primary_expression(GenericStatement parent) throws RecognitionException {
+    // nopC.g:350:1: primary_expression[GenericStatement parent] returns [String varname] : ( NAME | '(' expression[parent] ')' | functionCall[parent] | WERT );
+    public final String primary_expression(GenericStatement parent) throws RecognitionException {
+        String varname = null;
+
         int primary_expression_StartIndex = input.index();
 
-        try {
-            if ( state.backtracking>0 && alreadyParsedRule(input, 32) ) { return ; }
+        Token NAME4=null;
+        Token WERT5=null;
 
-            // nopC.g:317:2: ( NAME | '(' expression[parent] ')' | functionCall[parent] | WERT )
+        try {
+            if ( state.backtracking>0 && alreadyParsedRule(input, 32) ) { return varname; }
+
+            // nopC.g:351:2: ( NAME | '(' expression[parent] ')' | functionCall[parent] | WERT )
             int alt36=4;
             switch ( input.LA(1) ) {
             case NAME:
@@ -2977,7 +3035,7 @@ public class nopCParser extends Parser {
                     alt36=1;
                 }
                 else {
-                    if (state.backtracking>0) {state.failed=true; return ;}
+                    if (state.backtracking>0) {state.failed=true; return varname;}
                     NoViableAltException nvae =
                         new NoViableAltException("", 36, 1, input);
 
@@ -2997,7 +3055,7 @@ public class nopCParser extends Parser {
                 }
                 break;
             default:
-                if (state.backtracking>0) {state.failed=true; return ;}
+                if (state.backtracking>0) {state.failed=true; return varname;}
                 NoViableAltException nvae =
                     new NoViableAltException("", 36, 0, input);
 
@@ -3007,42 +3065,46 @@ public class nopCParser extends Parser {
 
             switch (alt36) {
                 case 1 :
-                    // nopC.g:317:4: NAME
+                    // nopC.g:351:4: NAME
                     {
-                    match(input,NAME,FOLLOW_NAME_in_primary_expression1235); if (state.failed) return ;
+                    NAME4=(Token)match(input,NAME,FOLLOW_NAME_in_primary_expression1265); if (state.failed) return varname;
+
+                    if ( state.backtracking==0 ) {writeSetVarToReg("X", (NAME4!=null?NAME4.getText():null), parent.getScope()); varname = (NAME4!=null?NAME4.getText():null);}
 
                     }
                     break;
                 case 2 :
-                    // nopC.g:318:4: '(' expression[parent] ')'
+                    // nopC.g:352:4: '(' expression[parent] ')'
                     {
-                    match(input,16,FOLLOW_16_in_primary_expression1240); if (state.failed) return ;
+                    match(input,16,FOLLOW_16_in_primary_expression1272); if (state.failed) return varname;
 
-                    pushFollow(FOLLOW_expression_in_primary_expression1242);
+                    pushFollow(FOLLOW_expression_in_primary_expression1274);
                     expression(parent);
 
                     state._fsp--;
-                    if (state.failed) return ;
+                    if (state.failed) return varname;
 
-                    match(input,17,FOLLOW_17_in_primary_expression1245); if (state.failed) return ;
+                    match(input,17,FOLLOW_17_in_primary_expression1277); if (state.failed) return varname;
 
                     }
                     break;
                 case 3 :
-                    // nopC.g:319:4: functionCall[parent]
+                    // nopC.g:353:4: functionCall[parent]
                     {
-                    pushFollow(FOLLOW_functionCall_in_primary_expression1251);
+                    pushFollow(FOLLOW_functionCall_in_primary_expression1283);
                     functionCall(parent);
 
                     state._fsp--;
-                    if (state.failed) return ;
+                    if (state.failed) return varname;
 
                     }
                     break;
                 case 4 :
-                    // nopC.g:320:4: WERT
+                    // nopC.g:354:4: WERT
                     {
-                    match(input,WERT,FOLLOW_WERT_in_primary_expression1257); if (state.failed) return ;
+                    WERT5=(Token)match(input,WERT,FOLLOW_WERT_in_primary_expression1289); if (state.failed) return varname;
+
+                    if ( state.backtracking==0 ) {writeSetImmidiateToReg("X", (WERT5!=null?WERT5.getText():null));}
 
                     }
                     break;
@@ -3059,21 +3121,21 @@ public class nopCParser extends Parser {
             if ( state.backtracking>0 ) { memoize(input, 32, primary_expression_StartIndex); }
 
         }
-        return ;
+        return varname;
     }
     // $ANTLR end "primary_expression"
 
 
 
     // $ANTLR start "typeSpecifier"
-    // nopC.g:345:1: typeSpecifier : ( 'int' | 'void' | 'bool' );
+    // nopC.g:377:1: typeSpecifier : ( 'int' | 'void' | 'bool' );
     public final void typeSpecifier() throws RecognitionException {
         int typeSpecifier_StartIndex = input.index();
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 33) ) { return ; }
 
-            // nopC.g:346:2: ( 'int' | 'void' | 'bool' )
+            // nopC.g:378:2: ( 'int' | 'void' | 'bool' )
             // nopC.g:
             {
             if ( input.LA(1)==44||input.LA(1)==51||input.LA(1)==53 ) {
@@ -3107,8 +3169,8 @@ public class nopCParser extends Parser {
 
     // $ANTLR start synpred4_nopC
     public final void synpred4_nopC_fragment() throws RecognitionException {
-        // nopC.g:116:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )
-        // nopC.g:116:3: typeSpecifier NAME ( '=' | ';' | ',' )
+        // nopC.g:149:2: ( typeSpecifier NAME ( '=' | ';' | ',' ) )
+        // nopC.g:149:3: typeSpecifier NAME ( '=' | ';' | ',' )
         {
         pushFollow(FOLLOW_typeSpecifier_in_synpred4_nopC89);
         typeSpecifier();
@@ -3137,8 +3199,8 @@ public class nopCParser extends Parser {
 
     // $ANTLR start synpred5_nopC
     public final void synpred5_nopC_fragment() throws RecognitionException {
-        // nopC.g:117:4: ( typeSpecifier NAME '(' )
-        // nopC.g:117:5: typeSpecifier NAME '('
+        // nopC.g:150:4: ( typeSpecifier NAME '(' )
+        // nopC.g:150:5: typeSpecifier NAME '('
         {
         pushFollow(FOLLOW_typeSpecifier_in_synpred5_nopC117);
         typeSpecifier();
@@ -3157,33 +3219,33 @@ public class nopCParser extends Parser {
 
     // $ANTLR start synpred17_nopC
     public final void synpred17_nopC_fragment() throws RecognitionException {
-        // nopC.g:174:5: ( ( functionCall[null] ';' ) ( assignment[null] ';' ) )
-        // nopC.g:174:5: ( functionCall[null] ';' ) ( assignment[null] ';' )
+        // nopC.g:207:5: ( ( functionCall[null] ';' ) ( assignment[null] ';' ) )
+        // nopC.g:207:5: ( functionCall[null] ';' ) ( assignment[null] ';' )
         {
-        // nopC.g:174:5: ( functionCall[null] ';' )
-        // nopC.g:174:7: functionCall[null] ';'
+        // nopC.g:207:5: ( functionCall[null] ';' )
+        // nopC.g:207:7: functionCall[null] ';'
         {
-        pushFollow(FOLLOW_functionCall_in_synpred17_nopC445);
+        pushFollow(FOLLOW_functionCall_in_synpred17_nopC447);
         functionCall(null);
 
         state._fsp--;
         if (state.failed) return ;
 
-        match(input,30,FOLLOW_30_in_synpred17_nopC448); if (state.failed) return ;
+        match(input,30,FOLLOW_30_in_synpred17_nopC450); if (state.failed) return ;
 
         }
 
 
-        // nopC.g:175:5: ( assignment[null] ';' )
-        // nopC.g:175:7: assignment[null] ';'
+        // nopC.g:208:5: ( assignment[null] ';' )
+        // nopC.g:208:7: assignment[null] ';'
         {
-        pushFollow(FOLLOW_assignment_in_synpred17_nopC457);
+        pushFollow(FOLLOW_assignment_in_synpred17_nopC459);
         assignment(null);
 
         state._fsp--;
         if (state.failed) return ;
 
-        match(input,30,FOLLOW_30_in_synpred17_nopC460); if (state.failed) return ;
+        match(input,30,FOLLOW_30_in_synpred17_nopC462); if (state.failed) return ;
 
         }
 
@@ -3266,140 +3328,142 @@ public class nopCParser extends Parser {
     public static final BitSet FOLLOW_expression_in_variableDeclarationList297 = new BitSet(new long[]{0x0000000000800002L});
     public static final BitSet FOLLOW_typeSpecifier_in_functionDefinition330 = new BitSet(new long[]{0x0000000000000080L});
     public static final BitSet FOLLOW_NAME_in_functionDefinition332 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_functionDefinition334 = new BitSet(new long[]{0x0028100000020000L});
-    public static final BitSet FOLLOW_parameterList_in_functionDefinition336 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_functionDefinition339 = new BitSet(new long[]{0x0080000000000000L});
-    public static final BitSet FOLLOW_55_in_functionDefinition341 = new BitSet(new long[]{0x087F700042210180L});
-    public static final BitSet FOLLOW_statement_in_functionDefinition343 = new BitSet(new long[]{0x087F700042210180L});
-    public static final BitSet FOLLOW_59_in_functionDefinition347 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_typeSpecifier_in_parameterList367 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_parameterList374 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_23_in_parameterList379 = new BitSet(new long[]{0x0028100000000000L});
-    public static final BitSet FOLLOW_typeSpecifier_in_parameterList381 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_parameterList388 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_55_in_codeBlock409 = new BitSet(new long[]{0x087F700042210180L});
-    public static final BitSet FOLLOW_statement_in_codeBlock410 = new BitSet(new long[]{0x087F700042210180L});
-    public static final BitSet FOLLOW_59_in_codeBlock413 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_statement_in_codeBlock418 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_functionCall_in_statement445 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_statement448 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_assignment_in_statement457 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_statement460 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_variableDeclaration_in_statement468 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_selection_statement_in_statement475 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_iteration_statement_in_statement483 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_jump_statement_in_statement491 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expression_statement_in_statement499 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_50_in_selection_statement520 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_selection_statement522 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_selection_statement524 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_selection_statement527 = new BitSet(new long[]{0x00FF700042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_selection_statement529 = new BitSet(new long[]{0x0000800000000002L});
-    public static final BitSet FOLLOW_47_in_selection_statement545 = new BitSet(new long[]{0x00FF700042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_selection_statement547 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_54_in_iteration_statement567 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_iteration_statement569 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_iteration_statement571 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_iteration_statement574 = new BitSet(new long[]{0x00FF700042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_iteration_statement576 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_48_in_iteration_statement582 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_iteration_statement584 = new BitSet(new long[]{0x0000000042210180L});
-    public static final BitSet FOLLOW_expression_statement_in_iteration_statement586 = new BitSet(new long[]{0x0000000042210180L});
-    public static final BitSet FOLLOW_expression_statement_in_iteration_statement589 = new BitSet(new long[]{0x0000000002230180L});
-    public static final BitSet FOLLOW_expression_in_iteration_statement592 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_iteration_statement596 = new BitSet(new long[]{0x00FF700042210180L});
-    public static final BitSet FOLLOW_codeBlock_in_iteration_statement598 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_30_in_expression_statement613 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expression_in_expression_statement618 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_expression_statement621 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_49_in_jump_statement634 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_NAME_in_jump_statement636 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement638 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_46_in_jump_statement643 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement645 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_45_in_jump_statement650 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement652 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_52_in_jump_statement657 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement659 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_52_in_jump_statement664 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_jump_statement666 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_jump_statement669 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAME_in_functionCall689 = new BitSet(new long[]{0x0000000000010000L});
-    public static final BitSet FOLLOW_16_in_functionCall691 = new BitSet(new long[]{0x0000000000820180L});
-    public static final BitSet FOLLOW_functionCallArgumentList_in_functionCall695 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_functionCall698 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NAME_in_functionCallArgumentList717 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_functionCall_in_functionCallArgumentList721 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_WERT_in_functionCallArgumentList726 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_23_in_functionCallArgumentList731 = new BitSet(new long[]{0x0000000000000180L});
-    public static final BitSet FOLLOW_NAME_in_functionCallArgumentList734 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_functionCall_in_functionCallArgumentList738 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_WERT_in_functionCallArgumentList743 = new BitSet(new long[]{0x0000000000800002L});
-    public static final BitSet FOLLOW_NAME_in_assignment765 = new BitSet(new long[]{0x0200090A14489000L});
-    public static final BitSet FOLLOW_assignmentOperator_in_assignment767 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_assignment769 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_logical_or_expression_in_expression847 = new BitSet(new long[]{0x0000020000000002L});
-    public static final BitSet FOLLOW_41_in_expression851 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_expression853 = new BitSet(new long[]{0x0000000020000000L});
-    public static final BitSet FOLLOW_29_in_expression856 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_expression858 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression876 = new BitSet(new long[]{0x0400000000000002L});
-    public static final BitSet FOLLOW_58_in_logical_or_expression880 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression882 = new BitSet(new long[]{0x0400000000000002L});
-    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression900 = new BitSet(new long[]{0x0000000000002002L});
-    public static final BitSet FOLLOW_13_in_logical_and_expression904 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression906 = new BitSet(new long[]{0x0000000000002002L});
-    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression924 = new BitSet(new long[]{0x0100000000000002L});
-    public static final BitSet FOLLOW_56_in_inclusive_or_expression928 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression930 = new BitSet(new long[]{0x0100000000000002L});
-    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression948 = new BitSet(new long[]{0x0000040000000002L});
-    public static final BitSet FOLLOW_42_in_exclusive_or_expression952 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression954 = new BitSet(new long[]{0x0000040000000002L});
-    public static final BitSet FOLLOW_equality_expression_in_and_expression972 = new BitSet(new long[]{0x0000000000004002L});
-    public static final BitSet FOLLOW_14_in_and_expression976 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_equality_expression_in_and_expression978 = new BitSet(new long[]{0x0000000000004002L});
-    public static final BitSet FOLLOW_relational_expression_in_equality_expression995 = new BitSet(new long[]{0x0000001000000402L});
-    public static final BitSet FOLLOW_set_in_equality_expression999 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_relational_expression_in_equality_expression1005 = new BitSet(new long[]{0x0000001000000402L});
-    public static final BitSet FOLLOW_shift_expression_in_relational_expression1023 = new BitSet(new long[]{0x0000006480000002L});
-    public static final BitSet FOLLOW_set_in_relational_expression1027 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_shift_expression_in_relational_expression1037 = new BitSet(new long[]{0x0000006480000002L});
-    public static final BitSet FOLLOW_additive_expression_in_shift_expression1055 = new BitSet(new long[]{0x0000008100000002L});
-    public static final BitSet FOLLOW_set_in_shift_expression1059 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_additive_expression_in_shift_expression1065 = new BitSet(new long[]{0x0000008100000002L});
-    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression1086 = new BitSet(new long[]{0x0000000001100002L});
-    public static final BitSet FOLLOW_20_in_additive_expression1091 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression1093 = new BitSet(new long[]{0x0000000001100002L});
-    public static final BitSet FOLLOW_24_in_additive_expression1098 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression1100 = new BitSet(new long[]{0x0000000001100002L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1119 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_18_in_multiplicative_expression1124 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1126 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_27_in_multiplicative_expression1131 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1133 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_11_in_multiplicative_expression1138 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1140 = new BitSet(new long[]{0x0000000008040802L});
-    public static final BitSet FOLLOW_postfix_expression_in_unary_expression1156 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_21_in_unary_expression1162 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_unary_expression1164 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_25_in_unary_expression1170 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_unary_expression_in_unary_expression1172 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_primary_expression_in_postfix_expression1187 = new BitSet(new long[]{0x0000000002200002L});
-    public static final BitSet FOLLOW_NAME_in_primary_expression1235 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_16_in_primary_expression1240 = new BitSet(new long[]{0x0000000002210180L});
-    public static final BitSet FOLLOW_expression_in_primary_expression1242 = new BitSet(new long[]{0x0000000000020000L});
-    public static final BitSet FOLLOW_17_in_primary_expression1245 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_functionCall_in_primary_expression1251 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_WERT_in_primary_expression1257 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_16_in_functionDefinition336 = new BitSet(new long[]{0x0028100000020000L});
+    public static final BitSet FOLLOW_parameterList_in_functionDefinition338 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_functionDefinition341 = new BitSet(new long[]{0x0080000000000000L});
+    public static final BitSet FOLLOW_55_in_functionDefinition343 = new BitSet(new long[]{0x087F700042210180L});
+    public static final BitSet FOLLOW_statement_in_functionDefinition345 = new BitSet(new long[]{0x087F700042210180L});
+    public static final BitSet FOLLOW_59_in_functionDefinition349 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_typeSpecifier_in_parameterList369 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_parameterList376 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_23_in_parameterList381 = new BitSet(new long[]{0x0028100000000000L});
+    public static final BitSet FOLLOW_typeSpecifier_in_parameterList383 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_parameterList390 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_55_in_codeBlock411 = new BitSet(new long[]{0x087F700042210180L});
+    public static final BitSet FOLLOW_statement_in_codeBlock412 = new BitSet(new long[]{0x087F700042210180L});
+    public static final BitSet FOLLOW_59_in_codeBlock415 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_statement_in_codeBlock420 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_functionCall_in_statement447 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_statement450 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_assignment_in_statement459 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_statement462 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_variableDeclaration_in_statement470 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_selection_statement_in_statement477 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_iteration_statement_in_statement485 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_jump_statement_in_statement493 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expression_statement_in_statement501 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_50_in_selection_statement522 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_selection_statement524 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_selection_statement526 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_selection_statement529 = new BitSet(new long[]{0x00FF700042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_selection_statement531 = new BitSet(new long[]{0x0000800000000002L});
+    public static final BitSet FOLLOW_47_in_selection_statement547 = new BitSet(new long[]{0x00FF700042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_selection_statement549 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_54_in_iteration_statement569 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_iteration_statement571 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_iteration_statement573 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_iteration_statement576 = new BitSet(new long[]{0x00FF700042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_iteration_statement578 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_48_in_iteration_statement584 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_iteration_statement586 = new BitSet(new long[]{0x0000000042210180L});
+    public static final BitSet FOLLOW_expression_statement_in_iteration_statement588 = new BitSet(new long[]{0x0000000042210180L});
+    public static final BitSet FOLLOW_expression_statement_in_iteration_statement591 = new BitSet(new long[]{0x0000000002230180L});
+    public static final BitSet FOLLOW_expression_in_iteration_statement594 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_iteration_statement598 = new BitSet(new long[]{0x00FF700042210180L});
+    public static final BitSet FOLLOW_codeBlock_in_iteration_statement600 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_30_in_expression_statement615 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expression_in_expression_statement620 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_expression_statement623 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_49_in_jump_statement636 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_NAME_in_jump_statement638 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement640 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_46_in_jump_statement645 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement647 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_45_in_jump_statement652 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement654 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_52_in_jump_statement659 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement661 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_52_in_jump_statement666 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_jump_statement668 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_jump_statement671 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAME_in_functionCall691 = new BitSet(new long[]{0x0000000000010000L});
+    public static final BitSet FOLLOW_16_in_functionCall693 = new BitSet(new long[]{0x0000000000820180L});
+    public static final BitSet FOLLOW_functionCallArgumentList_in_functionCall697 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_functionCall700 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NAME_in_functionCallArgumentList719 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_functionCall_in_functionCallArgumentList723 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_WERT_in_functionCallArgumentList728 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_23_in_functionCallArgumentList733 = new BitSet(new long[]{0x0000000000000180L});
+    public static final BitSet FOLLOW_NAME_in_functionCallArgumentList736 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_functionCall_in_functionCallArgumentList740 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_WERT_in_functionCallArgumentList745 = new BitSet(new long[]{0x0000000000800002L});
+    public static final BitSet FOLLOW_NAME_in_assignment767 = new BitSet(new long[]{0x0200090A14489000L});
+    public static final BitSet FOLLOW_assignmentOperator_in_assignment769 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_assignment771 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_logical_or_expression_in_expression849 = new BitSet(new long[]{0x0000020000000002L});
+    public static final BitSet FOLLOW_41_in_expression853 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_expression855 = new BitSet(new long[]{0x0000000020000000L});
+    public static final BitSet FOLLOW_29_in_expression858 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_expression860 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression878 = new BitSet(new long[]{0x0400000000000002L});
+    public static final BitSet FOLLOW_58_in_logical_or_expression882 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_logical_and_expression_in_logical_or_expression884 = new BitSet(new long[]{0x0400000000000002L});
+    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression902 = new BitSet(new long[]{0x0000000000002002L});
+    public static final BitSet FOLLOW_13_in_logical_and_expression906 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_inclusive_or_expression_in_logical_and_expression908 = new BitSet(new long[]{0x0000000000002002L});
+    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression926 = new BitSet(new long[]{0x0100000000000002L});
+    public static final BitSet FOLLOW_56_in_inclusive_or_expression930 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_exclusive_or_expression_in_inclusive_or_expression932 = new BitSet(new long[]{0x0100000000000002L});
+    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression950 = new BitSet(new long[]{0x0000040000000002L});
+    public static final BitSet FOLLOW_42_in_exclusive_or_expression954 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_and_expression_in_exclusive_or_expression956 = new BitSet(new long[]{0x0000040000000002L});
+    public static final BitSet FOLLOW_equality_expression_in_and_expression974 = new BitSet(new long[]{0x0000000000004002L});
+    public static final BitSet FOLLOW_14_in_and_expression978 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_equality_expression_in_and_expression980 = new BitSet(new long[]{0x0000000000004002L});
+    public static final BitSet FOLLOW_relational_expression_in_equality_expression997 = new BitSet(new long[]{0x0000001000000402L});
+    public static final BitSet FOLLOW_set_in_equality_expression1001 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_relational_expression_in_equality_expression1007 = new BitSet(new long[]{0x0000001000000402L});
+    public static final BitSet FOLLOW_shift_expression_in_relational_expression1025 = new BitSet(new long[]{0x0000006480000002L});
+    public static final BitSet FOLLOW_set_in_relational_expression1029 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_shift_expression_in_relational_expression1039 = new BitSet(new long[]{0x0000006480000002L});
+    public static final BitSet FOLLOW_additive_expression_in_shift_expression1057 = new BitSet(new long[]{0x0000008100000002L});
+    public static final BitSet FOLLOW_set_in_shift_expression1061 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_additive_expression_in_shift_expression1067 = new BitSet(new long[]{0x0000008100000002L});
+    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression1088 = new BitSet(new long[]{0x0000000001100002L});
+    public static final BitSet FOLLOW_20_in_additive_expression1093 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression1095 = new BitSet(new long[]{0x0000000001100002L});
+    public static final BitSet FOLLOW_24_in_additive_expression1100 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_multiplicative_expression_in_additive_expression1102 = new BitSet(new long[]{0x0000000001100002L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1121 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_18_in_multiplicative_expression1126 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1128 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_27_in_multiplicative_expression1133 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1135 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_11_in_multiplicative_expression1140 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_multiplicative_expression1142 = new BitSet(new long[]{0x0000000008040802L});
+    public static final BitSet FOLLOW_postfix_expression_in_unary_expression1162 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_21_in_unary_expression1169 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_unary_expression1171 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_25_in_unary_expression1178 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_unary_expression_in_unary_expression1180 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_primary_expression_in_postfix_expression1204 = new BitSet(new long[]{0x0000000002200002L});
+    public static final BitSet FOLLOW_21_in_postfix_expression1217 = new BitSet(new long[]{0x0000000002200002L});
+    public static final BitSet FOLLOW_25_in_postfix_expression1231 = new BitSet(new long[]{0x0000000002200002L});
+    public static final BitSet FOLLOW_NAME_in_primary_expression1265 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_16_in_primary_expression1272 = new BitSet(new long[]{0x0000000002210180L});
+    public static final BitSet FOLLOW_expression_in_primary_expression1274 = new BitSet(new long[]{0x0000000000020000L});
+    public static final BitSet FOLLOW_17_in_primary_expression1277 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_functionCall_in_primary_expression1283 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_WERT_in_primary_expression1289 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_typeSpecifier_in_synpred4_nopC89 = new BitSet(new long[]{0x0000000000000080L});
     public static final BitSet FOLLOW_NAME_in_synpred4_nopC91 = new BitSet(new long[]{0x0000000840800000L});
     public static final BitSet FOLLOW_set_in_synpred4_nopC93 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_typeSpecifier_in_synpred5_nopC117 = new BitSet(new long[]{0x0000000000000080L});
     public static final BitSet FOLLOW_NAME_in_synpred5_nopC119 = new BitSet(new long[]{0x0000000000010000L});
     public static final BitSet FOLLOW_16_in_synpred5_nopC122 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_functionCall_in_synpred17_nopC445 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_synpred17_nopC448 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_assignment_in_synpred17_nopC457 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_synpred17_nopC460 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_functionCall_in_synpred17_nopC447 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_synpred17_nopC450 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_assignment_in_synpred17_nopC459 = new BitSet(new long[]{0x0000000040000000L});
+    public static final BitSet FOLLOW_30_in_synpred17_nopC462 = new BitSet(new long[]{0x0000000000000002L});
 
 }

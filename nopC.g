@@ -20,6 +20,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 }
 
+
+// REGISTER USAGE
+// X - RETURN VALUES
+// Y - SECOND OPERAND, which is the first operand pushed to stack
+// B - TEMPORARY BOOLEAN RESULTS
+
 @members {
     TreeMap<String, FunctionDefinition> functionTable = new TreeMap<String, FunctionDefinition>();
     HashMap<String, String> varTable = new HashMap<String, String>();
@@ -232,7 +238,8 @@ ScopedStatement iteration_statement = new ScopedStatement(parent.getScope(), fun
 	
 expression_statement [GenericStatement parent]
 	: ';'
-	| expression[parent] ';'
+	| expression[parent] ';' {System.out.println("DORT");	}
+	
 	;
 
 jump_statement [GenericStatement parent]
@@ -271,7 +278,8 @@ assignment[GenericStatement parent]
 	}
 }
 	:
-		NAME assignmentOperator expression[p]
+		NAME {System.out.println("HIER: " + $NAME.text);} assignmentOperator expression[p]
+		
 	;
 
 
@@ -291,46 +299,92 @@ assignmentOperator
 	;
 
 	expression[GenericStatement parent]
-		: logical_or_expression[parent] ('?' expression[parent] ':' expression[parent])?
+		: logical_or_expression[parent] 
+			(
+				'?' 
+				expression[parent] 
+				':' 
+				expression[parent]
+			)?
 		;
 
 	logical_or_expression[GenericStatement parent]
-		: logical_and_expression[parent] ('||' logical_and_expression[parent])*
+		: logical_and_expression[parent] 
+			(
+				'||' {writeASM("SET PUSH, X\n");}	logical_and_expression[parent] {writeASM("SET Y, POP \n OR X, Y\nIFG X, 0\n   SET X, 1\n");}
+			)*
 		;
 
 	logical_and_expression[GenericStatement parent]
-		: inclusive_or_expression[parent] ('&&' inclusive_or_expression[parent])*
+		: inclusive_or_expression[parent] 
+			(
+				'&&' {writeASM("SET PUSH, X\n");} inclusive_or_expression[parent] {writeASM("SET Y, POP \nIFG Y, 0\n   SET Y, FFFF\n AND X, Y\nIFG X, 0\n   SET X, 1\n");}
+			)*
 		;
 
 	inclusive_or_expression[GenericStatement parent]
-		: exclusive_or_expression[parent] ('|' exclusive_or_expression[parent])*
+		: exclusive_or_expression[parent] 
+			(
+				'|' {writeASM("SET PUSH, X\n");} exclusive_or_expression[parent] {writeASM("SET Y, POP \nOR X, Y\n");}
+			)*
 		;
 
 	exclusive_or_expression[GenericStatement parent]
-		: and_expression[parent] ('^' and_expression[parent])*
+		: and_expression[parent] 
+		(
+			'^' {writeASM("SET PUSH, X\n");} and_expression[parent] {writeASM("SET Y, POP \nXOR X, Y\n");}
+		)*
 		;
 
 	and_expression[GenericStatement parent]
-		: equality_expression[parent] ('&' equality_expression[parent])*
+		: equality_expression[parent] 
+		(
+			'&' {writeASM("SET PUSH, X\n");} equality_expression[parent] 	{writeASM("SET Y, POP \nAND X, Y\n");}
+		)*
 		;
+		
 	equality_expression[GenericStatement parent]
-		: relational_expression[parent] (('=='|'!=') relational_expression[parent])*
+		: relational_expression[parent] 
+			(
+				'==' {writeASM("SET PUSH, X\n");} relational_expression[parent] {writeASM("SET B, 0\nSET Y, POP \nIFE	 X, Y\n   SET B, 1\nSET X, B\n");}
+			 |'!=' {writeASM("SET PUSH, X\n");} relational_expression[parent] {writeASM("SET B, 0\nSET Y, POP \nIFN  X, Y\n   SET B, 1\nSET X, B\n");}
+				
+			)*
 		;
 
 	relational_expression[GenericStatement parent]
-		: shift_expression[parent] (('<'|'>'|'<='|'>=') shift_expression[parent])*
+		: shift_expression[parent] 
+			(
+					 '<' {writeASM("SET PUSH, X\n");} shift_expression[parent]  {writeASM("SET B, 0\nSET Y, POP \nIFG X, Y\n   SET B, 1\nSET X, B\n");} 
+					|'>' {writeASM("SET PUSH, X\n");} shift_expression[parent]  {writeASM("SET B, 0\nSET Y, POP \nIFG Y, X\n   SET B, 1\nSET X, B\n");} 
+					|'<=' {writeASM("SET PUSH, X\n");} shift_expression[parent] {writeASM("SET B, 0\nSET Y, POP \nIFG X, Y\n   SET B, 1\nIFE X, Y\n    SET B, 1\nSET X, B\n" );}  
+					|'>=' {writeASM("SET PUSH, X\n");} shift_expression[parent] {writeASM("SET B, 0\nSET Y, POP \nIFG Y, X\n   SET B, 1\nIFE X, Y\n    SET B, 1\nSET X, B\n" );}  				
+			)*
 		;
 
 	shift_expression[GenericStatement parent]
-		: additive_expression[parent] (('<<'|'>>') additive_expression[parent])*
+		: additive_expression[parent] 
+		(
+				'<<' {writeASM("SET PUSH, X\n");} additive_expression[parent] {writeASM("SET Y, POP \nSHL Y, X\n SET X, Y\n");}
+			| '>>' {writeASM("SET PUSH, X\n");} additive_expression[parent] {writeASM("SET Y, POP \nSHR Y, X\n SET X, Y\n");} 
+		)*
 		;
 		
 	additive_expression[GenericStatement parent]
-		: (multiplicative_expression[parent]) ('+' multiplicative_expression[parent] | '-' multiplicative_expression[parent])*
+		: (multiplicative_expression[parent]) 
+			(
+					'+' {writeASM("SET PUSH, X\n");} multiplicative_expression[parent] {writeASM("SET Y, POP \nADD X, Y\n");} 
+				| '-' {writeASM("SET PUSH, X\n");} multiplicative_expression[parent] {writeASM("SET Y, POP \nSUB Y, X\n SET X, Y \n");} 
+			)*
 		;
 
 	multiplicative_expression[GenericStatement parent]
-		: (unary_expression[parent]) ('*' unary_expression[parent] | '/' unary_expression[parent] | '%' unary_expression[parent])*
+		: (unary_expression[parent]) 
+			 (
+					'*' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nMUL X, Y\n");} 
+				| '/' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nDIV Y, X\n SET X, Y \n");} 
+				| '%' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nMOD Y, X\n SET X, Y \n");}
+			 )*
 		;
 		
 		

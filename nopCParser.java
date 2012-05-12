@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nopC.g 2012-05-12 16:12:55
+// $ANTLR 3.4 nopC.g 2012-05-12 16:20:06
 
 import java.util.Map;
 import java.util.HashMap;
@@ -97,7 +97,7 @@ public class nopCParser extends Parser {
     }
     public nopCParser(TokenStream input, RecognizerSharedState state) {
         super(input, state);
-        this.state.ruleMemo = new HashMap[105+1];
+        this.state.ruleMemo = new HashMap[106+1];
          
 
     }
@@ -1066,7 +1066,7 @@ public class nopCParser extends Parser {
 
 
     // $ANTLR start "statement"
-    // nopC.g:208:1: statement[GenericStatement parent] : ( ( functionCall[null] ';' ) ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] );
+    // nopC.g:208:1: statement[GenericStatement parent] : ( ( functionCall[null] ';' ) | ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] );
     public final void statement(GenericStatement parent) throws RecognitionException {
         int statement_StartIndex = input.index();
 
@@ -1076,21 +1076,21 @@ public class nopCParser extends Parser {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 10) ) { return ; }
 
-            // nopC.g:212:2: ( ( functionCall[null] ';' ) ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] )
-            int alt14=6;
+            // nopC.g:212:2: ( ( functionCall[null] ';' ) | ( assignment[null] ';' ) | variableDeclaration[parent] | selection_statement[parent] | iteration_statement[parent] | jump_statement[parent] | expression_statement[parent] )
+            int alt14=7;
             switch ( input.LA(1) ) {
             case NAME:
                 {
-                int LA14_1 = input.LA(2);
-
-                if ( (LA14_1==16) ) {
+                switch ( input.LA(2) ) {
+                case 16:
+                    {
                     int LA14_15 = input.LA(3);
 
                     if ( (synpred17_nopC()) ) {
                         alt14=1;
                     }
                     else if ( (true) ) {
-                        alt14=6;
+                        alt14=7;
                     }
                     else {
                         if (state.backtracking>0) {state.failed=true; return ;}
@@ -1100,11 +1100,50 @@ public class nopCParser extends Parser {
                         throw nvae;
 
                     }
-                }
-                else if ( ((LA14_1 >= 10 && LA14_1 <= 11)||(LA14_1 >= 13 && LA14_1 <= 14)||LA14_1==18||(LA14_1 >= 20 && LA14_1 <= 21)||(LA14_1 >= 24 && LA14_1 <= 25)||LA14_1==27||(LA14_1 >= 30 && LA14_1 <= 32)||LA14_1==34||(LA14_1 >= 36 && LA14_1 <= 39)||(LA14_1 >= 41 && LA14_1 <= 42)||LA14_1==56||LA14_1==58) ) {
-                    alt14=6;
-                }
-                else {
+                    }
+                    break;
+                case 12:
+                case 15:
+                case 19:
+                case 22:
+                case 26:
+                case 28:
+                case 33:
+                case 35:
+                case 40:
+                case 43:
+                case 57:
+                    {
+                    alt14=2;
+                    }
+                    break;
+                case 10:
+                case 11:
+                case 13:
+                case 14:
+                case 18:
+                case 20:
+                case 21:
+                case 24:
+                case 25:
+                case 27:
+                case 30:
+                case 31:
+                case 32:
+                case 34:
+                case 36:
+                case 37:
+                case 38:
+                case 39:
+                case 41:
+                case 42:
+                case 56:
+                case 58:
+                    {
+                    alt14=7;
+                    }
+                    break;
+                default:
                     if (state.backtracking>0) {state.failed=true; return ;}
                     NoViableAltException nvae =
                         new NoViableAltException("", 14, 1, input);
@@ -1112,24 +1151,25 @@ public class nopCParser extends Parser {
                     throw nvae;
 
                 }
+
                 }
                 break;
             case 44:
             case 51:
             case 53:
                 {
-                alt14=2;
+                alt14=3;
                 }
                 break;
             case 50:
                 {
-                alt14=3;
+                alt14=4;
                 }
                 break;
             case 48:
             case 54:
                 {
-                alt14=4;
+                alt14=5;
                 }
                 break;
             case 45:
@@ -1137,7 +1177,7 @@ public class nopCParser extends Parser {
             case 49:
             case 52:
                 {
-                alt14=5;
+                alt14=6;
                 }
                 break;
             case WERT:
@@ -1146,7 +1186,7 @@ public class nopCParser extends Parser {
             case 25:
             case 30:
                 {
-                alt14=6;
+                alt14=7;
                 }
                 break;
             default:
@@ -1160,7 +1200,7 @@ public class nopCParser extends Parser {
 
             switch (alt14) {
                 case 1 :
-                    // nopC.g:213:5: ( functionCall[null] ';' ) ( assignment[null] ';' )
+                    // nopC.g:213:5: ( functionCall[null] ';' )
                     {
                     // nopC.g:213:5: ( functionCall[null] ';' )
                     // nopC.g:213:7: functionCall[null] ';'
@@ -1176,6 +1216,11 @@ public class nopCParser extends Parser {
                     }
 
 
+                    }
+                    break;
+                case 2 :
+                    // nopC.g:214:5: ( assignment[null] ';' )
+                    {
                     // nopC.g:214:5: ( assignment[null] ';' )
                     // nopC.g:214:7: assignment[null] ';'
                     {
@@ -1192,7 +1237,7 @@ public class nopCParser extends Parser {
 
                     }
                     break;
-                case 2 :
+                case 3 :
                     // nopC.g:215:5: variableDeclaration[parent]
                     {
                     pushFollow(FOLLOW_variableDeclaration_in_statement476);
@@ -1203,7 +1248,7 @@ public class nopCParser extends Parser {
 
                     }
                     break;
-                case 3 :
+                case 4 :
                     // nopC.g:216:5: selection_statement[parent]
                     {
                     pushFollow(FOLLOW_selection_statement_in_statement483);
@@ -1214,7 +1259,7 @@ public class nopCParser extends Parser {
 
                     }
                     break;
-                case 4 :
+                case 5 :
                     // nopC.g:217:6: iteration_statement[parent]
                     {
                     pushFollow(FOLLOW_iteration_statement_in_statement491);
@@ -1225,7 +1270,7 @@ public class nopCParser extends Parser {
 
                     }
                     break;
-                case 5 :
+                case 6 :
                     // nopC.g:218:6: jump_statement[parent]
                     {
                     pushFollow(FOLLOW_jump_statement_in_statement499);
@@ -1236,7 +1281,7 @@ public class nopCParser extends Parser {
 
                     }
                     break;
-                case 6 :
+                case 7 :
                     // nopC.g:219:6: expression_statement[parent]
                     {
                     pushFollow(FOLLOW_expression_statement_in_statement507);
@@ -1516,7 +1561,7 @@ public class nopCParser extends Parser {
 
                     match(input,30,FOLLOW_30_in_expression_statement629); if (state.failed) return ;
 
-                    if ( state.backtracking==0 ) {System.out.println("DORT");}
+                    if ( state.backtracking==0 ) {System.out.println("DORT");	}
 
                     }
                     break;
@@ -3355,8 +3400,8 @@ public class nopCParser extends Parser {
 
     // $ANTLR start synpred17_nopC
     public final void synpred17_nopC_fragment() throws RecognitionException {
-        // nopC.g:213:5: ( ( functionCall[null] ';' ) ( assignment[null] ';' ) )
-        // nopC.g:213:5: ( functionCall[null] ';' ) ( assignment[null] ';' )
+        // nopC.g:213:5: ( ( functionCall[null] ';' ) )
+        // nopC.g:213:5: ( functionCall[null] ';' )
         {
         // nopC.g:213:5: ( functionCall[null] ';' )
         // nopC.g:213:7: functionCall[null] ';'
@@ -3368,20 +3413,6 @@ public class nopCParser extends Parser {
         if (state.failed) return ;
 
         match(input,30,FOLLOW_30_in_synpred17_nopC456); if (state.failed) return ;
-
-        }
-
-
-        // nopC.g:214:5: ( assignment[null] ';' )
-        // nopC.g:214:7: assignment[null] ';'
-        {
-        pushFollow(FOLLOW_assignment_in_synpred17_nopC465);
-        assignment(null);
-
-        state._fsp--;
-        if (state.failed) return ;
-
-        match(input,30,FOLLOW_30_in_synpred17_nopC468); if (state.failed) return ;
 
         }
 
@@ -3480,7 +3511,7 @@ public class nopCParser extends Parser {
     public static final BitSet FOLLOW_59_in_codeBlock421 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_statement_in_codeBlock426 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_functionCall_in_statement453 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_statement456 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_30_in_statement456 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_assignment_in_statement465 = new BitSet(new long[]{0x0000000040000000L});
     public static final BitSet FOLLOW_30_in_statement468 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_variableDeclaration_in_statement476 = new BitSet(new long[]{0x0000000000000002L});
@@ -3608,8 +3639,6 @@ public class nopCParser extends Parser {
     public static final BitSet FOLLOW_NAME_in_synpred5_nopC125 = new BitSet(new long[]{0x0000000000010000L});
     public static final BitSet FOLLOW_16_in_synpred5_nopC128 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_functionCall_in_synpred17_nopC453 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_synpred17_nopC456 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_assignment_in_synpred17_nopC465 = new BitSet(new long[]{0x0000000040000000L});
-    public static final BitSet FOLLOW_30_in_synpred17_nopC468 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_30_in_synpred17_nopC456 = new BitSet(new long[]{0x0000000000000002L});
 
 }

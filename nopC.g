@@ -211,7 +211,7 @@ statement[GenericStatement parent]
 }
 	:
 		  ( functionCall[null] ';')
-		 	( assignment[null] ';'	)
+		| ( assignment[null] ';'	)
 		| variableDeclaration[parent]
 		| selection_statement[parent]
 	  | iteration_statement[parent]

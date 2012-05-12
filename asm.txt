@@ -1,0 +1,10 @@
+_____ STARTING NEW RUN _____ 
+:V6foo dat 0000
+:V7k dat 0000
+:V8main dat 0000
+:V5z dat 0000
+:V0i dat 0000
+:V3i dat 0000
+:V2j dat 0005
+:V1c dat 0000
+:V4o dat 0000

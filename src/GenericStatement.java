@@ -1,3 +1,4 @@
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
@@ -67,4 +68,11 @@ public class GenericStatement {
 	public String asm(){
 		return "";
 	}
+	
+	void foo () {
+		Integer i  = Integer.parseInt("1");
+		
+
+	}
+	
 }

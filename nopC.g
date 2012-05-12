@@ -13,13 +13,91 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.TreeMap;
 import src.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 }
 
 @members {
     TreeMap<String, FunctionDefinition> functionTable = new TreeMap<String, FunctionDefinition>();
     HashMap<String, String> varTable = new HashMap<String, String>();
-
 		GenericStatement hackStore1;
+		
+		FileWriter fstream;
+	  BufferedWriter out;
+	
+	
+	
+		void openWriter () {
+			try {
+			fstream = new FileWriter("asm.txt");
+			out = new BufferedWriter(fstream);
+			writeASM("_____ STARTING NEW RUN _____ \n");
+			
+			 } catch (Exception e) {
+				System.err.println("Error: " + e.getMessage());
+			}
+		}
+		void closeWriter () {
+			try {
+			
+			out.close();
+			 } catch (Exception e) {
+				System.err.println("Error: " + e.getMessage());
+			}
+		}
+	
+		void writeASM (String str) {
+			try{
+		  	out.write(str);
+		  }catch (Exception e){
+		  	System.err.println("Error: " + e.getMessage());
+		  }
+		}
+		
+		
+		
+
+		void writeDSEG () {
+			System.out.println("Writing DSEG");
+			for (String label : varTable.keySet()) {
+				writeASM(":" + label + " dat " +  String.format("\%04x", Integer.parseInt(varTable.get(label))) + "\n");				
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 }
 
 cFile returns [GenericStatement ret]
@@ -28,7 +106,7 @@ HashMap<String, String> scope = new HashMap<String, String>();
 GenericStatement cFile = new GenericStatement(scope, functionTable, varTable);
 }
 	: 
-	globalFunctionOrStatement[cFile]+{$ret = $globalFunctionOrStatement.ret;}
+	globalFunctionOrStatement[cFile]+{openWriter(); writeDSEG(); closeWriter();}
 	;
 
 
@@ -143,12 +221,12 @@ functionCall [GenericStatement parent]
 	FunctionDefinition fun = null;
 }
 	: 
-	NAME '(' {fun = functionTable.get($NAME.text); System.out.println(functionTable.get($NAME.text).getLabel());} variableList[p, fun] ')' 
+	NAME '(' {fun = functionTable.get($NAME.text);} functionCallArgumentList[p, fun] ')' 
 	;
 	
-variableList[GenericStatement parent, FunctionDefinition fun]
+functionCallArgumentList[GenericStatement parent, FunctionDefinition fun]
 	:
-		NAME? (',' NAME)*
+		  (NAME | functionCall[parent] | WERT)? (',' (NAME | functionCall[parent] | WERT))*
 	;
 
 assignment[GenericStatement parent]

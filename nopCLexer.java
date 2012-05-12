@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nopC.g 2012-05-11 23:46:32
+// $ANTLR 3.4 nopC.g 2012-05-12 12:45:17
 
 import org.antlr.runtime.*;
 import java.util.Stack;
@@ -1197,10 +1197,10 @@ public class nopCLexer extends Lexer {
         try {
             int _type = WERT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nopC.g:248:2: ( ( '0' .. '9' )+ )
-            // nopC.g:249:3: ( '0' .. '9' )+
+            // nopC.g:326:2: ( ( '0' .. '9' )+ )
+            // nopC.g:327:3: ( '0' .. '9' )+
             {
-            // nopC.g:249:3: ( '0' .. '9' )+
+            // nopC.g:327:3: ( '0' .. '9' )+
             int cnt1=0;
             loop1:
             do {
@@ -1255,13 +1255,13 @@ public class nopCLexer extends Lexer {
         try {
             int _type = NAME;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nopC.g:253:2: ( LETTER ( LETTER | '0' .. '9' )* )
-            // nopC.g:254:2: LETTER ( LETTER | '0' .. '9' )*
+            // nopC.g:331:2: ( LETTER ( LETTER | '0' .. '9' )* )
+            // nopC.g:332:2: LETTER ( LETTER | '0' .. '9' )*
             {
             mLETTER(); 
 
 
-            // nopC.g:254:9: ( LETTER | '0' .. '9' )*
+            // nopC.g:332:9: ( LETTER | '0' .. '9' )*
             loop2:
             do {
                 int alt2=2;
@@ -1309,7 +1309,7 @@ public class nopCLexer extends Lexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // nopC.g:260:2: ( '$' | 'A' .. 'Z' | 'a' .. 'z' | '_' )
+            // nopC.g:338:2: ( '$' | 'A' .. 'Z' | 'a' .. 'z' | '_' )
             // nopC.g:
             {
             if ( input.LA(1)=='$'||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
@@ -1337,8 +1337,8 @@ public class nopCLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nopC.g:275:3: ( ( ' ' | '\\t' | '\\n' | '\\r' ) )
-            // nopC.g:275:4: ( ' ' | '\\t' | '\\n' | '\\r' )
+            // nopC.g:353:3: ( ( ' ' | '\\t' | '\\n' | '\\r' ) )
+            // nopC.g:353:4: ( ' ' | '\\t' | '\\n' | '\\r' )
             {
             if ( (input.LA(1) >= '\t' && input.LA(1) <= '\n')||input.LA(1)=='\r'||input.LA(1)==' ' ) {
                 input.consume();
@@ -1368,14 +1368,14 @@ public class nopCLexer extends Lexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nopC.g:278:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // nopC.g:278:9: '/*' ( options {greedy=false; } : . )* '*/'
+            // nopC.g:356:5: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // nopC.g:356:9: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
 
 
-            // nopC.g:278:14: ( options {greedy=false; } : . )*
+            // nopC.g:356:14: ( options {greedy=false; } : . )*
             loop3:
             do {
                 int alt3=2;
@@ -1400,7 +1400,7 @@ public class nopCLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // nopC.g:278:42: .
+            	    // nopC.g:356:42: .
             	    {
             	    matchAny(); 
 
@@ -1435,14 +1435,14 @@ public class nopCLexer extends Lexer {
         try {
             int _type = LINE_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // nopC.g:282:5: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
-            // nopC.g:282:7: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+            // nopC.g:360:5: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+            // nopC.g:360:7: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
             {
             match("//"); 
 
 
 
-            // nopC.g:282:12: (~ ( '\\n' | '\\r' ) )*
+            // nopC.g:360:12: (~ ( '\\n' | '\\r' ) )*
             loop4:
             do {
                 int alt4=2;
@@ -1476,7 +1476,7 @@ public class nopCLexer extends Lexer {
             } while (true);
 
 
-            // nopC.g:282:26: ( '\\r' )?
+            // nopC.g:360:26: ( '\\r' )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -1485,7 +1485,7 @@ public class nopCLexer extends Lexer {
             }
             switch (alt5) {
                 case 1 :
-                    // nopC.g:282:26: '\\r'
+                    // nopC.g:360:26: '\\r'
                     {
                     match('\r'); 
 

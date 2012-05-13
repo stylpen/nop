@@ -1,8 +1,0 @@
-int x = 0;
-int main()
-{
-    for (;;){
-
-      int x = 1000;
-    }
-}

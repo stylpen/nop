@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nopC.g 2012-05-12 16:20:06
+// $ANTLR 3.4 nopC.g 2012-05-12 16:25:53
 
 import java.util.Map;
 import java.util.HashMap;
@@ -176,7 +176,7 @@ public class nopCParser extends Parser {
     			writeASM("; BEGIN DSEG\n");
     			
     			for (String label : varTable.keySet()) {
-    				writeASM(":" + label + " dat " +  String.format("%04x", Integer.parseInt(varTable.get(label))) + "\n");				
+    				writeASM(":" + label + " dat " +  String.format("0x%04x", Integer.parseInt(varTable.get(label))) + "\n");				
     			}
     			writeASM(":START JSR " + functionTable.get("main").getLabel() + "\n");				// Writes jump to main function so we can set pc to START at the beginning wihtout knowing where the main function will be
     		}
@@ -2141,7 +2141,7 @@ public class nopCParser extends Parser {
             	    state._fsp--;
             	    if (state.failed) return ;
 
-            	    if ( state.backtracking==0 ) {writeASM("SET Y, POP \n OR X, Y\nIFG X, 0\n   SET X, 1\n");}
+            	    if ( state.backtracking==0 ) {writeASM("SET Y, POP \n BOR X, Y\nIFG X, 0\n   SET X, 1\n");}
 
             	    }
             	    break;
@@ -2213,7 +2213,7 @@ public class nopCParser extends Parser {
             	    state._fsp--;
             	    if (state.failed) return ;
 
-            	    if ( state.backtracking==0 ) {writeASM("SET Y, POP \nIFG Y, 0\n   SET Y, FFFF\n AND X, Y\nIFG X, 0\n   SET X, 1\n");}
+            	    if ( state.backtracking==0 ) {writeASM("SET Y, POP \nIFG Y, 0\n   SET Y, 0xFFFF\n AND X, Y\nIFG X, 0\n   SET X, 1\n");}
 
             	    }
             	    break;

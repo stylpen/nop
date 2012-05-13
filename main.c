@@ -22,11 +22,10 @@ int main()
     ;;;;//
     bar(b);
     int a;
-    for (c = 9; c <= 399; c++){
-      int a =213;
-      int x;
-      k++;
+    if (a !=b){
+    4+5;
     }
+    
     
     
 }

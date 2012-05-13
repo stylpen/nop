@@ -162,7 +162,20 @@ variableDeclaration[GenericStatement parent] returns [GenericStatement ret]
 variableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
   :	
   // scope bekommt erstmal nur den text und null, weil das ergebniss zur laufzeit erzeugt wird und wir nur mal platz brauchen
-  (n1 = NAME ('=' expression[parent])?){parent.addVarToScope($n1.text, null); writeSetRegToMemory("X", $n1.text, parent.getScope());     } (',' (n2 = NAME ('=' expression[parent])?){parent.addVarToScope($n2.text, null);})*   
+  n1 = NAME {parent.addVarToScope($n1.text, null);}
+  (
+    '=' 
+    expression[parent] {writeSetRegToMemory("X", $n1.text, parent.getScope());} 
+  )?
+  
+  (
+    ',' 
+    n2 = NAME {parent.addVarToScope($n2.text, null);}
+    (
+      '=' 
+      expression[parent] {writeSetRegToMemory("X", $n2.text, parent.getScope());} 
+    )?
+   )*   
   ;
 
 
@@ -216,8 +229,13 @@ selection_statement [GenericStatement parent]
 @init{
 ScopedStatement selection_statement_if = new ScopedStatement(parent.getScope(), functionTable, varTable);
 ScopedStatement selection_statement_else = new ScopedStatement(parent.getScope(), functionTable, varTable);
+String label = "";
 }
-  : 'if' '(' expression[parent] ')' codeBlock[selection_statement_if] (options {k=1; backtrack=false;}:'else' codeBlock[selection_statement_else])?
+  : 'if' '(' expression[parent] ')' {label = getNewLoopCounter(); writeASM("IFE X, 0\n   SET PC, ELSE" + label + "\n");} 
+  codeBlock[selection_statement_if] {writeASM("SET PC, END" + label + "\n:ELSE" + label + "\n");}
+  (options {k=1; backtrack=false;}:
+  'else' 
+  codeBlock[selection_statement_else])? {writeASM(":END" + label + "\n");}
   ;
 
 iteration_statement [GenericStatement parent]
@@ -238,7 +256,7 @@ jump_statement [GenericStatement parent]
   : 'goto' NAME ';'
   | 'continue' ';'
   | 'break' ';'
-  | 'return' ';'
+  | 'return' ';'{writeASM("SET PC, POP\n");}
   | 'return' expression[parent] ';'{FunctionDefinition fun = (FunctionDefinition) parent; writeSetRegToMemory("X", fun.getName(), fun.getScope());}
   ;
 
@@ -391,10 +409,10 @@ assignment[GenericStatement parent]
 
 // murks murks
 // rettet varname für so sachen wie x++, ++x etc. damit wir das ergebniss wieder zurück in den memory schreiben können
-unary_expression[GenericStatement parent]
-  : p = postfix_expression[parent] 
-  | '++' unary_expression[parent]{writeASM("ADD X, 1\n"); if ($p.varname != null) {writeSetRegToMemory("X", $p.varname, parent.getScope()); }}
-  | '--' unary_expression[parent]{writeASM("SUB X, 1\n"); if ($p.varname != null) {writeSetRegToMemory("X", $p.varname, parent.getScope()); }}
+unary_expression[GenericStatement parent] returns [String varname]
+  : p = postfix_expression[parent] {$varname = $p.varname;}
+  | '++' u = unary_expression[parent]{writeASM("ADD X, 1\n"); if ($u.varname != null) {writeSetRegToMemory("X", $u.varname, parent.getScope()); }}
+  | '--' u = unary_expression[parent]{writeASM("SUB X, 1\n"); if ($u.varname != null) {writeSetRegToMemory("X", $u.varname, parent.getScope()); }}
   ;
 
 postfix_expression[GenericStatement parent] returns [String varname]

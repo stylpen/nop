@@ -1,5 +1,5 @@
 
-;COMPILED BY NOPC VERSION 0.0000000000000001 ON 2012/05/13 01:04:24 
+;COMPILED BY NOPC VERSION 0.0000000000000001 ON 2012/05/13 12:05:19 
 ;NOPC WAS WRITTEN BY STEPHAN WYPLER AND ALEXANDER RUST
 ;SEE https://github.com/stylpen/nop FOR MORE INFORMATION
 
@@ -48,21 +48,21 @@ SET X, [V2k]
 ADD X, 1
 SET [V2k], X
 ; BEGIN DSEG
-:V16x dat 0000
 :V9c dat 0000
-:V12main dat 0000
-:V14a dat 0000
-:V3b dat 0003
-:V5foo dat 0000
-:V8bar dat 0000
-:V0i dat 0000
-:V7b dat 0000
-:V11a dat 0000
-:V1j dat 0001
-:V4c dat 0000
 :V6a dat 0000
+:V7b dat 0000
+:V3b dat 0003
+:V4c dat 0000
 :V15a dat 0000
+:V5foo dat 0000
+:V14a dat 0000
 :V13b dat 0000
-:V2k dat 0000
+:V11a dat 0000
 :V10b dat 0000
+:V0i dat 0000
+:V1j dat 0001
+:V2k dat 0000
+:V12main dat 0000
+:V8bar dat 0000
+:V16x dat 0000
 :START JSR F2main

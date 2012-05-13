@@ -15,7 +15,7 @@ import java.util.TreeMap;
 import src.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
- import java.util.Date;
+import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 }
@@ -82,6 +82,10 @@ import java.text.SimpleDateFormat;
 		}
 		
 		
+		String getNewLoopCounter(){
+		  static int loopCounter = 0;
+		  return "" + loopCounter;		  
+		}
 		
 		
 		void writeInit () {
@@ -299,12 +303,17 @@ assignmentOperator
 	;
 
 	expression[GenericStatement parent]
+	@init{
+	    String label;
+	}
 		: logical_or_expression[parent] 
 			(
-				'?' 
-				expression[parent] 
-				':' 
+				'?' {writeASM("IFE X, 0\n   SET PC, ELSE" + label + "\n");} 
+				expression[parent] {jhj}
+				{writeASM("SET PC, END" + label + "\n");}
+				':'{writeASM(":ELSE" + label + "\n");}
 				expression[parent]
+				{writeASM(":END" + label + "\n");}
 			)?
 		;
 

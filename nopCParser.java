@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nopC.g 2012-05-13 01:03:54
+// $ANTLR 3.4 nopC.g 2012-05-13 12:04:52
 
 import java.util.Map;
 import java.util.HashMap;
@@ -3424,11 +3424,11 @@ public class nopCParser extends Parser {
 
     // Delegated rules
 
-    public final boolean synpred4_nopC() {
+    public final boolean synpred17_nopC() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred4_nopC_fragment(); // can never throw exception
+            synpred17_nopC_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }
@@ -3452,11 +3452,11 @@ public class nopCParser extends Parser {
         state.failed=false;
         return success;
     }
-    public final boolean synpred17_nopC() {
+    public final boolean synpred4_nopC() {
         state.backtracking++;
         int start = input.mark();
         try {
-            synpred17_nopC_fragment(); // can never throw exception
+            synpred4_nopC_fragment(); // can never throw exception
         } catch (RecognitionException re) {
             System.err.println("impossible: "+re);
         }

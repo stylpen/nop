@@ -1,3 +1,6 @@
+asm.txt
+nopCLexer.java
+nopCParser.java
 *.class
 make.sh
 # Package Files #

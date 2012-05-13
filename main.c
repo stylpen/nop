@@ -12,19 +12,18 @@ void bar(int c) {
     ++c;
     c++;
     int a;
-    a=foo(c);
+    a=foo(c,4);
 }
 
 
 int main()
 {
-    int b = foo();
+    int b = foo(2,4);
     ;;;;//
-    bar();
+    bar(b);
     int a;
     for (c = 9; c <= 399; c++){
       int a =213;
-        a
       int x;
       k++;
     }

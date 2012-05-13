@@ -62,6 +62,7 @@ public class FunctionDefinition extends ScopedStatement {
 		varTable.put(functionReturnValLabel, "0");
 		
 		globalScope.put(funName, functionReturnValLabel);
+		scope.put(funName, functionReturnValLabel);
 
 		
 		printFunTable();

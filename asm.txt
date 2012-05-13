@@ -1,5 +1,5 @@
 
-;COMPILED BY NOPC VERSION 0.0000000000000001 ON 2012/05/13 14:45:55 
+;COMPILED BY NOPC VERSION 0.0000000000000001 ON 2012/05/13 16:44:55 
 ;NOPC WAS WRITTEN BY STEPHAN WYPLER AND ALEXANDER RUST
 ;SEE https://github.com/stylpen/nop FOR MORE INFORMATION
 
@@ -7,36 +7,86 @@
 SET PC, START 
 :F0foo
 SET I, POP
-SET [V6o], POP
-SET [V5i], POP
+SET [V7b], POP
+SET [V6a], POP
 SET PUSH, I
-SET X, [V5i]
+SET X, [V6a]
 SET PUSH, X
-SET X, [V6o]
+SET X, [V7b]
 SET Y, POP 
-MUL X, Y
-SET [V7x], X
-:F1main
+ADD X, Y
+SET [V5foo], X
+SET PC, POP
+:F1bar
 SET I, POP
-SET [V9k], POP
+SET [V9c], POP
 SET PUSH, I
-SET PUSH, [V2j]
-SET PUSH, [V3d]
-SET PUSH, 3
+SET X, 1
+SET PUSH, X
+SET X, 3
+SET Y, POP 
+SHR Y, X
+SET X, Y
+SET [V10b], X
+SET X, [V9c]
+ADD X, 1
+SET X, [V9c]
+ADD X, 1
+SET [V9c], X
+SET [V11a], X
+SET PUSH, [V9c]
+SET PUSH, 4
 JSR F0foo
-SET PUSH, [V4foo]
+SET [V11a], X
+SET PC, POP
+:F2main
+SET I, POP
+SET PUSH, I
+SET PUSH, 2
+SET PUSH, 4
 JSR F0foo
-SET [V10z], X
+SET [V13b], X
+SET PUSH, [V13b]
+JSR F1bar
+SET [V14a], X
+SET X, 9
+SET [V4c], X
+SET X, [V4c]
+SET PUSH, X
+SET X, 399
+SET B, 0
+SET Y, POP 
+IFG X, Y
+   SET B, 1
+IFE X, Y
+    SET B, 1
+SET X, B
+SET X, [V4c]
+ADD X, 1
+SET [V4c], X
+SET X, 213
+SET [V15a], X
+SET [V16x], X
+SET X, [V2k]
+ADD X, 1
+SET [V2k], X
+SET PC, POP
 ; BEGIN DSEG
-:V8main dat 0x0000
-:V4foo dat 0x0000
-:V6o dat 0x0000
-:V5i dat 0x0000
-:V3d dat 0x000b
-:V10z dat 0x0000
+:V9c dat 0x0000
+:V6a dat 0x0000
+:V7b dat 0x0000
+:V3b dat 0x0003
+:V4c dat 0x0000
+:V15a dat 0x0000
+:V5foo dat 0x0000
+:V14a dat 0x0000
+:V13b dat 0x0000
+:V11a dat 0x0000
+:V10b dat 0x0000
 :V0i dat 0x0000
-:V9k dat 0x0000
-:V2j dat 0x0005
-:V1c dat 0x0000
-:V7x dat 0x0000
-:START JSR F1main
+:V1j dat 0x0001
+:V2k dat 0x0000
+:V12main dat 0x0000
+:V8bar dat 0x0000
+:V16x dat 0x0000
+:START JSR F2main

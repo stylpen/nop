@@ -74,18 +74,7 @@ import java.text.SimpleDateFormat;
 			writeASM("SET [" + scope.get(varname) + "], " + reg + "\n" );
 		}
 		
-	  /*	
-		void copyVariableParameterToFunction(String varname, HashMap<String, String> scope, int parameterCounter, FunctionDefinition targetFunction) {
-			String varLabel = scope.get(varname);
-			String targetLabel = targetFunction.getParameterLabelByPosition(parameterCounter);
-			writeASM("SET [" + targetLabel + "], [" + varLabel + "]\n" );
-		}
-		
-		void copyImmidiateParameterToFunction(String immidiateValue, int parameterCounter, FunctionDefinition targetFunction) {
-			String targetLabel = targetFunction.getParameterLabelByPosition(parameterCounter);
-			writeASM("SET [" + targetLabel + "], " + immidiateValue + "\n" );
-		}
-		*/
+
    void popParameters(FunctionDefinition fun){
 			writeASM("SET I, POP\n"); // save ip
 			int count = fun.getNumberOfParameters();
@@ -189,6 +178,7 @@ FunctionDefinition functionDefinition = new FunctionDefinition(parent.getScope()
 		')'
 		'{' {popParameters(functionDefinition);}
 		statement[functionDefinition]* 
+		    {writeASM("SET PC, POP\n");}
 		'}'
 		
 		{System.out.println($functionDefinition.text); }
@@ -235,7 +225,7 @@ iteration_statement [GenericStatement parent]
 ScopedStatement iteration_statement = new ScopedStatement(parent.getScope(), functionTable, varTable);
 }
   : 'while' '(' expression[parent] ')' codeBlock[iteration_statement]
-  | 'for' '(' expression_statement[parent] expression_statement[parent] expression[parent]? ')' codeBlock[iteration_statement]
+  | 'for' '(' (expression_statement[parent] | assignment[parent] ';') expression_statement[parent] expression[parent]? ')' codeBlock[iteration_statement]
   ;
 
 expression_statement [GenericStatement parent]
@@ -249,7 +239,7 @@ jump_statement [GenericStatement parent]
   | 'continue' ';'
   | 'break' ';'
   | 'return' ';'
-  | 'return' expression[parent] ';'
+  | 'return' expression[parent] ';'{FunctionDefinition fun = (FunctionDefinition) parent; writeSetRegToMemory("X", fun.getName(), fun.getScope());}
   ;
 
 functionCall [GenericStatement parent]

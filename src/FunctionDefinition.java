@@ -7,8 +7,10 @@ public class FunctionDefinition extends ScopedStatement {
 	private int parameterCounter = 0;
 	private HashMap<Integer, String> parameters = new HashMap<Integer, String>();
 	private String label; 
+	private String name; 
 	
-	
+	private HashMap<String, String> globalScope;
+
 	static int FUNCOUNTER;
 	static{
 		FUNCOUNTER = 0;
@@ -18,6 +20,8 @@ public class FunctionDefinition extends ScopedStatement {
 	
 	public FunctionDefinition(HashMap<String, String> oldScope, TreeMap<String, FunctionDefinition> refFunctionTable, HashMap<String, String> refVarTable) {
 		super(oldScope, refFunctionTable, refVarTable); // super copies scope
+		globalScope = oldScope;
+
 	}
 	
 	
@@ -43,15 +47,22 @@ public class FunctionDefinition extends ScopedStatement {
 		return label;
 	}
 	
+	public String getName () {
+		return name; 
+	}
+	
 	void addFun(String funName){
 		
 		label = generateFunLabel(funName);
-		
+		name = funName; 
 		funTable.put(funName, this);
 
 		// für speicherplatzreservierung von return wert
 		String  functionReturnValLabel = generateVarLabel(funName);
 		varTable.put(functionReturnValLabel, "0");
+		
+		globalScope.put(funName, functionReturnValLabel);
+
 		
 		printFunTable();
 	}

@@ -74,6 +74,30 @@ import java.text.SimpleDateFormat;
 			writeASM("SET [" + scope.get(varname) + "], " + reg + "\n" );
 		}
 		
+	  /*	
+		void copyVariableParameterToFunction(String varname, HashMap<String, String> scope, int parameterCounter, FunctionDefinition targetFunction) {
+			String varLabel = scope.get(varname);
+			String targetLabel = targetFunction.getParameterLabelByPosition(parameterCounter);
+			writeASM("SET [" + targetLabel + "], [" + varLabel + "]\n" );
+		}
+		
+		void copyImmidiateParameterToFunction(String immidiateValue, int parameterCounter, FunctionDefinition targetFunction) {
+			String targetLabel = targetFunction.getParameterLabelByPosition(parameterCounter);
+			writeASM("SET [" + targetLabel + "], " + immidiateValue + "\n" );
+		}
+		*/
+   void popParameters(FunctionDefinition fun){
+			writeASM("SET I, POP\n"); // save ip
+			int count = fun.getNumberOfParameters();
+			String targetLabel;
+			while(count >= 0){
+				  targetLabel = fun.getParameterLabelByPosition(count--);
+					writeASM("SET [" + targetLabel + "], " + "POP\n" );
+			} 
+			writeASM("SET PUSH, I\n"); // restore ip
+	 }
+		
+		
 		void writeSetImmidiateToReg(String reg, String immidiate) {
 			writeASM("SET " + reg + ", " + immidiate + "\n" );
 		}
@@ -101,16 +125,10 @@ import java.text.SimpleDateFormat;
 			writeASM("; BEGIN DSEG\n");
 			
 			for (String label : varTable.keySet()) {
-				writeASM(":" + label + " dat " +  String.format("\%04x", Integer.parseInt(varTable.get(label))) + "\n");				
+				writeASM(":" + label + " dat " +  String.format("0x\%04x", Integer.parseInt(varTable.get(label))) + "\n");				
 			}
 			writeASM(":START JSR " + functionTable.get("main").getLabel() + "\n");				// Writes jump to main function so we can set pc to START at the beginning wihtout knowing where the main function will be
 		}
-		
-		
-		
-		
-		
-
 }
 
 cFile returns [GenericStatement ret]
@@ -164,7 +182,16 @@ functionDefinition[GenericStatement parent] returns [GenericStatement ret]
 FunctionDefinition functionDefinition = new FunctionDefinition(parent.getScope(), functionTable, varTable);
 }
   :
-    typeSpecifier NAME {functionDefinition.addFun($NAME.text); writeASM(functionDefinition.getLabel() + ": \n"); } '(' parameterList[functionDefinition] ')' '{' statement[functionDefinition]* '}' {System.out.println($functionDefinition.text); }
+    typeSpecifier
+		NAME {functionDefinition.addFun($NAME.text); writeASM(":" + functionDefinition.getLabel() + "\n"); } 
+		'('
+		parameterList[functionDefinition] 
+		')'
+		'{' {popParameters(functionDefinition);}
+		statement[functionDefinition]* 
+		'}'
+		
+		{System.out.println($functionDefinition.text); }
   ;
 
 
@@ -236,42 +263,46 @@ functionCall [GenericStatement parent]
   FunctionDefinition fun = null;
 }
   : 
-  NAME '(' {fun = functionTable.get($NAME.text);} functionCallArgumentList[p, fun] ')' 
+  NAME '(' {fun = functionTable.get($NAME.text);} functionCallArgumentList[p, fun] ')' {writeASM("JSR " + fun.getLabel() + "\n");}
   ;
+
+
 
 functionCallArgumentList[GenericStatement parent, FunctionDefinition fun]
   :
-      (NAME | functionCall[parent] | WERT)? (',' (NAME | functionCall[parent] | WERT))*
+      (
+					n1 = NAME {writeSetVarToReg("PUSH", $n1.text, parent.getScope());} 
+				| functionCall[parent] {writeSetVarToReg("PUSH", fun.getName(), parent.getScope());}
+				| w1 = WERT {writeSetImmidiateToReg("PUSH", $w1.text);}
+			)? 
+			(','
+			  (
+						n2 = NAME {writeSetVarToReg("PUSH", $n2.text, parent.getScope());} 
+					| functionCall[parent] {writeSetVarToReg("PUSH", fun.getName(), parent.getScope());} 
+					| w2 = WERT {writeSetImmidiateToReg("PUSH", $w2.text);}
+				)
+			)*
   ;
 
 assignment[GenericStatement parent]
 @init {
-  GenericStatement p = parent; 
-
-  if (p == null) {
-     p = hackStore1;
-  }
-}
+  GenericStatement p = parent;
+  if (p == null) { p = hackStore1;}
+} 
   :
-    NAME {System.out.println("HIER: " + $NAME.text);} assignmentOperator expression[p]
-
-  ;
-
-
-
-assignmentOperator
-	: '='
-	| '*='
-	| '/='
-	| '%='
-	| '+='
-	| '-='
-	| '<<='
-	| '>>='
-	| '&='
-	| '^='
-	| '|='
-	;
+    NAME ( 	 '=' expression[p] {writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '*=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("MUL X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '/=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("DIV Y, X	\nSET X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '%=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("MOD Y, X	\nSET X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '+=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("ADD X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '-=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("SUB Y, X	\nSET X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '<<='expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("SHL Y, X	\nSET X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '>>='expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("SHR Y, X	\nSET X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '&=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("AND X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '^=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("XOR X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+					| '|=' expression[p] {writeSetVarToReg("Y", $NAME.text, p.getScope()); writeASM("BOR X, Y\n"); writeSetRegToMemory("X", $NAME.text, p.getScope()); }
+				 )
+  ;	
 
 	expression[GenericStatement parent]
 	@init{
@@ -298,7 +329,7 @@ assignmentOperator
 	logical_and_expression[GenericStatement parent]
 		: inclusive_or_expression[parent] 
 			(
-				'&&' {writeASM("SET PUSH, X\n");} inclusive_or_expression[parent] {writeASM("SET Y, POP \nIFG Y, 0\n   SET Y, FFFF\n AND X, Y\nIFG X, 0\n   SET X, 1\n");}
+				'&&' {writeASM("SET PUSH, X\n");} inclusive_or_expression[parent] {writeASM("SET Y, POP \nIFG Y, 0\n   SET Y, FFFF\nAND X, Y\nIFG X, 0\n   SET X, 1\n");}
 			)*
 		;
 
@@ -345,8 +376,8 @@ assignmentOperator
 	shift_expression[GenericStatement parent]
 		: additive_expression[parent] 
 		(
-				'<<' {writeASM("SET PUSH, X\n");} additive_expression[parent] {writeASM("SET Y, POP \nSHL Y, X\n SET X, Y\n");}
-			| '>>' {writeASM("SET PUSH, X\n");} additive_expression[parent] {writeASM("SET Y, POP \nSHR Y, X\n SET X, Y\n");} 
+				'<<' {writeASM("SET PUSH, X\n");} additive_expression[parent] {writeASM("SET Y, POP \nSHL Y, X\nSET X, Y\n");}
+			| '>>' {writeASM("SET PUSH, X\n");} additive_expression[parent] {writeASM("SET Y, POP \nSHR Y, X\nSET X, Y\n");} 
 		)*
 		;
 		
@@ -354,7 +385,7 @@ assignmentOperator
 		: (multiplicative_expression[parent]) 
 			(
 					'+' {writeASM("SET PUSH, X\n");} multiplicative_expression[parent] {writeASM("SET Y, POP \nADD X, Y\n");} 
-				| '-' {writeASM("SET PUSH, X\n");} multiplicative_expression[parent] {writeASM("SET Y, POP \nSUB Y, X\n SET X, Y \n");} 
+				| '-' {writeASM("SET PUSH, X\n");} multiplicative_expression[parent] {writeASM("SET Y, POP \nSUB Y, X\nSET X, Y \n");} 
 			)*
 		;
 
@@ -362,8 +393,8 @@ assignmentOperator
 		: (unary_expression[parent]) 
 			 (
 					'*' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nMUL X, Y\n");} 
-				| '/' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nDIV Y, X\n SET X, Y \n");} 
-				| '%' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nMOD Y, X\n SET X, Y \n");}
+				| '/' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nDIV Y, X\nSET X, Y \n");} 
+				| '%' {writeASM("SET PUSH, X\n");} unary_expression[parent] {writeASM("SET Y, POP \nMOD Y, X\nSET X, Y \n");}
 			 )*
 		;
 		

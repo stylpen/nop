@@ -12,9 +12,8 @@ $ cat main.c | java C
 $ cat asm.txt
 ````
 
+In case the make script fails make sure that the current directory, the src folder and ANTLR are in your Java classpath. 
 Afterwards use e.g http://migerh.github.com/dcpu16.js/ to run your assembled code. 
-
-
 
 ###License ###
 All code is licensed under GPL-3.

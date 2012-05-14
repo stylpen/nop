@@ -192,7 +192,11 @@ FunctionDefinition functionDefinition = new FunctionDefinition(parent.getScope()
 		')'
 		'{' {popParameters(functionDefinition);}
 		statement[functionDefinition, null]* 
-		    {writeASM("SET PC, POP\n");}
+		    {if(functionDefinition.getName().equals("main")){
+		      writeASM(":ENDE\nSET PC, ENDE\n");
+		    } else {
+		      writeASM("SET PC, POP\n");
+		    }}
 		'}'
 		
 		{System.out.println($functionDefinition.text); }

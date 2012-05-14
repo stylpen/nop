@@ -112,7 +112,7 @@ options {
 			writeASM(":" + label + " dat " +  String.format("0x\%04x", Integer.parseInt(varTable.get(label))) + "\n");				
 		}
 		// Writes jump to main function so we can set pc to START at the beginning wthout knowing where the main function will be
-		writeASM(":START JSR " + functionTable.get("main").getLabel() + "\n");			
+		writeASM(":START JSR " + functionTable.get("main").getLabel() + "\n:ENDE\n");			
 	}
 }
 
@@ -185,14 +185,9 @@ functionDefinition[GenericStatement parent] returns [GenericStatement ret]
 	parameterList[functionDefinition] 
 	')'
 	'{' {popParameters(functionDefinition);}
-	statement[functionDefinition, null]* 
-	    {if(functionDefinition.getName().equals("main")){
-	      writeASM(":ENDE\nSET PC, ENDE\n");
-	    } else {
-	      writeASM("SET PC, POP\n");
-	    }}
+	statement[functionDefinition, null]* {writeASM("SET PC, POP\n");}
 	'}'
-	{System.out.println($functionDefinition.text); }
+	{System.out.println($functionDefinition.text);	if(functionDefinition.getName().equals("main")) writeASM("SET PC, ENDE\n");}
  	;
 
 

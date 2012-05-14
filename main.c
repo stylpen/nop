@@ -11,7 +11,7 @@ void bar(int c) {
     int b = 1 >> 3;
     ++c;
     c++;
-    int a;
+    int a = b = 5, c = 9;
     a=foo(c,4);
 }
 

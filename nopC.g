@@ -165,7 +165,7 @@ variableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
   n1 = NAME {parent.addVarToScope($n1.text, null);}
   (
     '=' 
-    expression[parent] {writeSetRegToMemory("X", $n1.text, parent.getScope());} 
+    (expression[parent] | assignment[parent]) {writeSetRegToMemory("X", $n1.text, parent.getScope());}
   )?
   
   (
@@ -173,7 +173,7 @@ variableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
     n2 = NAME {parent.addVarToScope($n2.text, null);}
     (
       '=' 
-      expression[parent] {writeSetRegToMemory("X", $n2.text, parent.getScope());} 
+      (expression[parent] | assignment[parent]) {writeSetRegToMemory("X", $n2.text, parent.getScope());}
     )?
    )*   
   ;

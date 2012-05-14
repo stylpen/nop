@@ -1,7 +1,8 @@
 # NOP #
 Nop is not only a parser, but also a not optimized compiler based on ANTLR-3.
 
-It currently compiles a subset of ANSI-C to assembly code for the DCPU-16 architecture.
+It serves as a project for the compiler construction lecture at university and currently compiles a subset of ANSI-C to assembly code for the DCPU-16 architecture.
+See proposal.pdf for a list of probably supported language constructs.
 
 ###Usage ###
 Execute the following code in order to compile a .c file

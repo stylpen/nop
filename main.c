@@ -1,3 +1,6 @@
+// This is a simple testfile
+// Pipe it to java C in order to test the compiler
+
 int i = 0;
 int j = 1, k, b = 3;
 int c;

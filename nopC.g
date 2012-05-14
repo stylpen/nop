@@ -100,6 +100,7 @@ import java.text.SimpleDateFormat;
 		  return "" + loopCounter++;		  
 		}
 		
+	
 		
 		void writeInit () {
 			writeASM("\n;COMPILED BY NOPC VERSION " + version + " ON " + getDateTime() +  " \n");
@@ -190,7 +191,7 @@ FunctionDefinition functionDefinition = new FunctionDefinition(parent.getScope()
 		parameterList[functionDefinition] 
 		')'
 		'{' {popParameters(functionDefinition);}
-		statement[functionDefinition]* 
+		statement[functionDefinition, null]* 
 		    {writeASM("SET PC, POP\n");}
 		'}'
 		
@@ -203,14 +204,14 @@ parameterList[FunctionDefinition parent]
     (typeSpecifier (n1 = NAME){parent.addParam($n1.text);} (',' typeSpecifier (n2 = NAME){parent.addParam($n2.text);} )*)?
   ;
 
-codeBlock [GenericStatement parent]
+codeBlock [GenericStatement parent, String label]
   :
-  '{'statement[parent]*'}'
-  | statement[parent]
+  '{'statement[parent, label]*'}'
+  | statement[parent, label]
 
   ;
 
-statement[GenericStatement parent]
+statement[GenericStatement parent, String label]
 @init {
   hackStore1 = parent; // We cannot pass parent to functionCall or assignment directly, as there is a synpred rule involved during backtracking which does not take parameters. Therefore we store it in a global variable to access the variable through this later
 }
@@ -218,32 +219,35 @@ statement[GenericStatement parent]
       ( functionCall[null] ';')
     | ( assignment[null] ';'	)
     | variableDeclaration[parent]
-    | selection_statement[parent]
+    | selection_statement[parent, label]
     | iteration_statement[parent]
-    | jump_statement[parent]
+    | jump_statement[parent, label]
     | expression_statement[parent]
   ;
 
 
-selection_statement [GenericStatement parent]
+selection_statement [GenericStatement parent, String oldLoopLabel]
 @init{
 ScopedStatement selection_statement_if = new ScopedStatement(parent.getScope(), functionTable, varTable);
 ScopedStatement selection_statement_else = new ScopedStatement(parent.getScope(), functionTable, varTable);
 String label = "";
 }
   : 'if' '(' expression[parent] ')' {label = getNewLoopCounter(); writeASM("IFE X, 0\n   SET PC, ELSE" + label + "\n");} 
-  codeBlock[selection_statement_if] {writeASM("SET PC, END" + label + "\n:ELSE" + label + "\n");}
+  codeBlock[selection_statement_if, oldLoopLabel] {writeASM("SET PC, END" + label + "\n:ELSE" + label + "\n");}
   (options {k=1; backtrack=false;}:
   'else' 
-  codeBlock[selection_statement_else])? {writeASM(":END" + label + "\n");}
+  codeBlock[selection_statement_else, oldLoopLabel])? {writeASM(":END" + label + "\n");}
   ;
 
 iteration_statement [GenericStatement parent]
 @init{
 ScopedStatement iteration_statement = new ScopedStatement(parent.getScope(), functionTable, varTable);
+String label = "";
 }
-  : 'while' '(' expression[parent] ')' codeBlock[iteration_statement]
-  | 'for' '(' (expression_statement[parent] | assignment[parent] ';') expression_statement[parent] expression[parent]? ')' codeBlock[iteration_statement]
+  : 'while'{label = getNewLoopCounter(); writeASM(":LOOP" + label + "\n");}
+  '(' expression[parent] ')' {writeASM("IFE X, 0\n   SET PC, END" + label + "\n");}
+  codeBlock[iteration_statement, label] {writeASM("SET PC, LOOP" + label + "\n:END" + label + "\n");}
+  | 'for' '(' (expression_statement[parent] | assignment[parent] ';') expression_statement[parent] expression[parent]? ')' codeBlock[iteration_statement, null]
   ;
 
 expression_statement [GenericStatement parent]
@@ -252,10 +256,10 @@ expression_statement [GenericStatement parent]
 
   ;
 
-jump_statement [GenericStatement parent]
+jump_statement [GenericStatement parent, String label]
   : 'goto' NAME ';'
-  | 'continue' ';'
-  | 'break' ';'
+  | 'continue' ';' {writeASM("SET PC, LOOP" + label + "\n");}
+  | 'break' ';' {writeASM("SET PC, END" + label + "\n");}
   | 'return' ';'{writeASM("SET PC, POP\n");}
   | 'return' expression[parent] ';'{FunctionDefinition fun = (FunctionDefinition) parent; writeSetRegToMemory("X", fun.getName(), fun.getScope());}
   ;

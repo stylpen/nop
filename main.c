@@ -18,14 +18,9 @@ void bar(int c) {
 
 int main()
 {
-    int b = foo(2,4);
-    ;;;;//
-    bar(b);
-    int a;
-    if (a !=b){
-    4+5;
-    }
-    
-    
-    
+  int i = 0;
+  while(i < 10){
+   ++i++;
+   }
 }
+

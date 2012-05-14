@@ -1,4 +1,4 @@
-// $ANTLR 3.4 nopC.g 2012-05-14 14:16:39
+// $ANTLR 3.4 nopC.g 2012-05-14 14:22:29
 
 import java.util.Map;
 import java.util.HashMap;
@@ -112,7 +112,7 @@ public class nopCParser extends Parser {
 
         FileWriter fstream;
         BufferedWriter out;
-        String version = "0.0000000000000010";
+        String version = "0.0000000000000100";
         int loopCounter = 0;
 
 

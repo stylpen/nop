@@ -33,7 +33,7 @@ import java.text.SimpleDateFormat;
 
     FileWriter fstream;
     BufferedWriter out;
-    String version = "0.0000000000000010";
+    String version = "0.0000000000000100";
     int loopCounter = 0;
 
 

@@ -247,7 +247,12 @@ String label = "";
   : 'while'{label = getNewLoopCounter(); writeASM(":LOOP" + label + "\n");}
   '(' expression[parent] ')' {writeASM("IFE X, 0\n   SET PC, END" + label + "\n");}
   codeBlock[iteration_statement, label] {writeASM("SET PC, LOOP" + label + "\n:END" + label + "\n");}
-  | 'for' '(' (expression_statement[parent] | assignment[parent] ';') expression_statement[parent] expression[parent]? ')' codeBlock[iteration_statement, null]
+  | 'for' 
+  '(' (expression_statement[parent] | assignment[parent] ';') {label = getNewLoopCounter(); writeASM(":LOOP" + label + "\n");}
+      expression_statement[parent] {writeASM("IFE X, 0\n   SET PC, END" + label + "\nSET PC, INVEND" + label + "\n:INV" + label + "\n");}
+      expression[parent]? {writeASM("SET PC, LOOP" + label + "\n:INVEND" + label + "\n");}
+  ')' 
+  codeBlock[iteration_statement, null]{writeASM("SET PC, INV" + label + "\n:END" + label + "\n");}
   ;
 
 expression_statement [GenericStatement parent]

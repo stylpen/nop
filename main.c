@@ -18,9 +18,10 @@ void bar(int c) {
 
 int main()
 {
-  int i = 0;
-  while(i < 10){
-   ++i++;
-   }
+  int i;
+  int a = 1;
+  for(i=0;i<10;i++){
+   a *= 2;
+  }
 }
 

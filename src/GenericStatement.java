@@ -36,8 +36,6 @@ public class GenericStatement {
 		String label = generateVarLabel(varName);
 		varTable.put(label, val);
 		scope.put(varName, label);
-		printVarTable();
-		printScope();
 		
 		return label;
 	}

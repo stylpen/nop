@@ -100,12 +100,13 @@ options {
 		writeASM("\n;COMPILED BY NOPC VERSION " + version + " ON " + getDateTime() +  " \n");
 		writeASM(";NOPC WAS WRITTEN BY STEPHAN WYPLER AND ALEXANDER RUST\n");
 		writeASM(";SEE https://github.com/stylpen/nop FOR MORE INFORMATION\n\n");
+		System.out.println("start assembling");
 		writeASM(";BEGIN ASM\n");			
 		writeASM("SET PC, START \n");
 	}
 			
 	void writeDSEG () {
-		System.out.println("Writing DSEG");
+		System.out.println("writing DSEG");
 		writeASM("; BEGIN DSEG\n");
 		
 		for (String label : varTable.keySet()) {
@@ -137,7 +138,7 @@ globalFunctionOrStatement [GenericStatement parent] returns [GenericStatement re
 globalVariableDeclaration [GenericStatement parent] returns [GenericStatement ret]
   	:
 	// hier wird noch das cFile als parent weitergereicht
-  	typeSpecifier globalVariableDeclarationList[parent] ';' {System.out.println($globalVariableDeclaration.text);}
+  	typeSpecifier globalVariableDeclarationList[parent] ';'
   	;
 
 // Sollte matchen: 
@@ -152,7 +153,7 @@ globalVariableDeclarationList[GenericStatement parent] returns [GenericStatement
 
 variableDeclaration[GenericStatement parent] returns [GenericStatement ret]
   	:
-  	typeSpecifier variableDeclarationList[parent] ';' {System.out.println($variableDeclaration.text);}
+  	typeSpecifier variableDeclarationList[parent] ';'
   	;
 
 variableDeclarationList[GenericStatement parent] returns [GenericStatement ret]
@@ -187,7 +188,7 @@ functionDefinition[GenericStatement parent] returns [GenericStatement ret]
 	'{' {popParameters(functionDefinition);}
 	statement[functionDefinition, null]* {writeASM("SET PC, POP\n");}
 	'}'
-	{System.out.println($functionDefinition.text);	if(functionDefinition.getName().equals("main")) writeASM("SET PC, ENDE\n");}
+	{if(functionDefinition.getName().equals("main")) writeASM("SET PC, ENDE\n");}
  	;
 
 
@@ -250,7 +251,7 @@ selection_statement [GenericStatement parent, String oldLoopLabel]
 expression_statement [GenericStatement parent]
   	: 
       ';'
-  	| expression[parent] ';' {System.out.println("DORT");	}
+  	| expression[parent] ';'
   	;
 
 jump_statement [GenericStatement parent, String label]

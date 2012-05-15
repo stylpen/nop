@@ -63,10 +63,8 @@ public class FunctionDefinition extends ScopedStatement {
 		
 		globalScope.put(funName, functionReturnValLabel);
 		scope.put(funName, functionReturnValLabel);
-
-		
-		printFunTable();
 	}
+	
 	private String generateFunLabel(String funName){
 		return "F" + Integer.toString(FUNCOUNTER++) + funName;
 	}
